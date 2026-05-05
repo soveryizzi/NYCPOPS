@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>NYC POPS — Privately Owned Public Spaces</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#1a9e72;--green-dark:#0d6e4f;--green-light:#e8f7f2;
+  --blue:#2563a8;--blue-light:#e8f0fb;
+  --sand:#f5f2ec;--sand2:#ede9e0;
+  --ink:#1a1a18;--ink2:#4a4a46;--ink3:#8a8a84;
+  --border:#e0ddd6;--white:#fff;--radius:10px;
+  --sidebar:320px;
+  --font-d:'Playfair Display',Georgia,serif;
+  --font-b:'DM Sans',system-ui,sans-serif;
+}
+html,body{height:100%;font-family:var(--font-b);background:var(--sand);color:var(--ink);-webkit-font-smoothing:antialiased}
+
+/* ── LAYOUT ── */
+#app{display:flex;height:100vh;height:100dvh}
+
+/* ── SIDEBAR ── */
+#sidebar{width:var(--sidebar);flex-shrink:0;display:flex;flex-direction:column;background:var(--white);border-right:1px solid var(--border);overflow:hidden;z-index:10}
+#brand{padding:22px 22px 18px;border-bottom:1px solid var(--border);background:var(--ink);color:var(--white);flex-shrink:0}
+#brand h1{font-family:var(--font-d);font-size:20px;font-weight:500;letter-spacing:-.2px;line-height:1.2;margin-bottom:6px}
+#brand h1 em{color:var(--green);font-style:normal}
+#brand p{font-size:11.5px;color:rgba(255,255,255,.45);line-height:1.5;font-weight:300}
+#search-wrap{padding:14px 16px 12px;border-bottom:1px solid var(--border);flex-shrink:0}
+#search{width:100%;padding:9px 13px;font-size:13px;font-family:var(--font-b);border:1px solid var(--border);border-radius:var(--radius);background:var(--sand);color:var(--ink);outline:none;margin-bottom:8px;transition:border-color .15s}
+#search:focus{border-color:var(--green)}
+#search::placeholder{color:var(--ink3)}
+#nbhd{width:100%;padding:8px 12px;font-size:12.5px;font-family:var(--font-b);border:1px solid var(--border);border-radius:var(--radius);background:var(--sand);color:var(--ink);outline:none;cursor:pointer}
+#nbhd:focus{border-color:var(--green)}
+#filter-wrap{padding:12px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
+#filter-label{font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px}
+#filters{display:flex;flex-wrap:wrap;gap:5px}
+.fb{padding:5px 12px;font-size:12px;font-family:var(--font-b);border-radius:20px;border:1px solid var(--border);background:var(--white);color:var(--ink2);cursor:pointer;transition:all .12s;white-space:nowrap}
+.fb:hover{border-color:var(--green);color:var(--green)}
+.fb.on{background:var(--green);color:var(--white);border-color:var(--green)}
+#list-header{padding:10px 16px 8px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:space-between}
+#list-header span{font-size:11.5px;color:var(--ink3)}
+#list-header strong{color:var(--ink);font-weight:500}
+#list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+#list::-webkit-scrollbar{width:4px}
+#list::-webkit-scrollbar-track{background:transparent}
+#list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.space-item{padding:13px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;border-left:3px solid transparent}
+.space-item:hover{background:var(--sand)}
+.space-item.active{background:var(--green-light);border-left-color:var(--green)}
+.space-item.active .si-name{color:var(--green-dark)}
+.si-name{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:3px;line-height:1.3}
+.si-addr{font-size:11.5px;color:var(--ink3);margin-bottom:5px}
+.si-tags{display:flex;gap:4px;flex-wrap:wrap}
+.si-tag{font-size:10.5px;padding:2px 8px;border-radius:20px}
+.si-tag-out{background:var(--green-light);color:var(--green-dark)}
+.si-tag-in{background:var(--blue-light);color:var(--blue)}
+.si-tag-type{background:var(--sand2);color:var(--ink2)}
+#list-empty{padding:40px 20px;text-align:center;color:var(--ink3);font-size:13px;line-height:1.7}
+
+/* ── MAP ── */
+#mapwrap{flex:1;position:relative;overflow:hidden}
+#map{width:100%;height:100%}
+
+/* ── DETAIL CARD (desktop) ── */
+#detail{position:absolute;top:16px;right:16px;width:288px;background:var(--white);border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 4px 28px rgba(0,0,0,.1);z-index:600;display:none;overflow:hidden;animation:fadeUp .2s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+#detail.show{display:block}
+#detail-close{position:absolute;top:10px;right:12px;font-size:18px;line-height:1;cursor:pointer;color:var(--ink3);background:none;border:none;font-family:inherit;z-index:1;padding:4px 6px}
+#detail-inner{padding:16px 16px 18px}
+#d-name{font-family:var(--font-d);font-size:15px;font-weight:500;color:var(--ink);margin-bottom:3px;line-height:1.3;padding-right:24px}
+#d-addr{font-size:11.5px;color:var(--ink3);margin-bottom:10px}
+#d-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px}
+.dtag{font-size:11px;padding:3px 9px;border-radius:20px}
+.dtag-out{background:var(--green-light);color:var(--green-dark)}
+.dtag-in{background:var(--blue-light);color:var(--blue)}
+.dtag-type{background:var(--sand2);color:var(--ink2)}
+#d-amenities{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;margin-bottom:12px}
+.dam{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink)}
+.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.dy{background:var(--green)}.dn{background:#d0d0d0}
+#d-hours{font-size:12px;color:var(--ink3);border-top:1px solid var(--border);padding-top:10px;line-height:1.5}
+#d-hours strong{color:var(--ink)}
+
+/* ── SLIDE-UP PANEL (mobile) ── */
+#panel{position:absolute;bottom:0;left:0;right:0;z-index:800;background:var(--white);border-top:1px solid var(--border);border-radius:16px 16px 0 0;transform:translateY(100%);transition:transform .28s cubic-bezier(.32,.72,0,1);max-height:66%;overflow-y:auto;-webkit-overflow-scrolling:touch;display:none}
+#panel.open{transform:translateY(0)}
+#panel-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 0;flex-shrink:0}
+#pclose{position:absolute;top:10px;right:14px;font-size:20px;line-height:1;cursor:pointer;color:var(--ink3);background:none;border:none;font-family:inherit;padding:4px 6px}
+#pinner{padding:14px 18px 32px}
+#p-name{font-family:var(--font-d);font-size:17px;font-weight:500;color:var(--ink);margin-bottom:3px;line-height:1.3}
+#p-addr{font-size:12px;color:var(--ink3);margin-bottom:10px}
+#p-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+.ptag{font-size:11px;padding:3px 9px;border-radius:20px}
+.ptag-out{background:var(--green-light);color:var(--green-dark)}
+.ptag-in{background:var(--blue-light);color:var(--blue)}
+.ptag-type{background:var(--sand2);color:var(--ink2)}
+#p-amenities{display:grid;grid-template-columns:1fr 1fr;gap:7px 16px;margin-bottom:14px}
+.pam{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--ink)}
+#p-hours{font-size:12px;color:var(--ink3);border-top:1px solid var(--border);padding-top:10px;line-height:1.5}
+#p-hours strong{color:var(--ink)}
+
+/* ── LOADING ── */
+#loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;background:rgba(245,242,236,.92);z-index:900;backdrop-filter:blur(4px)}
+#loading p{font-size:13px;color:var(--ink3)}
+.spinner{width:32px;height:32px;border:2.5px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .75s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#err-banner{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:910;background:#fffbec;color:#7a5c00;border:1px solid #e6c85a;border-radius:8px;padding:8px 16px;font-size:12px;white-space:nowrap;display:none}
+
+/* Leaflet tweaks */
+.leaflet-control-zoom{border:1px solid var(--border)!important;border-radius:8px!important;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.08)!important}
+.leaflet-control-zoom a{color:var(--ink)!important;font-size:16px!important;line-height:28px!important}
+.leaflet-control-attribution{font-size:10px!important;background:rgba(255,255,255,.75)!important}
+
+/* ── MOBILE OVERRIDES ── */
+@media(max-width:640px){
+  #sidebar{display:none}
+  #panel{display:block}
+  #detail{display:none!important}
+  #app{display:block;height:100vh;height:100dvh}
+  #mapwrap{height:100%;position:relative}
+  #mobile-bar{display:flex;position:absolute;top:0;left:0;right:0;z-index:500;flex-direction:column;background:var(--white);border-bottom:1px solid var(--border)}
+  #mob-brand{padding:11px 14px 8px;background:var(--ink)}
+  #mob-brand h2{font-family:var(--font-d);font-size:16px;font-weight:500;color:var(--white)}
+  #mob-brand h2 em{color:var(--green);font-style:normal}
+  #mob-controls{padding:8px 10px;display:flex;flex-direction:column;gap:7px}
+  #mob-row1{display:flex;gap:7px}
+  #mob-search{flex:1;padding:7px 11px;font-size:13px;font-family:var(--font-b);border:1px solid var(--border);border-radius:20px;background:var(--sand);color:var(--ink);outline:none;min-width:0}
+  #mob-search:focus{border-color:var(--green)}
+  #mob-nbhd{padding:7px 9px;font-size:12px;font-family:var(--font-b);border:1px solid var(--border);border-radius:20px;background:var(--sand);color:var(--ink);outline:none;max-width:140px}
+  #mob-filters{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:1px}
+  #mob-filters::-webkit-scrollbar{display:none}
+  #mob-status{font-size:11px;color:var(--ink3);padding:0 2px 2px}
+}
+@media(min-width:641px){
+  #mobile-bar{display:none}
+  #panel{display:none!important}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- DESKTOP SIDEBAR -->
+  <div id="sidebar">
+    <div id="brand">
+      <h1>NYC <em>Public</em> Spaces</h1>
+      <p>Privately Owned Public Spaces (POPS)<br/>Live data · NYC Dept. of City Planning</p>
+    </div>
+    <div id="search-wrap">
+      <input id="search" type="text" placeholder="Search name, address, neighborhood…" autocomplete="off"/>
+      <select id="nbhd"><option value="">All neighborhoods</option></select>
+    </div>
+    <div id="filter-wrap">
+      <div id="filter-label">Filter by amenity</div>
+      <div id="filters">
+        <button class="fb on" data-f="all">All</button>
+        <button class="fb" data-f="outdoor">Outdoors</button>
+        <button class="fb" data-f="indoor">Indoors</button>
+        <button class="fb" data-f="seating">Seating</button>
+        <button class="fb" data-f="trees">Trees</button>
+        <button class="fb" data-f="food">Food</button>
+        <button class="fb" data-f="restrooms">Restrooms</button>
+        <button class="fb" data-f="water">Water</button>
+      </div>
+    </div>
+    <div id="list-header">
+      <span><strong id="shown-count">0</strong> spaces</span>
+    </div>
+    <div id="list"></div>
+  </div>
+
+  <!-- MAP AREA -->
+  <div id="mapwrap">
+
+    <!-- Mobile top bar -->
+    <div id="mobile-bar">
+      <div id="mob-brand"><h2>NYC <em>Public</em> Spaces</h2></div>
+      <div id="mob-controls">
+        <div id="mob-row1">
+          <input id="mob-search" type="text" placeholder="Search spaces…"/>
+          <select id="mob-nbhd"><option value="">All</option></select>
+        </div>
+        <div id="mob-filters">
+          <button class="fb on" data-f="all">All</button>
+          <button class="fb" data-f="outdoor">Outdoors</button>
+          <button class="fb" data-f="indoor">Indoors</button>
+          <button class="fb" data-f="seating">Seating</button>
+          <button class="fb" data-f="trees">Trees</button>
+          <button class="fb" data-f="food">Food</button>
+          <button class="fb" data-f="restrooms">Restrooms</button>
+          <button class="fb" data-f="water">Water</button>
+        </div>
+        <div id="mob-status"></div>
+      </div>
+    </div>
+
+    <div id="map"></div>
+    <div id="err-banner">Could not load live data — showing sample spaces</div>
+
+    <!-- Desktop detail card -->
+    <div id="detail">
+      <button id="detail-close">&#215;</button>
+      <div id="detail-inner">
+        <div id="d-name"></div>
+        <div id="d-addr"></div>
+        <div id="d-tags"></div>
+        <div id="d-amenities"></div>
+        <div id="d-hours"></div>
+      </div>
+    </div>
+
+    <!-- Mobile slide-up panel -->
+    <div id="panel">
+      <div id="panel-handle"></div>
+      <button id="pclose">&#215;</button>
+      <div id="pinner">
+        <div id="p-name"></div>
+        <div id="p-addr"></div>
+        <div id="p-tags"></div>
+        <div id="p-amenities"></div>
+        <div id="p-hours"></div>
+      </div>
+    </div>
+
+    <div id="loading"><div class="spinner"></div><p>Fetching live POPS data…</p></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+const FALLBACK=[
+  {name:"Paley Park",address:"3 E 53rd St",borough:"Manhattan",neighborhood:"Midtown",latitude:"40.7598",longitude:"-73.9745",space_type:"Vest Pocket Park",indoor_outdoor:"Outdoor",seating:"Yes",trees_planting:"Yes",food_service:"No",public_restroom:"No",water_feature:"Yes",hours_details:"8am–8pm daily"},
+  {name:"Zuccotti Park",address:"Broadway & Liberty St",borough:"Manhattan",neighborhood:"Financial District",latitude:"40.7072",longitude:"-74.0113",space_type:"Plaza",indoor_outdoor:"Outdoor",seating:"Yes",trees_planting:"Yes",food_service:"No",public_restroom:"No",water_feature:"No",hours_details:"24 hours"},
+  {name:"Greenacre Park",address:"217 E 51st St",borough:"Manhattan",neighborhood:"Midtown East",latitude:"40.7563",longitude:"-73.9692",space_type:"Vest Pocket Park",indoor_outdoor:"Outdoor",seating:"Yes",trees_planting:"Yes",food_service:"No",public_restroom:"No",water_feature:"Yes",hours_details:"8am–7:45pm daily"},
+  {name:"IBM Garden Plaza",address:"590 Madison Ave",borough:"Manhattan",neighborhood:"Midtown",latitude:"40.7617",longitude:"-73.9729",space_type:"Atrium",indoor_outdoor:"Indoor",seating:"Yes",trees_planting:"Yes",food_service:"Yes",public_restroom:"Yes",water_feature:"No",hours_details:"8am–10pm daily"},
+  {name:"World Financial Center Winter Garden",address:"220 Vesey St",borough:"Manhattan",neighborhood:"Financial District",latitude:"40.7115",longitude:"-74.0155",space_type:"Atrium",indoor_outdoor:"Indoor",seating:"Yes",trees_planting:"Yes",food_service:"Yes",public_restroom:"Yes",water_feature:"No",hours_details:"7am–11pm daily"},
+  {name:"MetroTech Commons",address:"333 Jay St",borough:"Brooklyn",neighborhood:"Downtown Brooklyn",latitude:"40.6924",longitude:"-73.9874",space_type:"Plaza",indoor_outdoor:"Outdoor",seating:"Yes",trees_planting:"Yes",food_service:"Yes",public_restroom:"No",water_feature:"No",hours_details:"24 hours"},
+  {name:"Seagram Building Plaza",address:"375 Park Ave",borough:"Manhattan",neighborhood:"Midtown East",latitude:"40.7582",longitude:"-73.9732",space_type:"Plaza",indoor_outdoor:"Outdoor",seating:"Yes",trees_planting:"No",food_service:"No",public_restroom:"No",water_feature:"Yes",hours_details:"24 hours"},
+  {name:"Time Warner Center Atrium",address:"10 Columbus Circle",borough:"Manhattan",neighborhood:"Upper West Side",latitude:"40.7683",longitude:"-73.9826",space_type:"Atrium",indoor_outdoor:"Indoor",seating:"Yes",trees_planting:"No",food_service:"Yes",public_restroom:"Yes",water_feature:"No",hours_details:"7am–11pm daily"},
+  {name:"Socrates Sculpture Park",address:"32-01 Vernon Blvd",borough:"Queens",neighborhood:"Long Island City",latitude:"40.7736",longitude:"-73.9364",space_type:"Park",indoor_outdoor:"Outdoor",seating:"Yes",trees_planting:"Yes",food_service:"No",public_restroom:"Yes",water_feature:"No",hours_details:"10am–dusk daily"},
+  {name:"One Liberty Plaza",address:"165 Broadway",borough:"Manhattan",neighborhood:"Financial District",latitude:"40.7097",longitude:"-74.0119",space_type:"Plaza",indoor_outdoor:"Outdoor",seating:"Yes",trees_planting:"No",food_service:"Yes",public_restroom:"No",water_feature:"No",hours_details:"24 hours"},
+];
+
+const AMENITIES=[
+  {key:'seating',label:'Seating'},
+  {key:'trees_planting',label:'Trees / plants'},
+  {key:'food_service',label:'Food service'},
+  {key:'public_restroom',label:'Restrooms'},
+  {key:'water_feature',label:'Water feature'},
+];
+
+const FILTER_MAP={
+  outdoor: r=>nv(r.indoor_outdoor)==='outdoor',
+  indoor:  r=>nv(r.indoor_outdoor)==='indoor',
+  seating: r=>isY(r.seating),
+  trees:   r=>isY(r.trees_planting),
+  food:    r=>isY(r.food_service),
+  restrooms:r=>isY(r.public_restroom),
+  water:   r=>isY(r.water_feature),
+};
+
+function nv(v){return(v||'').toLowerCase().trim()}
+function isY(v){const x=nv(v);return x==='yes'||x==='y'||x==='true'||x==='1'}
+function isMobile(){return window.innerWidth<=640}
+
+const map=L.map('map',{zoomControl:false}).setView([40.745,-73.985],12);
+L.control.zoom({position:'bottomright'}).addTo(map);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
+  attribution:'&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> &copy; <a href="https://carto.com">CARTO</a> | <a href="https://data.cityofnewyork.us">NYC Open Data</a>',
+  maxZoom:19
+}).addTo(map);
+
+let allData=[],filtered=[],markers=[],activeFilter='all',searchQ='',selNbhd='',activeItem=null;
+
+function makeIcon(indoor,active){
+  const c=indoor?'#2563a8':'#1a9e72';
+  const w=active?24:18,h=active?30:23;
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 22 28">
+    <path d="M11 0C4.9 0 0 4.9 0 11c0 7.7 11 17 11 17S22 18.7 22 11C22 4.9 17.1 0 11 0z" fill="${c}" opacity="${active?1:.85}"/>
+    <circle cx="11" cy="10.5" r="${active?5.5:4.5}" fill="white" opacity=".97"/>
+  </svg>`;
+  return L.divIcon({html:svg,iconSize:[w,h],iconAnchor:[w/2,h],popupAnchor:[0,-h],className:''});
+}
+
+function amenityRows(r,cls){
+  return AMENITIES.map(a=>`<div class="${cls}"><span class="dot ${isY(r[a.key])?'dy':'dn'}"></span>${a.label}</div>`).join('');
+}
+
+function renderTags(r,prefix){
+  const ind=nv(r.indoor_outdoor)==='indoor';
+  return `<span class="${prefix}-tag ${prefix}-tag-${ind?'in':'out'}">${ind?'Indoors':'Outdoors'}</span>`+
+    (r.space_type?`<span class="${prefix}-tag ${prefix}-tag-type">${r.space_type}</span>`:'')+
+    (r.neighborhood?`<span class="${prefix}-tag ${prefix}-tag-type">${r.neighborhood}</span>`:'');
+}
+
+function hoursHTML(r){
+  const h=r.hours_details||r.hours||r.public_hours||'';
+  return h?`<strong>Hours:</strong> ${h}`:'Hours not listed';
+}
+
+function selectSpace(r,mo){
+  // detail card
+  document.getElementById('d-name').textContent=r.name||r.building_name||'Unnamed space';
+  document.getElementById('d-addr').textContent=[r.address,r.borough].filter(Boolean).join(', ');
+  document.getElementById('d-tags').innerHTML=renderTags(r,'dtag');
+  document.getElementById('d-amenities').innerHTML=amenityRows(r,'dam');
+  document.getElementById('d-hours').innerHTML=hoursHTML(r);
+  document.getElementById('detail').classList.add('show');
+  // list highlight
+  document.querySelectorAll('.space-item').forEach(el=>el.classList.remove('active'));
+  if(mo&&mo.listEl){mo.listEl.classList.add('active');mo.listEl.scrollIntoView({block:'nearest'})}
+  // pin
+  if(activeItem&&activeItem!==mo) activeItem.layer.setIcon(makeIcon(nv(activeItem.r.indoor_outdoor)==='indoor',false));
+  activeItem=mo;
+  if(mo) mo.layer.setIcon(makeIcon(nv(r.indoor_outdoor)==='indoor',true));
+}
+
+function openPanel(r){
+  document.getElementById('p-name').textContent=r.name||r.building_name||'Unnamed space';
+  document.getElementById('p-addr').textContent=[r.address,r.borough].filter(Boolean).join(', ');
+  document.getElementById('p-tags').innerHTML=renderTags(r,'ptag');
+  document.getElementById('p-amenities').innerHTML=amenityRows(r,'pam');
+  document.getElementById('p-hours').innerHTML=hoursHTML(r);
+  document.getElementById('panel').classList.add('open');
+}
+
+function closeDetail(){
+  document.getElementById('detail').classList.remove('show');
+  if(activeItem){activeItem.layer.setIcon(makeIcon(nv(activeItem.r.indoor_outdoor)==='indoor',false));activeItem=null;}
+  document.querySelectorAll('.space-item').forEach(el=>el.classList.remove('active'));
+}
+function closePanel(){document.getElementById('panel').classList.remove('open')}
+
+document.getElementById('detail-close').addEventListener('click',closeDetail);
+document.getElementById('pclose').addEventListener('click',closePanel);
+map.on('click',()=>{closeDetail();closePanel();});
+
+function buildList(){
+  const list=document.getElementById('list');
+  list.innerHTML='';
+  if(!filtered.length){
+    list.innerHTML='<div id="list-empty">No spaces match your filters.<br/>Try adjusting the search or amenity filters above.</div>';
+    return;
+  }
+  const frag=document.createDocumentFragment();
+  filtered.forEach(({r,mo})=>{
+    const el=document.createElement('div');
+    el.className='space-item';
+    const ind=nv(r.indoor_outdoor)==='indoor';
+    el.innerHTML=`<div class="si-name">${r.name||r.building_name||'Unnamed'}</div>
+      <div class="si-addr">${[r.address,r.borough].filter(Boolean).join(', ')}</div>
+      <div class="si-tags">
+        <span class="si-tag ${ind?'si-tag-in':'si-tag-out'}">${ind?'Indoors':'Outdoors'}</span>
+        ${r.space_type?`<span class="si-tag si-tag-type">${r.space_type}</span>`:''}
+      </div>`;
+    el.addEventListener('click',()=>{
+      const lat=parseFloat(r.latitude||r.lat),lng=parseFloat(r.longitude||r.long||r.lng);
+      if(lat&&lng) map.panTo([lat,lng],{animate:true,duration:.4});
+      selectSpace(r,mo);
+    });
+    if(mo) mo.listEl=el;
+    frag.appendChild(el);
+  });
+  list.appendChild(frag);
+}
+
+function applyFilters(){
+  const q=searchQ.toLowerCase();
+  filtered=[];
+  markers.forEach(mo=>{
+    const r=mo.r;
+    const mS=!q||(r.name||'').toLowerCase().includes(q)||(r.address||'').toLowerCase().includes(q)||(r.neighborhood||'').toLowerCase().includes(q)||(r.borough||'').toLowerCase().includes(q);
+    const mN=!selNbhd||(r.neighborhood||'')===selNbhd;
+    const mF=activeFilter==='all'||(FILTER_MAP[activeFilter]&&FILTER_MAP[activeFilter](r));
+    if(mS&&mN&&mF){map.addLayer(mo.layer);filtered.push({r,mo});}
+    else map.removeLayer(mo.layer);
+  });
+  document.getElementById('shown-count').textContent=filtered.length;
+  document.getElementById('mob-status').textContent=`${filtered.length} of ${allData.length} spaces`;
+  buildList();
+}
+
+function buildMarkers(){
+  markers.forEach(({layer})=>{try{map.removeLayer(layer)}catch(e){}});
+  markers=[];
+  allData.forEach(r=>{
+    const lat=parseFloat(r.latitude||r.lat),lng=parseFloat(r.longitude||r.long||r.lng);
+    if(!lat||!lng||isNaN(lat)||isNaN(lng))return;
+    const ind=nv(r.indoor_outdoor)==='indoor';
+    const layer=L.marker([lat,lng],{icon:makeIcon(ind,false)});
+    const mo={layer,r,listEl:null};
+    layer.on('click',e=>{
+      e.originalEvent.stopPropagation();
+      if(isMobile()) openPanel(r);
+      else selectSpace(r,mo);
+    });
+    map.addLayer(layer);
+    markers.push(mo);
+  });
+  applyFilters();
+}
+
+function populateNeighborhoods(sel){
+  const nbhds=[...new Set(allData.map(r=>r.neighborhood||'').filter(Boolean))].sort();
+  nbhds.forEach(nb=>{const o=document.createElement('option');o.value=nb;o.textContent=nb;sel.appendChild(o)});
+}
+
+async function loadData(){
+  try{
+    const res=await fetch('https://data.cityofnewyork.us/resource/rvih-nhyn.json?$limit=600');
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    const data=await res.json();
+    if(!data||!data.length)throw new Error('empty');
+    allData=data;
+  }catch(e){
+    console.warn('Live fetch failed:',e);
+    allData=FALLBACK;
+    const b=document.getElementById('err-banner');
+    b.style.display='block';
+    setTimeout(()=>{b.style.display='none'},5000);
+  }
+  document.getElementById('loading').style.display='none';
+  populateNeighborhoods(document.getElementById('nbhd'));
+  populateNeighborhoods(document.getElementById('mob-nbhd'));
+  buildMarkers();
+}
+
+// Desktop controls
+document.getElementById('search').addEventListener('input',e=>{searchQ=e.target.value;applyFilters()});
+document.getElementById('nbhd').addEventListener('change',e=>{selNbhd=e.target.value;applyFilters()});
+document.querySelectorAll('#filters .fb').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('#filters .fb').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');activeFilter=b.dataset.f;applyFilters();
+  });
+});
+
+// Mobile controls
+document.getElementById('mob-search').addEventListener('input',e=>{searchQ=e.target.value;applyFilters()});
+document.getElementById('mob-nbhd').addEventListener('change',e=>{selNbhd=e.target.value;applyFilters()});
+document.querySelectorAll('#mob-filters .fb').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('#mob-filters .fb').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');activeFilter=b.dataset.f;applyFilters();
+  });
+});
+
+loadData();
+</script>
+</body>
+</html>
