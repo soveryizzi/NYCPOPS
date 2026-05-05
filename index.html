@@ -15,157 +15,146 @@
   --dark:#242325;--white:#fff;
   --border:#dde8e6;--bg:#f4faf8;
   --ink:#242325;--ink2:#4a4a4a;--ink3:#7a8c88;
-  --nav:52px;--sidebar:320px;
+  --radius:8px;--sidebar:320px;
   --font:'Helvetica Neue',Helvetica,Arial,sans-serif;
 }
-html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden}
 
-/* ════════════════════════════════════════
-   SHARED NAV BAR (desktop + mobile)
-════════════════════════════════════════ */
-#navbar{
-  position:fixed;top:0;left:0;right:0;
-  height:var(--nav);z-index:1000;
-  background:var(--green);
-  display:flex;align-items:center;
-  gap:8px;
-  padding:0 16px;
-  box-shadow:0 2px 12px rgba(0,0,0,.15);
-  width:100%;
-  min-width:0;
-}
-#nav-title{
-  font-size:15px;font-weight:700;color:var(--white);
-  white-space:nowrap;letter-spacing:-.2px;flex-shrink:0;
-  line-height:1.2;
-}
-#nav-title span{color:var(--yellow)}
-#nav-title small{
-  display:block;font-size:9px;font-weight:400;
-  color:rgba(255,255,255,.4);letter-spacing:0;margin-top:1px;
-}
+/* ── LAYOUT ── */
+#app{display:flex;height:100vh;height:100dvh}
 
-/* Search — takes remaining space */
-#nav-search-wrap{flex:1 1 0;position:relative;min-width:0;}
-#nav-search{
-  width:100%;
-  padding:7px 32px 7px 14px;
-  font-size:13px;font-family:var(--font);
-  border:none;border-radius:20px;
-  background:rgba(255,255,255,.18);
-  color:var(--white);outline:none;
-  transition:background .15s;
-  min-width:0;
-}
-#nav-search::placeholder{color:rgba(255,255,255,.5)}
-#nav-search:focus{background:rgba(255,255,255,.26)}
-#nav-search-clear{
-  position:absolute;right:10px;top:50%;transform:translateY(-50%);
-  background:none;border:none;color:rgba(255,255,255,.6);
-  font-size:16px;cursor:pointer;display:none;line-height:1;padding:2px;
-}
-#nav-search-clear.show{display:block}
-
-/* Borough select */
-#nav-boro{
-  padding:6px 8px;font-size:12px;font-family:var(--font);
-  border:1.5px solid rgba(255,255,255,.3);border-radius:20px;
-  background:transparent;color:var(--white);outline:none;cursor:pointer;
-  flex-shrink:0;max-width:130px;
-}
-#nav-boro option{color:var(--ink);background:var(--white)}
-
-/* Hamburger */
-#hamburger{
-  width:36px;height:36px;border-radius:10px;flex-shrink:0;
-  background:rgba(255,255,255,.15);border:none;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;
-  cursor:pointer;transition:background .15s;
-}
-#hamburger:hover{background:rgba(255,255,255,.25)}
-#hamburger span{width:18px;height:2px;background:var(--white);border-radius:1px;transition:all .2s}
-#hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
-#hamburger.open span:nth-child(2){opacity:0}
-#hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-
-/* Mobile: tighten nav title on small screens */
-@media(max-width:400px){
-  #nav-title small{display:none}
-  #nav-title{font-size:13px}
-}
-
-/* ════════════════════════════════════════
-   FILTER DRAWER (drops from navbar)
-════════════════════════════════════════ */
-#filter-drawer{
-  position:fixed;top:var(--nav);left:0;right:0;z-index:990;
-  background:var(--white);border-bottom:1px solid var(--border);
-  padding:14px 16px 16px;
-  transform:translateY(-110%);
-  transition:transform .22s cubic-bezier(.32,.72,0,1);
-  box-shadow:0 4px 20px rgba(0,0,0,.1);
-}
-#filter-drawer.open{transform:translateY(0)}
-#fd-label{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px}
-#fd-filters{display:flex;flex-wrap:wrap;gap:6px}
-.fb{padding:5px 13px;font-size:12px;font-family:var(--font);border-radius:20px;border:1.5px solid var(--border);background:var(--white);color:var(--ink2);cursor:pointer;transition:all .12s;white-space:nowrap}
-.fb:hover{border-color:var(--green);color:var(--green)}
-.fb.on{background:var(--green);color:var(--white);border-color:var(--green)}
-#fd-overlay{position:fixed;inset:0;z-index:980;display:none}
-#fd-overlay.show{display:block}
-
-/* ════════════════════════════════════════
-   MAIN LAYOUT
-════════════════════════════════════════ */
-#app{
-  display:flex;
-  padding-top:var(--nav);
-  height:100vh;height:100dvh;
-}
-
-/* ── DESKTOP SIDEBAR ── */
+/* ── SIDEBAR ── */
 #sidebar{
   width:var(--sidebar);flex-shrink:0;
   display:flex;flex-direction:column;
   background:var(--white);
   border-right:1px solid var(--border);
   overflow:hidden;
+  border-radius:0 32px 32px 0;
+  box-shadow:4px 0 24px rgba(0,0,0,.08);
 }
+
+/* Green header */
+#sb-header{
+  background:var(--green);
+  padding:20px 16px 14px;
+  flex-shrink:0;
+  border-radius:0 32px 0 0;
+}
+#sb-title-row{display:flex;align-items:flex-start;justify-content:space-between}
+#sb-title{font-size:26px;font-weight:800;color:var(--white);letter-spacing:-.4px;line-height:1}
+#sb-title span{color:var(--yellow)}
+#sb-timestamp{font-size:10px;color:rgba(255,255,255,.4);margin-top:4px;display:block}
+#sb-icon-row{display:flex;gap:7px;padding-top:2px;flex-shrink:0}
+.sb-icon-btn{
+  width:36px;height:36px;border-radius:10px;
+  background:rgba(255,255,255,.18);border:none;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:background .15s;position:relative;
+}
+.sb-icon-btn:hover,.sb-icon-btn.active{background:rgba(255,255,255,.32)}
+.sb-icon-badge{
+  position:absolute;top:-5px;right:-5px;
+  width:16px;height:16px;border-radius:50%;
+  background:var(--yellow);color:var(--dark);
+  font-size:10px;font-weight:800;
+  display:none;align-items:center;justify-content:center;
+  border:2px solid var(--green);
+}
+.sb-icon-badge.show{display:flex}
+
+/* Search panel */
+#sb-search-panel{overflow:hidden;max-height:0;transition:max-height .2s ease}
+#sb-search-panel.open{max-height:52px;margin-top:10px}
+#sb-search-wrap{position:relative}
+#nav-search{
+  width:100%;padding:9px 34px 9px 12px;
+  font-size:14px;font-family:var(--font);
+  border:none;border-radius:8px;
+  background:rgba(255,255,255,.2);color:var(--white);outline:none;
+}
+#nav-search::placeholder{color:rgba(255,255,255,.55)}
+#nav-search:focus{background:rgba(255,255,255,.28)}
+#nav-search-clear{
+  position:absolute;right:8px;top:50%;transform:translateY(-50%);
+  background:none;border:none;color:rgba(255,255,255,.7);
+  font-size:18px;cursor:pointer;display:none;line-height:1;
+}
+#nav-search-clear.show{display:block}
+
+/* Filter panel */
+#sb-filters{overflow:hidden;max-height:0;transition:max-height .25s cubic-bezier(.32,.72,0,1)}
+#sb-filters.open{max-height:340px;overflow-y:auto;margin-top:8px}
+
+/* Filter sections inside green header */
+.fd-section{padding:10px 0 8px;border-bottom:1px solid rgba(255,255,255,.15)}
+.fd-section:last-of-type{border-bottom:none;padding-bottom:2px}
+.fd-section-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:7px}
+.fd-chips{display:flex;flex-wrap:wrap;gap:5px}
+.fc{
+  padding:5px 11px;font-size:12px;font-weight:500;
+  font-family:var(--font);border-radius:20px;
+  border:1.5px solid rgba(255,255,255,.3);
+  background:rgba(255,255,255,.12);color:rgba(255,255,255,.88);
+  cursor:pointer;transition:all .12s;white-space:nowrap;
+}
+.fc:hover{border-color:rgba(255,255,255,.7);background:rgba(255,255,255,.22)}
+.fc.on{background:rgba(255,255,255,.9);color:var(--green-text);border-color:transparent;font-weight:600}
+#fd-amenities .fc{border-radius:8px;font-size:11.5px;display:flex;align-items:center;gap:4px}
+#fd-amenities .fc::before{content:'○';font-size:11px;color:rgba(255,255,255,.4)}
+#fd-amenities .fc.on::before{content:'✓';color:var(--green);font-weight:700}
+#fd-amenities .fc.on{background:rgba(255,255,255,.9);color:var(--green-text)}
+
+/* Count bar */
 #sb-meta{
-  padding:10px 14px 8px;border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+  padding:8px 14px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:8px;flex-shrink:0;
 }
-#sb-meta span{font-size:11px;color:var(--ink3)}
-#sb-meta strong{color:var(--ink);font-weight:600}
-#sb-version{font-size:10px;color:var(--ink3)}
+#sb-meta span{font-size:13px;color:var(--ink3)}
+#sb-meta strong{font-size:14px;color:var(--ink);font-weight:700}
+#fd-active-count{font-size:12px;color:var(--ink3)}
+#fd-active-count strong{color:var(--green)}
+#sb-clear{
+  font-size:12px;font-family:var(--font);font-weight:600;
+  background:var(--green-light);color:var(--green-text);
+  border:1px solid var(--green);border-radius:20px;
+  padding:3px 10px;cursor:pointer;transition:all .15s;margin-left:auto;
+}
+#sb-clear:hover{background:var(--green);color:var(--white)}
 
-#legend{padding:8px 14px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:14px}
-.leg{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink2)}
-.leg-icon{width:20px;height:20px;flex-shrink:0}
+/* Legend */
 
-#list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
-#list::-webkit-scrollbar{width:3px}
-#list::-webkit-scrollbar-track{background:transparent}
-#list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 
-.space-item{padding:11px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;border-left:3px solid transparent}
-.space-item:hover{background:var(--green-light)}
-.space-item.active{background:var(--green-light);border-left-color:var(--green)}
+/* List */
+#list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:8px 10px;display:flex;flex-direction:column;gap:6px;scrollbar-width:none}
+#list::-webkit-scrollbar{display:none}
+#list-empty{padding:36px 18px;text-align:center;color:var(--ink3);font-size:14px;line-height:1.7}
+
+/* Space cards */
+.space-item{
+  padding:12px 14px;border-radius:12px;
+  border:2px solid #b2ddd6;border-left:3px solid #b2ddd6;
+  background:var(--white);cursor:pointer;
+  transition:background .12s,border-color .12s,box-shadow .12s;
+  box-shadow:0 1px 4px rgba(0,0,0,.04);
+}
+.space-item:hover{background:var(--green-light);border-color:var(--green);border-left-color:var(--green);box-shadow:0 2px 8px rgba(0,114,99,.1)}
+.space-item.active{background:var(--green-light);border-color:var(--green);border-left-color:var(--green);box-shadow:0 3px 14px rgba(0,114,99,.15)}
 .space-item.active .si-name{color:var(--green-text)}
-.si-row{display:flex;align-items:flex-start;gap:8px}
-.si-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:3px}
-.si-dot-out{background:var(--green)}.si-dot-in{background:var(--blue)}
+.si-row{display:flex;align-items:flex-start;gap:9px}
+.si-icon{width:20px;height:27px;flex-shrink:0;margin-top:0}
+.si-icon-sq{width:20px;height:20px;flex-shrink:0;margin-top:3px}
 .si-content{flex:1;min-width:0}
-.si-name{font-size:12.5px;font-weight:600;color:var(--ink);margin-bottom:2px;line-height:1.3}
-.si-addr{font-size:11px;color:var(--ink3);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.si-tags{display:flex;gap:4px;flex-wrap:wrap}
-.si-tag{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:500}
+.si-name{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:3px;line-height:1.3}
+.si-addr{font-size:12px;color:var(--ink3);margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.si-tags{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.si-tag{font-size:10.5px;padding:2px 8px;border-radius:20px;font-weight:600}
+.si-tag-boro{background:transparent;color:var(--ink2);border:1.5px solid var(--yellow)}
 .si-tag-out{background:var(--green-light);color:var(--green-text)}
 .si-tag-in{background:var(--blue-light);color:var(--blue-text)}
 .si-tag-type{background:var(--slate-light);color:var(--ink2)}
-#list-empty{padding:36px 18px;text-align:center;color:var(--ink3);font-size:13px;line-height:1.7}
 
-/* ── MAP AREA ── */
+/* ── MAP ── */
 #mapwrap{flex:1;position:relative;overflow:hidden}
 #map{width:100%;height:100%}
 
@@ -174,151 +163,140 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
   position:absolute;top:16px;right:16px;width:300px;
   background:var(--white);border-radius:32px;
   box-shadow:0 8px 32px rgba(0,114,99,.15);
-  z-index:600;display:none;overflow:hidden;
-  animation:fadeUp .2s ease;
+  z-index:600;display:none;overflow:hidden;animation:fadeUp .2s ease;
+  flex-direction:column;
 }
 @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-#detail.show{display:block}
+#detail.show{display:flex}
 #detail-close{
-  position:absolute;top:12px;right:14px;
-  width:28px;height:28px;border-radius:50%;
+  position:absolute;top:12px;right:14px;width:32px;height:32px;border-radius:50%;
   display:flex;align-items:center;justify-content:center;
-  font-size:16px;cursor:pointer;
-  color:rgba(255,255,255,.8);background:rgba(0,0,0,.15);
-  border:none;font-family:var(--font);z-index:1;
+  font-size:18px;cursor:pointer;color:rgba(255,255,255,.8);background:rgba(0,0,0,.15);border:none;font-family:var(--font);z-index:1;
 }
 #detail-close:hover{background:rgba(0,0,0,.28)}
-#d-header{padding:20px 20px 16px}
+#d-header{padding:16px 20px 16px}
 #d-header.out{background:var(--green)}
 #d-header.in{background:var(--blue)}
-#d-badge{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:rgba(255,255,255,.75);margin-bottom:8px}
-#d-badge .badge-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.8)}
-#d-name{font-size:15px;font-weight:700;color:var(--white);margin-bottom:3px;line-height:1.3;padding-right:28px}
-#d-addr{font-size:11px;color:rgba(255,255,255,.6);line-height:1.4}
-#detail-body{padding:16px 20px 20px}
-#d-type-row{margin-bottom:12px}
-.dtype{display:inline-block;font-size:11px;padding:4px 12px;border-radius:20px;font-weight:600}
-.dtype-out{background:var(--green-light);color:var(--green-text)}
-.dtype-in{background:var(--blue-light);color:var(--blue-text)}
-#d-amenities-label{font-size:9.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px}
-#d-amenities{display:grid;grid-template-columns:1fr 1fr;gap:7px 8px;margin-bottom:14px}
-.dam{display:flex;align-items:center;gap:7px;font-size:12px}
+/* Tag row in detail header */
+#d-tag-row{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:10px}
+.d-htag{font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px}
+.d-htag-boro{background:transparent;color:rgba(255,255,255,.9);border:1.5px solid var(--yellow)}
+.d-htag-out{background:rgba(255,255,255,.25);color:var(--white)}
+.d-htag-in{background:rgba(255,255,255,.25);color:var(--white)}
+.d-htag-type{background:rgba(255,255,255,.12);color:rgba(255,255,255,.75)}
+#d-name{font-size:20px;font-weight:800;color:var(--white);margin-bottom:6px;line-height:1.2;padding-right:36px}
+#d-addr{font-size:12px;color:rgba(255,255,255,.65);line-height:1.4}
+#detail-body{padding:14px 18px 20px;overflow-y:auto;flex:1}
+/* dtype no longer used — removed */
+#d-amenities-label{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px}
+#d-amenities{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.dam{display:flex;align-items:center;gap:8px;font-size:13px}
 .dam-yes{color:var(--ink)}.dam-no{color:var(--ink3)}
-.chk{width:18px;height:18px;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700}
+.chk{width:18px;height:18px;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;font-weight:700}
 .chk-yes{background:var(--green-light);color:var(--green)}
 .chk-no{background:#f0f0f0;color:#bbb}
-#d-hours{font-size:12px;color:var(--ink2);background:var(--yellow-light);border:1px solid #e8c040;border-radius:10px;padding:9px 12px;line-height:1.5;margin-bottom:10px}
-#d-hours .hours-label{font-size:9.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:2px}
-#d-hours .hours-val{font-weight:600;color:var(--ink);display:block;margin-bottom:5px}
-.hours-src{display:inline-block;font-size:10.5px;color:var(--green-text);text-decoration:none;border-bottom:1px solid var(--green);line-height:1.3;margin-top:2px}
+.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.dy{background:var(--green)}.dn{background:#ccd6d4}
+#d-hours{font-size:13px;color:var(--ink2);background:var(--yellow-light);border:1px solid #e8c040;border-radius:14px;padding:11px 14px;line-height:1.5;margin-bottom:12px}
+#d-hours .hours-label{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:3px}
+#d-hours .hours-val{font-weight:600;color:var(--ink);font-size:14px;display:block;margin-bottom:5px}
+.hours-src{display:inline-block;font-size:13px;color:var(--green-text);text-decoration:none;border-bottom:1px solid var(--green);line-height:1.3}
 .hours-src:hover{color:var(--green)}
-#d-ada{display:flex;align-items:center;gap:8px;font-size:12px;border-radius:10px;padding:9px 12px}
+#d-ada{display:flex;align-items:center;gap:10px;font-size:13px;border-radius:14px;padding:11px 14px}
 #d-ada.ada-yes{background:var(--blue-light);color:var(--blue-text)}
 #d-ada.ada-no{background:#f5f5f5;color:var(--ink3)}
 #d-ada.ada-partial{background:var(--slate-light);color:#4a6a7a}
-.ada-icon{font-size:16px;flex-shrink:0}
-.ada-text strong{display:block;font-size:11px;font-weight:600;margin-bottom:1px}
-.ada-text span{font-size:10.5px;opacity:.8}
+.ada-icon{font-size:18px;flex-shrink:0}
+.ada-text strong{display:block;font-size:13px;font-weight:700;margin-bottom:1px}
+.ada-text span{font-size:12px;opacity:.8}
+.apops-btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;margin-top:12px;padding:11px 16px;
+  background:var(--dark);color:var(--white);
+  font-size:14px;font-weight:600;font-family:var(--font);
+  border:none;border-radius:10px;text-decoration:none;transition:background .15s;
+}
+.apops-btn:hover{background:#3a3838}
 
-/* ════════════════════════════════════════
-   MOBILE — full-screen layout
-════════════════════════════════════════ */
-
-/* Mobile view toggle bar */
+/* ── MOBILE VIEW TOGGLE ── */
 #mob-view-bar{
-  display:none;
-  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
-  z-index:900;
-  background:var(--dark);
-  border-radius:24px;
-  padding:4px;
-  box-shadow:0 4px 20px rgba(0,0,0,.25);
-  gap:2px;
+  display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  z-index:900;background:var(--dark);border-radius:24px;padding:4px;
+  box-shadow:0 4px 20px rgba(0,0,0,.25);gap:2px;
 }
-.vbtn{
-  padding:8px 20px;font-size:13px;font-weight:600;
-  font-family:var(--font);border:none;border-radius:20px;
-  cursor:pointer;transition:all .15s;color:rgba(255,255,255,.6);
-  background:transparent;
-}
+.vbtn{padding:8px 20px;font-size:14px;font-weight:600;font-family:var(--font);border:none;border-radius:20px;cursor:pointer;transition:all .15s;color:rgba(255,255,255,.6);background:transparent}
 .vbtn.active{background:var(--white);color:var(--ink)}
 
-/* Mobile search results list */
-#mob-results{
-  display:none;
-  position:fixed;top:var(--nav);left:0;right:0;bottom:0;
-  z-index:700;background:var(--white);overflow-y:auto;
-  -webkit-overflow-scrolling:touch;
-}
+/* ── MOBILE RESULTS LIST ── */
+#mob-results{display:none;position:fixed;top:52px;left:0;right:0;bottom:0;z-index:700;background:var(--white);overflow-y:auto;-webkit-overflow-scrolling:touch}
 #mob-results.show{display:block}
-#mob-results-header{
-  padding:10px 14px 8px;border-bottom:1px solid var(--border);
-  font-size:11px;color:var(--ink3);
-  position:sticky;top:0;background:var(--white);z-index:1;
-}
+#mob-results-header{padding:10px 14px 8px;border-bottom:1px solid var(--border);font-size:14px;color:var(--ink3);position:sticky;top:0;background:var(--white);z-index:1}
 #mob-results-header strong{color:var(--ink)}
+#mob-results-list{padding:8px 10px;display:flex;flex-direction:column;gap:6px}
+#mob-status{font-size:12px;color:var(--ink3)}
 
-/* Mobile panel — 50% height */
+/* ── MOBILE PANEL ── */
 #panel{
-  position:fixed;bottom:0;left:0;right:0;
-  z-index:800;background:var(--white);
-  border-radius:32px 32px 0 0;
-  transform:translateY(100%);
-  transition:transform .3s cubic-bezier(.32,.72,0,1);
-  height:50%;
-  overflow-y:auto;-webkit-overflow-scrolling:touch;
-  display:none;
-  box-shadow:0 -4px 32px rgba(0,0,0,.12);
+  position:fixed;bottom:0;left:0;right:0;z-index:800;
+  background:var(--white);border-radius:32px 32px 0 0;
+  transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,0,1);
+  height:60%;display:flex;flex-direction:column;
+  box-shadow:0 -4px 32px rgba(0,0,0,.12);overflow:hidden;display:none;
 }
 #panel.open{transform:translateY(0)}
-#panel-handle{width:40px;height:4px;background:rgba(255,255,255,.4);border-radius:2px;margin:14px auto 0;position:relative;z-index:3}
-#pclose{
-  position:absolute;top:12px;right:16px;
-  width:28px;height:28px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-size:16px;cursor:pointer;
-  color:rgba(255,255,255,.8);background:rgba(0,0,0,.15);
-  border:none;font-family:var(--font);z-index:3;
-}
-#pclose:hover{background:rgba(0,0,0,.28)}
-#p-header{padding:16px 20px 16px;margin-top:0}
-#p-header.out{background:var(--green);border-radius:32px 32px 0 0}
-#p-header.in{background:var(--blue);border-radius:32px 32px 0 0}
-#p-badge{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:rgba(255,255,255,.75);margin-bottom:8px}
-#p-badge .badge-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.8)}
-#p-name{font-size:18px;font-weight:700;color:var(--white);margin-bottom:3px;line-height:1.3;padding-right:34px}
-#p-addr{font-size:12px;color:rgba(255,255,255,.6);line-height:1.4}
-#p-body{padding:16px 20px 36px}
-#p-type-row{margin-bottom:14px}
-.ptype{display:inline-block;font-size:11px;padding:4px 12px;border-radius:20px;font-weight:600}
-.ptype-out{background:var(--green-light);color:var(--green-text)}
-.ptype-in{background:var(--blue-light);color:var(--blue-text)}
-#p-amenities-label{font-size:9.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px}
-#p-amenities{display:grid;grid-template-columns:1fr 1fr;gap:9px 8px;margin-bottom:16px}
+#p-sticky{flex-shrink:0;position:relative;border-radius:32px 32px 0 0;overflow:hidden}
+#p-sticky.out{background:var(--green)}
+#p-sticky.in{background:var(--blue)}
+#panel-handle{width:40px;height:4px;background:rgba(255,255,255,.35);border-radius:2px;margin:12px auto 0;display:block}
+#pclose{position:absolute;top:10px;right:16px;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;color:rgba(255,255,255,.8);background:rgba(0,0,0,.15);border:none;font-family:var(--font);z-index:3}
+#p-header{padding:8px 20px 14px}
+#p-top-row{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:8px}
+.p-htag{font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px}
+.p-htag-boro{background:transparent;color:rgba(255,255,255,.9);border:1.5px solid var(--yellow)}
+.p-htag-out{background:rgba(255,255,255,.22);color:var(--white)}
+.p-htag-in{background:rgba(255,255,255,.22);color:var(--white)}
+.p-htag-type{background:rgba(255,255,255,.12);color:rgba(255,255,255,.75)}
+#p-name{font-size:18px;font-weight:700;color:var(--white);margin-bottom:3px;line-height:1.3;padding-right:36px}
+#p-addr-link{font-size:14px;color:rgba(255,255,255,.65);line-height:1.4;text-decoration:none;display:inline-block}
+#p-addr-link:hover{color:rgba(255,255,255,.9);text-decoration:underline}
+#p-addr-link::after{content:' ↗';font-size:12px;opacity:.7}
+#p-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 18px 32px}
+#p-amenities-label{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px}
+#p-amenities{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
 .pam{display:flex;align-items:center;gap:8px;font-size:13px}
 .pam-yes{color:var(--ink)}.pam-no{color:var(--ink3)}
-#p-hours{font-size:13px;color:var(--ink2);background:var(--yellow-light);border:1px solid #e8c040;border-radius:14px;padding:12px 14px;line-height:1.5;margin-bottom:12px}
+#p-hours{font-size:13px;color:var(--ink2);background:var(--yellow-light);border:1px solid #e8c040;border-radius:14px;padding:11px 14px;line-height:1.5;margin-bottom:12px}
 #p-hours .hours-label{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:3px}
-#p-hours .hours-val{font-weight:600;color:var(--ink);font-size:14px;display:block;margin-bottom:6px}
-#p-ada{display:flex;align-items:center;gap:10px;font-size:13px;border-radius:14px;padding:12px 14px}
+#p-hours .hours-val{font-weight:600;color:var(--ink);font-size:14px;display:block;margin-bottom:5px}
+#p-ada{display:flex;align-items:center;gap:10px;font-size:13px;border-radius:14px;padding:11px 14px}
 #p-ada.ada-yes{background:var(--blue-light);color:var(--blue-text)}
 #p-ada.ada-no{background:#f5f5f5;color:var(--ink3)}
 #p-ada.ada-partial{background:var(--slate-light);color:#4a6a7a}
-.p-ada-icon{font-size:20px;flex-shrink:0}
-.p-ada-text strong{display:block;font-size:12px;font-weight:700;margin-bottom:1px}
-.p-ada-text span{font-size:11px;opacity:.75}
+.p-ada-icon{font-size:18px;flex-shrink:0}
+.p-ada-text strong{display:block;font-size:13px;font-weight:700;margin-bottom:1px}
+.p-ada-text span{font-size:12px;opacity:.75}
+
+/* ── MOBILE TOP BAR ── */
+#mobile-bar{display:none;position:fixed;top:0;left:0;right:0;z-index:500;flex-direction:column;background:var(--white);border-bottom:1px solid var(--border)}
+#mob-brand{padding:10px 14px 8px;background:var(--green)}
+#mob-brand h2{font-size:16px;font-weight:700;color:var(--white)}
+#mob-brand h2 span{color:var(--yellow)}
+#mob-controls{padding:7px 10px;display:flex;flex-direction:column;gap:6px}
+#mob-row1{display:flex;gap:7px}
+#mob-search{flex:1;padding:7px 11px;font-size:14px;font-family:var(--font);border:1.5px solid var(--border);border-radius:20px;background:var(--bg);color:var(--ink);outline:none;min-width:0}
+#mob-search:focus{border-color:var(--green)}
 
 /* ── LOADING / ERROR ── */
-#loading{position:fixed;inset:0;padding-top:var(--nav);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;background:rgba(244,250,248,.94);z-index:950;backdrop-filter:blur(4px)}
-#loading p{font-size:13px;color:var(--ink3)}
+#loading{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;background:rgba(244,250,248,.94);z-index:950;backdrop-filter:blur(4px)}
+#loading p{font-size:14px;color:var(--ink3)}
 .spinner{width:30px;height:30px;border:2.5px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .75s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-#api-error{position:fixed;inset:0;padding-top:var(--nav);display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px;background:rgba(244,250,248,.97);z-index:950;padding:24px;text-align:center}
+#api-error{position:fixed;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px;background:rgba(244,250,248,.97);z-index:950;padding:24px;text-align:center}
 #api-error.show{display:flex}
 .err-icon{font-size:36px}.err-title{font-size:16px;font-weight:700;color:var(--ink)}
-.err-msg{font-size:13px;color:var(--ink3);line-height:1.6;max-width:260px}
-.err-detail{font-size:11px;color:var(--ink3);background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px 12px;max-width:300px;word-break:break-all;font-family:monospace}
-.err-btn{margin-top:4px;padding:10px 24px;background:var(--green);color:var(--white);font-size:13px;font-weight:600;font-family:var(--font);border:none;border-radius:8px;cursor:pointer}
+.err-msg{font-size:14px;color:var(--ink3);line-height:1.6;max-width:260px}
+.err-detail{font-size:12px;color:var(--ink3);background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px 12px;max-width:300px;word-break:break-all;font-family:monospace}
+.err-btn{margin-top:4px;padding:10px 24px;background:var(--green);color:var(--white);font-size:14px;font-weight:600;font-family:var(--font);border:none;border-radius:8px;cursor:pointer}
 .err-btn:hover{background:var(--green-hover)}
 
 /* Leaflet */
@@ -327,117 +305,139 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 .leaflet-control-zoom a:hover{background:var(--green-light)!important;color:var(--green)!important}
 .leaflet-control-attribution{font-size:10px!important;background:rgba(255,255,255,.8)!important}
 
-/* ════════════════════════════════════════
-   RESPONSIVE BREAKPOINTS
-════════════════════════════════════════ */
+/* ── RESPONSIVE ── */
 @media(min-width:641px){
-  /* Desktop: hide mobile-only elements */
   #mob-view-bar{display:none!important}
   #mob-results{display:none!important}
   #panel{display:none!important}
-  #nav-boro{display:flex}
+  #mobile-bar{display:none!important}
 }
-
 @media(max-width:640px){
-  /* Mobile: hide desktop-only elements */
   #sidebar{display:none}
-  #detail{display:none!important}
-  #nav-boro{display:none}
-
-  /* Mobile app fills screen */
-  #app{display:block;padding-top:var(--nav)}
-  #mapwrap{height:100%;position:relative}
-
-  /* Show mobile toggle + panel */
+  #panel{display:flex!important}
   #mob-view-bar{display:flex}
-  #panel{display:block}
+  #mobile-bar{display:flex}
+  html,body,#app{overflow-x:hidden;max-width:100vw}
+  #app{display:block;height:100vh;height:100dvh;width:100%}
+  #mapwrap{position:absolute;top:0;left:0;right:0;bottom:0;width:100%;overflow:hidden}
+  #panel{left:0;right:0;width:100%;max-width:100vw;overflow-x:hidden}
+  #mob-results{left:0;right:0;width:100%;max-width:100vw;overflow-x:hidden}
+  .si-addr{white-space:normal;overflow:visible;text-overflow:unset}
 }
 </style>
 </head>
 <body>
 
-<!-- ═══════════════ NAVBAR ═══════════════ -->
-<nav id="navbar">
-  <div id="nav-title">
-    NYC <span>Public</span> Spaces
-    <small>Last updated: 2026-05-05 00:13:48 EDT</small>
-  </div>
-  <div id="nav-search-wrap">
-    <input id="nav-search" type="text" placeholder="Search spaces, addresses…" autocomplete="off"/>
-    <button id="nav-search-clear">&#215;</button>
-  </div>
-  <select id="nav-boro">
-    <option value="">All boroughs</option>
-    <option value="Manhattan">Manhattan</option>
-    <option value="Brooklyn">Brooklyn</option>
-    <option value="Queens">Queens</option>
-    <option value="Bronx">Bronx</option>
-    <option value="Staten Island">Staten Island</option>
-  </select>
-  <button id="hamburger" aria-label="Filters">
-    <span></span><span></span><span></span>
-  </button>
-</nav>
-
-<!-- ═══════════════ FILTER DRAWER ═══════════════ -->
-<div id="fd-overlay"></div>
-<div id="filter-drawer">
-  <div id="fd-label">Filter by amenity</div>
-  <div id="fd-filters">
-    <button class="fb on" data-f="all">All</button>
-    <button class="fb" data-f="outdoor">Outdoors</button>
-    <button class="fb" data-f="indoor">Indoors</button>
-    <button class="fb" data-f="seating">Seating</button>
-    <button class="fb" data-f="trees">Trees</button>
-    <button class="fb" data-f="food">Food</button>
-    <button class="fb" data-f="restrooms">Restrooms</button>
-    <button class="fb" data-f="water">Water</button>
-  </div>
-</div>
-
-<!-- ═══════════════ MAIN APP ═══════════════ -->
 <div id="app">
 
-  <!-- Desktop sidebar -->
+  <!-- SIDEBAR -->
   <div id="sidebar">
+    <div id="sb-header">
+      <div id="sb-title-row">
+        <div>
+          <div id="sb-title">NYC <span>POPS</span></div>
+          <span id="sb-timestamp">Last updated: 2026-05-05 17:50:20 EDT</span>
+        </div>
+        <div id="sb-icon-row">
+          <button class="sb-icon-btn" id="sb-search-btn" onclick="toggleSearch()" aria-label="Search">
+            <svg width="17" height="17" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="white" stroke-width="1.8"/><path d="M12 12l3.5 3.5" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </button>
+          <button class="sb-icon-btn" id="sb-filter-btn" onclick="toggleSbFilters()" aria-label="Filters">
+            <svg width="17" height="17" viewBox="0 0 18 18" fill="none"><path d="M2 4h14M5 9h8M7.5 14h3" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <span class="sb-icon-badge" id="sb-filter-badge"></span>
+          </button>
+        </div>
+      </div>
+      <div id="sb-search-panel">
+        <div id="sb-search-wrap">
+          <input id="nav-search" type="text" placeholder="Search spaces, addresses…" autocomplete="off"/>
+          <button id="nav-search-clear">&#215;</button>
+        </div>
+      </div>
+      <div id="sb-filters">
+        <div class="fd-section">
+          <div class="fd-section-label">Borough</div>
+          <div class="fd-chips" id="fd-boroughs">
+            <button class="fc" data-b="Manhattan">Manhattan</button>
+            <button class="fc" data-b="Brooklyn">Brooklyn</button>
+            <button class="fc" data-b="Queens">Queens</button>
+            <button class="fc" data-b="Bronx">Bronx</button>
+            <button class="fc" data-b="Staten Island">Staten Island</button>
+          </div>
+        </div>
+        <div class="fd-section">
+          <div class="fd-section-label">Type</div>
+          <div class="fd-chips" id="fd-types">
+            <button class="fc on" data-t="outdoor">Outdoors</button>
+            <button class="fc on" data-t="indoor">Indoors</button>
+          </div>
+        </div>
+        <div class="fd-section">
+          <div class="fd-section-label">Amenities</div>
+          <div class="fd-chips" id="fd-amenities">
+            <button class="fc" data-a="seating">Seating</button>
+            <button class="fc" data-a="tables">Tables</button>
+            <button class="fc" data-a="restrooms">Restrooms</button>
+            <button class="fc" data-a="food">Food service</button>
+            <button class="fc" data-a="water">Water feature</button>
+            <button class="fc" data-a="trees">Trees / planting</button>
+            <button class="fc" data-a="artwork">Artwork</button>
+            <button class="fc" data-a="bicycle">Bicycle parking</button>
+            <button class="fc" data-a="climate">Climate control</button>
+            <button class="fc" data-a="elevator">Elevator</button>
+            <button class="fc" data-a="escalator">Escalator</button>
+            <button class="fc" data-a="lighting">Lighting</button>
+            <button class="fc" data-a="retail">Retail frontage</button>
+            <button class="fc" data-a="subway">Subway access</button>
+            <button class="fc" data-a="programs">Programs</button>
+            <button class="fc" data-a="24hr">24-hour access</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div id="sb-meta">
-      <span><strong id="shown-count">0</strong> spaces shown</span>
+      <strong id="shown-count">0</strong><span>spaces</span>
+      <span id="fd-active-count"></span>
+      <button id="sb-clear" onclick="clearAllFilters()" style="display:none">Clear ✕</button>
     </div>
-    <div id="legend">
-      <div class="leg">
-        <svg class="leg-icon" viewBox="0 0 20 20"><circle cx="10" cy="8" r="7" fill="#007263"/><polygon points="10,18 6,11 14,11" fill="#007263"/><circle cx="10" cy="8" r="3.5" fill="white"/></svg>
-        Outdoors
-      </div>
-      <div class="leg">
-        <svg class="leg-icon" viewBox="0 0 20 20"><rect x="2" y="2" width="16" height="16" rx="3" fill="#00A6ED"/><rect x="6" y="6" width="8" height="8" rx="1.5" fill="white"/></svg>
-        Indoors
-      </div>
-    </div>
+
     <div id="list"></div>
   </div>
 
-  <!-- Map -->
+  <!-- MAP -->
   <div id="mapwrap">
+
+    <!-- Mobile top bar -->
+    <div id="mobile-bar">
+      <div id="mob-brand"><h2>NYC <span>POPS</span></h2></div>
+      <div id="mob-controls">
+        <div id="mob-row1">
+          <input id="mob-search" type="text" placeholder="Search spaces…"/>
+        </div>
+        <div id="mob-status"></div>
+      </div>
+    </div>
+
     <div id="map"></div>
 
     <!-- Desktop detail card -->
     <div id="detail">
       <button id="detail-close">&#215;</button>
       <div id="d-header">
-        <div id="d-badge"><span class="badge-dot"></span><span id="d-badge-label"></span></div>
         <div id="d-name"></div>
         <div id="d-addr"></div>
+        <div id="d-tag-row"></div>
       </div>
       <div id="detail-body">
-        <div id="d-type-row"></div>
         <div id="d-amenities-label">Amenities</div>
         <div id="d-amenities"></div>
         <div id="d-hours"></div>
         <div id="d-ada"></div>
+        <div id="d-apops-wrap"></div>
       </div>
     </div>
 
-    <!-- Loading + error -->
     <div id="loading"><div class="spinner"></div><p>Fetching live POPS data…</p></div>
     <div id="api-error">
       <div class="err-icon">⚠️</div>
@@ -449,33 +449,35 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
   </div>
 </div>
 
-<!-- Mobile search results list (shown when searching on mobile) -->
+<!-- Mobile results list -->
 <div id="mob-results">
   <div id="mob-results-header"><strong id="mob-res-count">0</strong> results</div>
   <div id="mob-results-list"></div>
 </div>
 
-<!-- Mobile: Map / List toggle pill -->
+<!-- Mobile map/list toggle -->
 <div id="mob-view-bar">
   <button class="vbtn active" id="vbtn-map" onclick="setMobView('map')">Map</button>
   <button class="vbtn" id="vbtn-list" onclick="setMobView('list')">List</button>
 </div>
 
-<!-- Mobile slide-up panel (50% height) -->
+<!-- Mobile slide-up panel -->
 <div id="panel">
-  <div id="panel-handle"></div>
-  <button id="pclose">&#215;</button>
-  <div id="p-header">
-    <div id="p-badge"><span class="badge-dot"></span><span id="p-badge-label"></span></div>
-    <div id="p-name"></div>
-    <div id="p-addr"></div>
+  <div id="p-sticky">
+    <div id="panel-handle"></div>
+    <button id="pclose">&#215;</button>
+    <div id="p-header">
+      <div id="p-name"></div>
+      <a id="p-addr-link" href="#" target="_blank" rel="noopener"></a>
+      <div id="p-top-row"></div>
+    </div>
   </div>
   <div id="p-body">
-    <div id="p-type-row"></div>
     <div id="p-amenities-label">Amenities</div>
     <div id="p-amenities"></div>
     <div id="p-hours"></div>
     <div id="p-ada"></div>
+    <div id="p-apops-wrap"></div>
   </div>
 </div>
 
@@ -483,7 +485,6 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 <script>
 // ── Field resolvers ──────────────────────────────────────────────────────────
 function getName(r) {
-  // Fall through all known name fields before giving up
   return r.building_name
     || r.principal_public_space
     || r.space_name
@@ -509,27 +510,46 @@ function getAmenity(r, keys) {
 }
 
 const AMENITIES = [
-  { label:'Seating',        keys:['seating','seat'],                    adaKey:false },
-  { label:'Trees / plants', keys:['trees','planting','landscap','shrub'], adaKey:false },
-  { label:'Food service',   keys:['food','café','cafe','kiosk','vending'], adaKey:false },
-  { label:'Restrooms',      keys:['restroom','bathroom','toilet'],       adaKey:false },
-  { label:'Water feature',  keys:['water','fountain','waterfall'],       adaKey:false },
-  { label:'ADA accessible', keys:[],                                     adaKey:true  },
+  { label:'Seating',          keys:['seating','seat'] },
+  { label:'Tables',           keys:['table'] },
+  { label:'Restrooms',        keys:['restroom','bathroom','toilet'] },
+  { label:'Food service',     keys:['food','café','cafe','kiosk','vending','restaurant'] },
+  { label:'Water feature',    keys:['water feature','fountain','waterfall'] },
+  { label:'Trees / planting', keys:['trees','planting','landscap','shrub'] },
+  { label:'Artwork',          keys:['artwork','art','sculpture'] },
+  { label:'Bicycle parking',  keys:['bicycle','bike'] },
+  { label:'Climate control',  keys:['climate','heated','air condition','cooled'] },
+  { label:'Elevator',         keys:['elevator'] },
+  { label:'Escalator',        keys:['escalator'] },
+  { label:'Lighting',         keys:['lighting','lit'] },
+  { label:'Retail frontage',  keys:['retail'] },
+  { label:'Subway access',    keys:['subway'] },
+  { label:'Programs',         keys:['program'] },
+  { label:'24-hour access',   keys:['24 hour','24-hour','24hours','open 24'] },
 ];
 
-const FILTER_MAP = {
-  outdoor:   r => !isIndoor(r),
-  indoor:    r => isIndoor(r),
-  seating:   r => getAmenity(r, ['seating','seat']),
-  trees:     r => getAmenity(r, ['trees','planting','landscap','shrub']),
-  food:      r => getAmenity(r, ['food','café','cafe','kiosk','vending']),
-  restrooms: r => getAmenity(r, ['restroom','bathroom','toilet']),
-  water:     r => getAmenity(r, ['water','fountain','waterfall']),
+const AMENITY_FILTER_MAP = {
+  seating:  r => getAmenity(r, ['seating','seat']),
+  tables:   r => getAmenity(r, ['table']),
+  restrooms:r => getAmenity(r, ['restroom','bathroom','toilet']),
+  food:     r => getAmenity(r, ['food','café','cafe','kiosk','vending','restaurant']),
+  water:    r => getAmenity(r, ['water feature','fountain','waterfall']),
+  trees:    r => getAmenity(r, ['trees','planting','landscap','shrub']),
+  artwork:  r => getAmenity(r, ['artwork','art','sculpture']),
+  bicycle:  r => getAmenity(r, ['bicycle','bike']),
+  climate:  r => getAmenity(r, ['climate','heated','air condition','cooled']),
+  elevator: r => getAmenity(r, ['elevator']),
+  escalator:r => getAmenity(r, ['escalator']),
+  lighting: r => getAmenity(r, ['lighting','lit']),
+  retail:   r => getAmenity(r, ['retail']),
+  subway:   r => getAmenity(r, ['subway']),
+  programs: r => getAmenity(r, ['program']),
+  '24hr':   r => getAmenity(r, ['24 hour','24-hour','24hours','open 24']),
 };
 
 function isMobile() { return window.innerWidth <= 640 }
 
-// ── Map init ─────────────────────────────────────────────────────────────────
+// ── Map ──────────────────────────────────────────────────────────────────────
 const map = L.map('map', {zoomControl:false}).setView([40.745,-73.985], 12);
 L.control.zoom({position:'bottomright'}).addTo(map);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
@@ -537,76 +557,113 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
   maxZoom:19
 }).addTo(map);
 
-let allData=[], filtered=[], markers=[], activeFilter='all', searchQ='', selBoro='', activeItem=null;
-let mobView = 'map'; // 'map' | 'list'
+let allData=[], filtered=[], markers=[], searchQ='', activeItem=null;
+let activeBoroughs = new Set(); // empty = show all
+let activeTypes    = new Set(); // empty = show all
+let activeAmenities = new Set(); // empty = no amenity filter
+let mobView = 'map';
 
 // ── Icons ────────────────────────────────────────────────────────────────────
 function makeOutdoorIcon(active) {
-  const c = active ? '#005c4e' : '#007263';
-  const s = active ? 26 : 20, h = s+7;
-  return L.divIcon({html:`<svg xmlns="http://www.w3.org/2000/svg" width="${s}" height="${h}" viewBox="0 0 26 32"><circle cx="13" cy="12" r="11" fill="${c}"/><polygon points="13,30 7,19 19,19" fill="${c}"/><circle cx="13" cy="12" r="5" fill="white" opacity=".95"/></svg>`, iconSize:[s,h], iconAnchor:[s/2,h], popupAnchor:[0,-h], className:''});
+  if (active) {
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="40" viewBox="0 0 32 40"><circle cx="16" cy="14" r="14" fill="white"/><circle cx="16" cy="14" r="11.5" fill="#002e25"/><polygon points="16,38 9,22 23,22" fill="#002e25"/><circle cx="16" cy="14" r="5" fill="white"/></svg>`;
+    return L.divIcon({html:svg, iconSize:[32,40], iconAnchor:[16,40], popupAnchor:[0,-40], className:''});
+  }
+  return L.divIcon({html:`<svg xmlns="http://www.w3.org/2000/svg" width="20" height="27" viewBox="0 0 26 32"><circle cx="13" cy="12" r="11" fill="#007263"/><polygon points="13,30 7,19 19,19" fill="#007263"/><circle cx="13" cy="12" r="5" fill="white" opacity=".95"/></svg>`, iconSize:[20,27], iconAnchor:[10,27], popupAnchor:[0,-27], className:''});
 }
 function makeIndoorIcon(active) {
-  const c = active ? '#006fa8' : '#00A6ED';
-  const s = active ? 26 : 20;
-  return L.divIcon({html:`<svg xmlns="http://www.w3.org/2000/svg" width="${s}" height="${s}" viewBox="0 0 26 26"><rect x="1" y="1" width="24" height="24" rx="5" fill="${c}"/><rect x="8" y="8" width="10" height="10" rx="2" fill="white" opacity=".95"/></svg>`, iconSize:[s,s], iconAnchor:[s/2,s/2], popupAnchor:[0,-s/2], className:''});
+  if (active) {
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30"><rect x="0" y="0" width="30" height="30" rx="7" fill="white"/><rect x="2" y="2" width="26" height="26" rx="5.5" fill="#002e25"/><rect x="9" y="9" width="12" height="12" rx="2.5" fill="white"/></svg>`;
+    return L.divIcon({html:svg, iconSize:[30,30], iconAnchor:[15,15], popupAnchor:[0,-15], className:''});
+  }
+  return L.divIcon({html:`<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 26 26"><rect x="1" y="1" width="24" height="24" rx="5" fill="#00A6ED"/><rect x="8" y="8" width="10" height="10" rx="2" fill="white" opacity=".95"/></svg>`, iconSize:[20,20], iconAnchor:[10,10], popupAnchor:[0,-10], className:''});
 }
 
 // ── Render helpers ───────────────────────────────────────────────────────────
-function isADAok(r) {
-  const v = (r.physically_disabled||'').toLowerCase().trim();
-  return v === 'full' || v.includes('partial');
-}
 function amenityRows(r, cls, yes, no) {
   return AMENITIES.map(a => {
-    const ok = a.adaKey ? isADAok(r) : getAmenity(r, a.keys);
+    const ok = getAmenity(r, a.keys);
     return `<div class="${cls} ${ok?yes:no}"><span class="chk ${ok?'chk-yes':'chk-no'}">${ok?'✓':'✕'}</span>${a.label}</div>`;
   }).join('');
 }
 function hoursBlock(r) {
   const h = r.hour_of_access_required || '';
-  const popsNum = r.pops_number || '';
-  const sourceUrl = popsNum
-    ? `https://data.cityofnewyork.us/City-Government/Privately-Owned-Public-Spaces-POPS-/rvih-nhyn`
-    : 'https://data.cityofnewyork.us/City-Government/Privately-Owned-Public-Spaces-POPS-/rvih-nhyn';
-  return `<span class="hours-label">Hours of access</span>` +
-    `<span class="hours-val">${h||'Not listed'}</span>` +
-    `<a class="hours-src" href="${sourceUrl}" target="_blank" rel="noopener">Verify on NYC Open Data ↗</a>`;
+  const apopsUrl = apopsURL(r);
+  const verifyUrl = apopsUrl || 'https://data.cityofnewyork.us/City-Government/Privately-Owned-Public-Spaces-POPS-/rvih-nhyn';
+  const verifyLabel = apopsUrl ? 'Verify hours on APOPS ↗' : 'Verify on NYC Open Data ↗';
+  return `<span class="hours-label">Hours of access</span><span class="hours-val">${h||'Not listed'}</span><a class="hours-src" href="${verifyUrl}" target="_blank" rel="noopener">${verifyLabel}</a>`;
 }
 function adaBlock(r) {
-  const v = (r.physically_disabled||'').toLowerCase().trim();
-  if (v==='full')           return {cls:'ada-yes',    icon:'♿', title:'Fully accessible',      sub:'ADA compliant'};
-  if (v.includes('partial'))return {cls:'ada-partial', icon:'♿', title:'Partially accessible',  sub:'Some ADA features'};
-  if (v==='none'||v==='no') return {cls:'ada-no',     icon:'♿', title:'Not accessible',         sub:'No ADA access listed'};
-  return                           {cls:'ada-no',     icon:'♿', title:'Accessibility unknown',  sub:v||'No data'};
+  const raw = (r.physically_disabled||'').trim();
+  const v = raw.toLowerCase();
+  if (v === 'full')                           return {cls:'ada-yes',     icon:'♿', title:'Fully accessible',     sub:'Full ADA compliance'};
+  if (v === 'full/partial'||v==='partial/full') return {cls:'ada-partial', icon:'♿', title:'Partially accessible', sub:'Full access in some areas'};
+  if (v === 'partial')                        return {cls:'ada-partial', icon:'♿', title:'Partially accessible', sub:'Some ADA features present'};
+  if (v === 'none'||v==='no'||v==='n/a'||v==='na') return {cls:'ada-no', icon:'♿', title:'Not accessible',      sub:'No ADA access listed'};
+  if (v === ''||v==='unknown')                return {cls:'ada-no',     icon:'♿', title:'Accessibility unknown', sub:'No data available'};
+  return                                             {cls:'ada-no',     icon:'♿', title:'Accessibility unknown', sub:raw};
 }
 function adaHTML(r, ic, tc) {
   const a = adaBlock(r);
   return `<span class="${ic}">${a.icon}</span><div class="${tc}"><strong>${a.title}</strong><span>${a.sub}</span></div>`;
 }
-
-// ── Space card fill ──────────────────────────────────────────────────────────
-function fillCard(r, prefix, indoorCls) {
-  const ind = isIndoor(r), label = ind?'Indoors':'Outdoors';
-  document.getElementById(`${prefix}-badge-label`).textContent = label;
-  document.getElementById(`${prefix}-name`).textContent = getName(r)||'Unnamed space';
-  document.getElementById(`${prefix}-addr`).textContent = [getBorough(r), getAddr(r)].filter(Boolean).join(' · ');
-  document.getElementById(`${prefix}-header`).className = ind?'in':'out';
-  const type = getType(r);
-  document.getElementById(`${prefix}-type-row`).innerHTML = type ? `<span class="${prefix==='p'?'ptype':'dtype'} ${ind?(prefix==='p'?'ptype-in':'dtype-in'):(prefix==='p'?'ptype-out':'dtype-out')}">${type}</span>` : '';
-  document.getElementById(`${prefix}-amenities`).innerHTML = prefix==='p'
-    ? amenityRows(r,'pam','pam-yes','pam-no')
-    : amenityRows(r,'dam','dam-yes','dam-no');
-  document.getElementById(`${prefix}-hours`).innerHTML = hoursBlock(r);
-  const ada = adaBlock(r);
-  const adaEl = document.getElementById(`${prefix}-ada`);
-  adaEl.className = ada.cls;
-  adaEl.innerHTML = adaHTML(r, prefix==='p'?'p-ada-icon':'ada-icon', prefix==='p'?'p-ada-text':'ada-text');
+function apopsURL(r) {
+  const num = (r.pops_number || '').toLowerCase().trim();
+  return num ? `https://apops.mas.org/pops/${num}/` : null;
 }
 
-// ── Desktop: select space ────────────────────────────────────────────────────
+// ── Fill card ────────────────────────────────────────────────────────────────
+function fillCard(r, prefix) {
+  const ind = isIndoor(r), label = ind?'Indoors':'Outdoors';
+  const type = getType(r);
+  const apopsUrl = apopsURL(r);
+
+  if (prefix === 'p') {
+    document.getElementById('p-sticky').className = ind ? 'in' : 'out';
+    const boro = getBorough(r);
+    document.getElementById('p-top-row').innerHTML =
+      (boro ? `<span class="p-htag p-htag-boro">${boro}</span>` : '') +
+      `<span class="p-htag ${ind?'p-htag-in':'p-htag-out'}">${label}</span>` +
+      (type ? `<span class="p-htag p-htag-type">${type}</span>` : '');
+    document.getElementById('p-name').textContent = getName(r) || 'Unnamed space';
+    const addr = getAddr(r);
+    const mapsQ = encodeURIComponent([getName(r), addr].filter(Boolean).join(', ') + ' NYC');
+    const addrLink = document.getElementById('p-addr-link');
+    addrLink.href = apopsUrl || `https://www.google.com/maps/search/?api=1&query=${mapsQ}`;
+    addrLink.innerHTML = `<svg width="12" height="12" viewBox="0 0 14 14" fill="none" style="margin-right:4px;vertical-align:middle"><path d="M7 1C4.79 1 3 2.79 3 5c0 3.25 4 8 4 8s4-4.75 4-8c0-2.21-1.79-4-4-4z" fill="currentColor" opacity=".8"/><circle cx="7" cy="5" r="1.5" fill="white"/></svg>${[getBorough(r), addr].filter(Boolean).join(' · ')}`;
+    document.getElementById('p-amenities').innerHTML = amenityRows(r,'pam','pam-yes','pam-no');
+    document.getElementById('p-hours').innerHTML = hoursBlock(r);
+    const pAda = adaBlock(r);
+    const pAdaEl = document.getElementById('p-ada');
+    pAdaEl.className = pAda.cls;
+    pAdaEl.innerHTML = adaHTML(r, 'p-ada-icon', 'p-ada-text');
+    document.getElementById('p-apops-wrap').innerHTML = apopsUrl
+      ? `<a class="apops-btn" href="${apopsUrl}" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>View on APOPS</a>` : '';
+  } else {
+    const boro = getBorough(r);
+    document.getElementById('d-tag-row').innerHTML =
+      (boro ? `<span class="d-htag d-htag-boro">${boro}</span>` : '') +
+      `<span class="d-htag ${ind?'d-htag-in':'d-htag-out'}">${label}</span>` +
+      (type ? `<span class="d-htag d-htag-type">${type}</span>` : '');
+    document.getElementById('d-name').textContent = getName(r) || 'Unnamed space';
+    const addr = getAddr(r);
+    const mapsQ = encodeURIComponent([getName(r), addr].filter(Boolean).join(', ') + ' NYC');
+    document.getElementById('d-addr').innerHTML = `<a href="https://www.google.com/maps/search/?api=1&query=${mapsQ}" target="_blank" rel="noopener" style="color:rgba(255,255,255,.6);text-decoration:none;display:inline-flex;align-items:center;gap:4px" onmouseover="this.style.color='rgba(255,255,255,.9)'" onmouseout="this.style.color='rgba(255,255,255,.6)'"><svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M7 1C4.79 1 3 2.79 3 5c0 3.25 4 8 4 8s4-4.75 4-8c0-2.21-1.79-4-4-4z" fill="currentColor" opacity=".8"/><circle cx="7" cy="5" r="1.5" fill="white"/></svg>${[getBorough(r), addr].filter(Boolean).join(' · ')} ↗</a>`;
+    document.getElementById('d-header').className = ind ? 'in' : 'out';
+    document.getElementById('d-amenities').innerHTML = amenityRows(r,'dam','dam-yes','dam-no');
+    document.getElementById('d-hours').innerHTML = hoursBlock(r);
+    const ada = adaBlock(r);
+    const adaEl = document.getElementById('d-ada');
+    adaEl.className = ada.cls;
+    adaEl.innerHTML = adaHTML(r, 'ada-icon', 'ada-text');
+    document.getElementById('d-apops-wrap').innerHTML = apopsUrl
+      ? `<a class="apops-btn" href="${apopsUrl}" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>View on APOPS</a>` : '';
+  }
+}
+
+// ── Select / open ────────────────────────────────────────────────────────────
 function selectSpace(r, mo) {
-  fillCard(r, 'd', 'dtype');
+  fillCard(r, 'd');
   document.getElementById('detail').classList.add('show');
   document.querySelectorAll('.space-item').forEach(el => el.classList.remove('active'));
   if (mo?.listEl) { mo.listEl.classList.add('active'); mo.listEl.scrollIntoView({block:'nearest'}) }
@@ -614,50 +671,41 @@ function selectSpace(r, mo) {
   activeItem = mo;
   if (mo) mo.layer.setIcon(isIndoor(r)?makeIndoorIcon(true):makeOutdoorIcon(true));
 }
-
-// ── Mobile: open panel ───────────────────────────────────────────────────────
-function openPanel(r) {
-  fillCard(r, 'p', 'ptype');
-  document.getElementById('panel').classList.add('open');
-}
+function openPanel(r) { fillCard(r, 'p'); document.getElementById('panel').classList.add('open'); }
 function closePanel() { document.getElementById('panel').classList.remove('open') }
-
 function closeDetail() {
   document.getElementById('detail').classList.remove('show');
   if (activeItem) { activeItem.layer.setIcon(isIndoor(activeItem.r)?makeIndoorIcon(false):makeOutdoorIcon(false)); activeItem=null; }
   document.querySelectorAll('.space-item').forEach(el => el.classList.remove('active'));
 }
-
 document.getElementById('detail-close').addEventListener('click', closeDetail);
 document.getElementById('pclose').addEventListener('click', closePanel);
 map.on('click', () => { closeDetail(); closePanel(); });
 
-// ── Mobile view toggle ───────────────────────────────────────────────────────
+// ── Mobile view ──────────────────────────────────────────────────────────────
 function setMobView(v) {
   mobView = v;
   document.getElementById('vbtn-map').classList.toggle('active', v==='map');
   document.getElementById('vbtn-list').classList.toggle('active', v==='list');
   const res = document.getElementById('mob-results');
-  if (v === 'list') {
-    res.classList.add('show');
-    buildMobList();
-    closePanel();
-  } else {
-    res.classList.remove('show');
-  }
+  if (v === 'list') { res.classList.add('show'); buildMobList(); closePanel(); }
+  else res.classList.remove('show');
 }
 
-// ── Build sidebar list (desktop) ─────────────────────────────────────────────
+// ── Build list items ─────────────────────────────────────────────────────────
 function buildListItem(r, mo, forMobile) {
   const el = document.createElement('div');
   el.className = 'space-item';
   const ind = isIndoor(r), type = getType(r);
+  const outdoorSVG = `<svg class="si-icon" viewBox="0 0 26 32" fill="none"><circle cx="13" cy="12" r="11" fill="#007263"/><polygon points="13,30 7,19 19,19" fill="#007263"/><circle cx="13" cy="12" r="5" fill="white" opacity=".95"/></svg>`;
+  const indoorSVG  = `<svg class="si-icon-sq" viewBox="0 0 26 26" fill="none"><rect x="1" y="1" width="24" height="24" rx="5" fill="#00A6ED"/><rect x="8" y="8" width="10" height="10" rx="2" fill="white" opacity=".95"/></svg>`;
   el.innerHTML = `<div class="si-row">
-    <span class="si-dot ${ind?'si-dot-in':'si-dot-out'}"></span>
+    ${ind ? indoorSVG : outdoorSVG}
     <div class="si-content">
       <div class="si-name">${getName(r)||'Unnamed'}</div>
-      <div class="si-addr">${[getBorough(r),getAddr(r)].filter(Boolean).join(' · ')}</div>
+      <div class="si-addr">${getAddr(r)||''}</div>
       <div class="si-tags">
+        ${getBorough(r)?`<span class="si-tag si-tag-boro">${getBorough(r)}</span>`:''}
         <span class="si-tag ${ind?'si-tag-in':'si-tag-out'}">${ind?'Indoors':'Outdoors'}</span>
         ${type?`<span class="si-tag si-tag-type">${type}</span>`:''}
       </div>
@@ -666,58 +714,68 @@ function buildListItem(r, mo, forMobile) {
   el.addEventListener('click', () => {
     const lat=getLat(r), lng=getLng(r);
     if (!isNaN(lat)&&!isNaN(lng)) map.panTo([lat,lng],{animate:true,duration:.4});
-    if (forMobile) { setMobView('map'); openPanel(r); }
-    else selectSpace(r, mo);
+    if (forMobile) { setMobView('map'); openPanel(r); } else selectSpace(r, mo);
   });
   if (!forMobile && mo) mo.listEl = el;
   return el;
 }
-
 function buildList() {
   const list = document.getElementById('list');
   list.innerHTML = '';
-  if (!filtered.length) {
-    list.innerHTML = '<div id="list-empty">No spaces match.<br/>Try adjusting filters.</div>';
-    return;
-  }
+  if (!filtered.length) { list.innerHTML = '<div id="list-empty">No spaces match.<br/>Try adjusting filters.</div>'; return; }
   const frag = document.createDocumentFragment();
   filtered.forEach(({r,mo}) => frag.appendChild(buildListItem(r, mo, false)));
   list.appendChild(frag);
 }
-
 function buildMobList() {
   const list = document.getElementById('mob-results-list');
   list.innerHTML = '';
   document.getElementById('mob-res-count').textContent = filtered.length;
-  if (!filtered.length) {
-    list.innerHTML = '<div id="list-empty" style="padding:36px 18px;text-align:center;color:var(--ink3);font-size:13px;line-height:1.7">No spaces match.<br/>Try adjusting filters.</div>';
-    return;
-  }
+  if (!filtered.length) { list.innerHTML = '<div style="padding:36px 18px;text-align:center;color:var(--ink3);font-size:14px;line-height:1.7">No spaces match.<br/>Try adjusting filters.</div>'; return; }
   const frag = document.createDocumentFragment();
   filtered.forEach(({r,mo}) => frag.appendChild(buildListItem(r, mo, true)));
   list.appendChild(frag);
 }
 
-// ── Apply filters ────────────────────────────────────────────────────────────
+// ── Filters ──────────────────────────────────────────────────────────────────
+function searchableText(r) {
+  return [getName(r),getAddr(r),getBorough(r),r.street_name||'',r.neighborhood||'',r.community_district||'',getType(r),r.amenities_required||'',r.hour_of_access_required||'',r.building_location||'',r.developer||'',r.zip_code||'',r.pops_number||''].join(' ').toLowerCase();
+}
+function filtersAreActive() {
+  return activeAmenities.size > 0 || activeBoroughs.size > 0 || activeTypes.size > 0 || !!searchQ;
+}
+function updateFilterCount() {
+  const total = activeAmenities.size + activeBoroughs.size + activeTypes.size;
+  const el = document.getElementById('fd-active-count');
+  if (el) el.innerHTML = total > 0 ? `<strong>${total}</strong> filter${total>1?'s':''} active` : '';
+  const badge = document.getElementById('sb-filter-badge');
+  if (badge) { badge.textContent = total > 0 ? total : ''; badge.classList.toggle('show', total > 0); }
+  const sbClear = document.getElementById('sb-clear');
+  if (sbClear) sbClear.style.display = filtersAreActive() ? 'inline-block' : 'none';
+}
 function applyFilters() {
-  const q = searchQ.toLowerCase();
+  const q = searchQ.toLowerCase().trim();
   filtered = [];
   markers.forEach(mo => {
     const r = mo.r;
-    const mS = !q || getName(r).toLowerCase().includes(q) || getAddr(r).toLowerCase().includes(q) || getBorough(r).toLowerCase().includes(q);
-    const mB = !selBoro || getBorough(r).toLowerCase() === selBoro.toLowerCase();
-    const mF = activeFilter==='all' || (FILTER_MAP[activeFilter]&&FILTER_MAP[activeFilter](r));
-    if (mS && mB && mF) { map.addLayer(mo.layer); filtered.push({r,mo}); }
+    const mS = !q || searchableText(r).includes(q);
+    const mB = activeBoroughs.size === 0 || activeBoroughs.has(getBorough(r));
+    const ind = isIndoor(r);
+    const mT = activeTypes.size === 0 || (ind && activeTypes.has('indoor')) || (!ind && activeTypes.has('outdoor'));
+    const mA = activeAmenities.size === 0 || [...activeAmenities].every(key => AMENITY_FILTER_MAP[key]&&AMENITY_FILTER_MAP[key](r));
+    if (mS&&mB&&mT&&mA) { map.addLayer(mo.layer); filtered.push({r,mo}); }
     else map.removeLayer(mo.layer);
   });
   document.getElementById('shown-count').textContent = filtered.length;
+  const ms = document.getElementById('mob-status');
+  if (ms) ms.textContent = `${filtered.length} of ${allData.length} spaces`;
   buildList();
   if (isMobile() && mobView==='list') buildMobList();
-  // On mobile: if user is searching, auto-show list view
-  if (isMobile() && searchQ) setMobView('list');
+  if (isMobile() && q) setMobView('list');
+  updateFilterCount();
 }
 
-// ── Build markers ────────────────────────────────────────────────────────────
+// ── Markers ──────────────────────────────────────────────────────────────────
 function buildMarkers() {
   markers.forEach(({layer}) => { try{map.removeLayer(layer)}catch(e){} });
   markers = [];
@@ -729,17 +787,18 @@ function buildMarkers() {
     const mo = {layer, r, listEl:null};
     layer.on('click', e => {
       e.originalEvent.stopPropagation();
-      if (isMobile()) { setMobView('map'); openPanel(r); }
-      else selectSpace(r, mo);
+      if (isMobile()) { setMobView('map'); openPanel(r); } else selectSpace(r, mo);
     });
     map.addLayer(layer);
     markers.push(mo);
   });
+  const adaVals = [...new Set(allData.map(r => r.physically_disabled||'(empty)'))].sort();
+  console.log('Unique physically_disabled values:', adaVals);
   console.log(`Built ${markers.length} markers`);
   applyFilters();
 }
 
-// ── Load data ────────────────────────────────────────────────────────────────
+// ── Load ─────────────────────────────────────────────────────────────────────
 async function loadData() {
   try {
     const res = await fetch('https://data.cityofnewyork.us/resource/rvih-nhyn.json?$limit=600');
@@ -757,46 +816,67 @@ async function loadData() {
   }
 }
 
-// ── Hamburger / filter drawer ─────────────────────────────────────────────────
-const hamburger = document.getElementById('hamburger');
-const drawer = document.getElementById('filter-drawer');
-const overlay = document.getElementById('fd-overlay');
-function toggleDrawer(open) {
-  hamburger.classList.toggle('open', open);
-  drawer.classList.toggle('open', open);
-  overlay.classList.toggle('show', open);
+// ── UI Controls ──────────────────────────────────────────────────────────────
+function toggleSearch() {
+  const panel = document.getElementById('sb-search-panel');
+  const btn = document.getElementById('sb-search-btn');
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open', !isOpen);
+  if (btn) btn.classList.toggle('active', !isOpen);
+  if (!isOpen) setTimeout(() => { const s = document.getElementById('nav-search'); if(s) s.focus(); }, 220);
 }
-hamburger.addEventListener('click', () => toggleDrawer(!drawer.classList.contains('open')));
-overlay.addEventListener('click', () => toggleDrawer(false));
+function toggleSbFilters() {
+  const panel = document.getElementById('sb-filters');
+  const btn = document.getElementById('sb-filter-btn');
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open', !isOpen);
+  if (btn) btn.classList.toggle('active', !isOpen);
+}
+function clearAllFilters() {
+  activeBoroughs = new Set();
+  activeTypes = new Set();
+  activeAmenities.clear();
+  document.querySelectorAll('#fd-boroughs .fc').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('#fd-types .fc').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('#fd-amenities .fc').forEach(b => b.classList.remove('on'));
+  searchQ = '';
+  const ns = document.getElementById('nav-search'); if (ns) ns.value = '';
+  document.getElementById('nav-search-clear')?.classList.remove('show');
+  applyFilters();
+}
 
-document.querySelectorAll('#fd-filters .fb').forEach(b => {
+document.querySelectorAll('#fd-boroughs .fc').forEach(b => {
   b.addEventListener('click', () => {
-    document.querySelectorAll('#fd-filters .fb').forEach(x => x.classList.remove('on'));
-    b.classList.add('on');
-    activeFilter = b.dataset.f;
+    const boro = b.dataset.b;
+    if (activeBoroughs.has(boro)) { activeBoroughs.delete(boro); b.classList.remove('on'); }
+    else { activeBoroughs.add(boro); b.classList.add('on'); }
     applyFilters();
-    toggleDrawer(false);
+  });
+});
+document.querySelectorAll('#fd-types .fc').forEach(b => {
+  b.addEventListener('click', () => {
+    const t = b.dataset.t;
+    if (activeTypes.has(t)) { activeTypes.delete(t); b.classList.remove('on'); }
+    else { activeTypes.add(t); b.classList.add('on'); }
+    applyFilters();
+  });
+});
+document.querySelectorAll('#fd-amenities .fc').forEach(b => {
+  b.addEventListener('click', () => {
+    const a = b.dataset.a;
+    if (activeAmenities.has(a)) { activeAmenities.delete(a); b.classList.remove('on'); }
+    else { activeAmenities.add(a); b.classList.add('on'); }
+    applyFilters();
   });
 });
 
-// ── Search + borough controls ─────────────────────────────────────────────────
 const navSearch = document.getElementById('nav-search');
 const clearBtn = document.getElementById('nav-search-clear');
+navSearch.addEventListener('input', e => { searchQ=e.target.value; clearBtn.classList.toggle('show',!!searchQ); applyFilters(); });
+clearBtn.addEventListener('click', () => { navSearch.value=''; searchQ=''; clearBtn.classList.remove('show'); if(isMobile()) setMobView('map'); applyFilters(); });
 
-navSearch.addEventListener('input', e => {
-  searchQ = e.target.value;
-  clearBtn.classList.toggle('show', !!searchQ);
-  applyFilters();
-});
-clearBtn.addEventListener('click', () => {
-  navSearch.value = ''; searchQ = '';
-  clearBtn.classList.remove('show');
-  if (isMobile()) setMobView('map');
-  applyFilters();
-});
-document.getElementById('nav-boro').addEventListener('change', e => {
-  selBoro = e.target.value; applyFilters();
-});
+const mobSearchEl = document.getElementById('mob-search');
+if (mobSearchEl) mobSearchEl.addEventListener('input', e => { searchQ=e.target.value; applyFilters(); });
 
 loadData();
 </script>
