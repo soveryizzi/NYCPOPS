@@ -8,62 +8,128 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --green:#007263;
-  --green-hover:#005c4e;
-  --green-light:#e0f2ee;
-  --green-text:#004d42;
-  --blue:#00A6ED;
-  --blue-light:#e0f5fe;
-  --blue-text:#006fa8;
-  --yellow:#F5CB5C;
-  --yellow-light:#fef8e3;
-  --slate:#95B8D1;
-  --slate-light:#edf4f9;
-  --dark:#242325;
-  --white:#ffffff;
-  --border:#dde8e6;
-  --bg:#f4faf8;
-  --ink:#242325;
-  --ink2:#4a4a4a;
-  --ink3:#7a8c88;
-  --radius:8px;
-  --sidebar:320px;
+  --green:#007263;--green-hover:#005c4e;--green-light:#e0f2ee;--green-text:#004d42;
+  --blue:#00A6ED;--blue-light:#e0f5fe;--blue-text:#006fa8;
+  --yellow:#F5CB5C;--yellow-light:#fef8e3;
+  --slate:#95B8D1;--slate-light:#edf4f9;
+  --dark:#242325;--white:#fff;
+  --border:#dde8e6;--bg:#f4faf8;
+  --ink:#242325;--ink2:#4a4a4a;--ink3:#7a8c88;
+  --nav:52px;--sidebar:320px;
   --font:'Helvetica Neue',Helvetica,Arial,sans-serif;
 }
 html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
 
-#app{display:flex;height:100vh;height:100dvh}
+/* ════════════════════════════════════════
+   SHARED NAV BAR (desktop + mobile)
+════════════════════════════════════════ */
+#navbar{
+  position:fixed;top:0;left:0;right:0;
+  height:var(--nav);z-index:1000;
+  background:var(--green);
+  display:flex;align-items:center;gap:10px;
+  padding:0 14px;
+  box-shadow:0 2px 12px rgba(0,0,0,.15);
+}
+#nav-title{
+  font-size:15px;font-weight:700;color:var(--white);
+  white-space:nowrap;letter-spacing:-.2px;flex-shrink:0;
+}
+#nav-title span{color:var(--yellow)}
+#nav-title small{
+  display:block;font-size:9px;font-weight:400;
+  color:rgba(255,255,255,.45);letter-spacing:0;margin-top:1px;
+}
 
-/* ── SIDEBAR ── */
-#sidebar{width:var(--sidebar);flex-shrink:0;display:flex;flex-direction:column;background:var(--white);border-right:1px solid var(--border);overflow:hidden;z-index:10}
+/* Search in navbar */
+#nav-search-wrap{flex:1;position:relative;max-width:420px}
+#nav-search{
+  width:100%;padding:7px 36px 7px 12px;
+  font-size:13px;font-family:var(--font);
+  border:none;border-radius:20px;
+  background:rgba(255,255,255,.15);
+  color:var(--white);outline:none;
+  transition:background .15s;
+}
+#nav-search::placeholder{color:rgba(255,255,255,.55)}
+#nav-search:focus{background:rgba(255,255,255,.25)}
+#nav-search-clear{
+  position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  background:none;border:none;color:rgba(255,255,255,.6);
+  font-size:16px;cursor:pointer;display:none;line-height:1;padding:2px;
+}
+#nav-search-clear.show{display:block}
 
-#brand{padding:20px 20px 16px;background:var(--green);color:var(--white);flex-shrink:0}
-#brand h1{font-size:18px;font-weight:700;letter-spacing:-.3px;line-height:1.2;margin-bottom:5px}
-#brand h1 span{color:var(--yellow)}
-#brand p{font-size:11px;color:rgba(255,255,255,.55);line-height:1.5}
+/* Borough select */
+#nav-boro{
+  padding:6px 10px;font-size:12px;font-family:var(--font);
+  border:1.5px solid rgba(255,255,255,.3);border-radius:20px;
+  background:transparent;color:var(--white);outline:none;cursor:pointer;
+  flex-shrink:0;
+}
+#nav-boro option{color:var(--ink);background:var(--white)}
 
-#search-wrap{padding:12px 14px 10px;border-bottom:1px solid var(--border);flex-shrink:0}
-#search{width:100%;padding:8px 12px;font-size:13px;font-family:var(--font);border:1.5px solid var(--border);border-radius:var(--radius);background:var(--bg);color:var(--ink);outline:none;margin-bottom:7px;transition:border-color .15s}
-#search:focus{border-color:var(--green)}
-#search::placeholder{color:var(--ink3)}
-#nbhd{width:100%;padding:7px 11px;font-size:12.5px;font-family:var(--font);border:1.5px solid var(--border);border-radius:var(--radius);background:var(--bg);color:var(--ink);outline:none;cursor:pointer}
-#nbhd:focus{border-color:var(--green)}
+/* Hamburger */
+#hamburger{
+  width:36px;height:36px;border-radius:10px;flex-shrink:0;
+  background:rgba(255,255,255,.15);border:none;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;
+  cursor:pointer;transition:background .15s;
+}
+#hamburger:hover{background:rgba(255,255,255,.25)}
+#hamburger span{width:18px;height:2px;background:var(--white);border-radius:1px;transition:all .2s}
+#hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+#hamburger.open span:nth-child(2){opacity:0}
+#hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
 
-#filter-wrap{padding:10px 14px 9px;border-bottom:1px solid var(--border);flex-shrink:0}
-#filter-label{font-size:9.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:7px}
-#filters{display:flex;flex-wrap:wrap;gap:5px}
-.fb{padding:4px 11px;font-size:11.5px;font-family:var(--font);border-radius:20px;border:1.5px solid var(--border);background:var(--white);color:var(--ink2);cursor:pointer;transition:all .12s;white-space:nowrap}
+/* ════════════════════════════════════════
+   FILTER DRAWER (drops from navbar)
+════════════════════════════════════════ */
+#filter-drawer{
+  position:fixed;top:var(--nav);left:0;right:0;z-index:990;
+  background:var(--white);border-bottom:1px solid var(--border);
+  padding:14px 16px 16px;
+  transform:translateY(-110%);
+  transition:transform .22s cubic-bezier(.32,.72,0,1);
+  box-shadow:0 4px 20px rgba(0,0,0,.1);
+}
+#filter-drawer.open{transform:translateY(0)}
+#fd-label{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px}
+#fd-filters{display:flex;flex-wrap:wrap;gap:6px}
+.fb{padding:5px 13px;font-size:12px;font-family:var(--font);border-radius:20px;border:1.5px solid var(--border);background:var(--white);color:var(--ink2);cursor:pointer;transition:all .12s;white-space:nowrap}
 .fb:hover{border-color:var(--green);color:var(--green)}
 .fb.on{background:var(--green);color:var(--white);border-color:var(--green)}
+#fd-overlay{position:fixed;inset:0;z-index:980;display:none}
+#fd-overlay.show{display:block}
 
-/* Legend */
-#legend{padding:8px 14px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:14px;align-items:center}
+/* ════════════════════════════════════════
+   MAIN LAYOUT
+════════════════════════════════════════ */
+#app{
+  display:flex;
+  padding-top:var(--nav);
+  height:100vh;height:100dvh;
+}
+
+/* ── DESKTOP SIDEBAR ── */
+#sidebar{
+  width:var(--sidebar);flex-shrink:0;
+  display:flex;flex-direction:column;
+  background:var(--white);
+  border-right:1px solid var(--border);
+  overflow:hidden;
+}
+#sb-meta{
+  padding:10px 14px 8px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+}
+#sb-meta span{font-size:11px;color:var(--ink3)}
+#sb-meta strong{color:var(--ink);font-weight:600}
+#sb-version{font-size:10px;color:var(--ink3)}
+
+#legend{padding:8px 14px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:14px}
 .leg{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink2)}
 .leg-icon{width:20px;height:20px;flex-shrink:0}
-
-#list-header{padding:9px 14px 7px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:space-between}
-#list-header span{font-size:11px;color:var(--ink3)}
-#list-header strong{color:var(--ink);font-weight:600}
 
 #list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
 #list::-webkit-scrollbar{width:3px}
@@ -76,8 +142,7 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 .space-item.active .si-name{color:var(--green-text)}
 .si-row{display:flex;align-items:flex-start;gap:8px}
 .si-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:3px}
-.si-dot-out{background:var(--green)}
-.si-dot-in{background:var(--blue)}
+.si-dot-out{background:var(--green)}.si-dot-in{background:var(--blue)}
 .si-content{flex:1;min-width:0}
 .si-name{font-size:12.5px;font-weight:600;color:var(--ink);margin-bottom:2px;line-height:1.3}
 .si-addr{font-size:11px;color:var(--ink3);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -86,19 +151,31 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 .si-tag-out{background:var(--green-light);color:var(--green-text)}
 .si-tag-in{background:var(--blue-light);color:var(--blue-text)}
 .si-tag-type{background:var(--slate-light);color:var(--ink2)}
-
 #list-empty{padding:36px 18px;text-align:center;color:var(--ink3);font-size:13px;line-height:1.7}
 
-/* ── MAP ── */
+/* ── MAP AREA ── */
 #mapwrap{flex:1;position:relative;overflow:hidden}
 #map{width:100%;height:100%}
 
-/* ── DETAIL CARD ── */
-#detail{position:absolute;top:16px;right:16px;width:300px;background:var(--white);border-radius:32px;box-shadow:0 8px 32px rgba(0,114,99,.15);z-index:600;display:none;overflow:hidden;animation:fadeUp .2s ease}
+/* ── DESKTOP DETAIL CARD ── */
+#detail{
+  position:absolute;top:16px;right:16px;width:300px;
+  background:var(--white);border-radius:32px;
+  box-shadow:0 8px 32px rgba(0,114,99,.15);
+  z-index:600;display:none;overflow:hidden;
+  animation:fadeUp .2s ease;
+}
 @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 #detail.show{display:block}
-#detail-close{position:absolute;top:12px;right:14px;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;line-height:1;cursor:pointer;color:rgba(255,255,255,.8);background:rgba(0,0,0,.15);border:none;font-family:var(--font);z-index:1}
-#detail-close:hover{background:rgba(0,0,0,.28);color:var(--white)}
+#detail-close{
+  position:absolute;top:12px;right:14px;
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;cursor:pointer;
+  color:rgba(255,255,255,.8);background:rgba(0,0,0,.15);
+  border:none;font-family:var(--font);z-index:1;
+}
+#detail-close:hover{background:rgba(0,0,0,.28)}
 #d-header{padding:20px 20px 16px}
 #d-header.out{background:var(--green)}
 #d-header.in{background:var(--blue)}
@@ -114,8 +191,7 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 #d-amenities-label{font-size:9.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px}
 #d-amenities{display:grid;grid-template-columns:1fr 1fr;gap:7px 8px;margin-bottom:14px}
 .dam{display:flex;align-items:center;gap:7px;font-size:12px}
-.dam-yes{color:var(--ink)}
-.dam-no{color:var(--ink3)}
+.dam-yes{color:var(--ink)}.dam-no{color:var(--ink3)}
 .chk{width:18px;height:18px;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700}
 .chk-yes{background:var(--green-light);color:var(--green)}
 .chk-no{background:#f0f0f0;color:#bbb}
@@ -130,13 +206,67 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 .ada-text strong{display:block;font-size:11px;font-weight:600;margin-bottom:1px}
 .ada-text span{font-size:10.5px;opacity:.8}
 
-/* ── MOBILE PANEL ── */
-#panel{position:absolute;bottom:0;left:0;right:0;z-index:800;background:var(--white);border-radius:32px 32px 0 0;transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,0,1);max-height:80%;overflow-y:auto;-webkit-overflow-scrolling:touch;display:none;box-shadow:0 -4px 32px rgba(0,0,0,.1)}
+/* ════════════════════════════════════════
+   MOBILE — full-screen layout
+════════════════════════════════════════ */
+
+/* Mobile view toggle bar */
+#mob-view-bar{
+  display:none;
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  z-index:900;
+  background:var(--dark);
+  border-radius:24px;
+  padding:4px;
+  box-shadow:0 4px 20px rgba(0,0,0,.25);
+  gap:2px;
+}
+.vbtn{
+  padding:8px 20px;font-size:13px;font-weight:600;
+  font-family:var(--font);border:none;border-radius:20px;
+  cursor:pointer;transition:all .15s;color:rgba(255,255,255,.6);
+  background:transparent;
+}
+.vbtn.active{background:var(--white);color:var(--ink)}
+
+/* Mobile search results list */
+#mob-results{
+  display:none;
+  position:fixed;top:var(--nav);left:0;right:0;bottom:0;
+  z-index:700;background:var(--white);overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+}
+#mob-results.show{display:block}
+#mob-results-header{
+  padding:10px 14px 8px;border-bottom:1px solid var(--border);
+  font-size:11px;color:var(--ink3);
+  position:sticky;top:0;background:var(--white);z-index:1;
+}
+#mob-results-header strong{color:var(--ink)}
+
+/* Mobile panel — 50% height */
+#panel{
+  position:fixed;bottom:0;left:0;right:0;
+  z-index:800;background:var(--white);
+  border-radius:32px 32px 0 0;
+  transform:translateY(100%);
+  transition:transform .3s cubic-bezier(.32,.72,0,1);
+  height:50%;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
+  display:none;
+  box-shadow:0 -4px 32px rgba(0,0,0,.12);
+}
 #panel.open{transform:translateY(0)}
 #panel-handle{width:40px;height:4px;background:rgba(255,255,255,.4);border-radius:2px;margin:14px auto 0;position:relative;z-index:3}
-#panel-handle.dark{background:var(--border)}
-#pclose{position:absolute;top:12px;right:16px;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;color:rgba(255,255,255,.8);background:rgba(0,0,0,.15);border:none;font-family:var(--font);z-index:3}
-#pclose:hover{background:rgba(0,0,0,.28);color:var(--white)}
+#pclose{
+  position:absolute;top:12px;right:16px;
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;cursor:pointer;
+  color:rgba(255,255,255,.8);background:rgba(0,0,0,.15);
+  border:none;font-family:var(--font);z-index:3;
+}
+#pclose:hover{background:rgba(0,0,0,.28)}
 #p-header{padding:16px 20px 16px;margin-top:0}
 #p-header.out{background:var(--green);border-radius:32px 32px 0 0}
 #p-header.in{background:var(--blue);border-radius:32px 32px 0 0}
@@ -152,8 +282,7 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 #p-amenities-label{font-size:9.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px}
 #p-amenities{display:grid;grid-template-columns:1fr 1fr;gap:9px 8px;margin-bottom:16px}
 .pam{display:flex;align-items:center;gap:8px;font-size:13px}
-.pam-yes{color:var(--ink)}
-.pam-no{color:var(--ink3)}
+.pam-yes{color:var(--ink)}.pam-no{color:var(--ink3)}
 #p-hours{font-size:13px;color:var(--ink2);background:var(--yellow-light);border:1px solid #e8c040;border-radius:14px;padding:12px 14px;line-height:1.5;margin-bottom:12px}
 #p-hours .hours-label{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:3px}
 #p-hours .hours-val{font-weight:600;color:var(--ink);font-size:14px}
@@ -166,18 +295,16 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 .p-ada-text span{font-size:11px;opacity:.75}
 
 /* ── LOADING / ERROR ── */
-#loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;background:rgba(244,250,248,.94);z-index:900;backdrop-filter:blur(4px)}
+#loading{position:fixed;inset:0;padding-top:var(--nav);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;background:rgba(244,250,248,.94);z-index:950;backdrop-filter:blur(4px)}
 #loading p{font-size:13px;color:var(--ink3)}
 .spinner{width:30px;height:30px;border:2.5px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .75s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-#api-error{position:absolute;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px;background:rgba(244,250,248,.97);z-index:900;backdrop-filter:blur(4px);padding:24px;text-align:center}
+#api-error{position:fixed;inset:0;padding-top:var(--nav);display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px;background:rgba(244,250,248,.97);z-index:950;padding:24px;text-align:center}
 #api-error.show{display:flex}
-.err-icon{font-size:36px}
-.err-title{font-size:16px;font-weight:700;color:var(--ink)}
+.err-icon{font-size:36px}.err-title{font-size:16px;font-weight:700;color:var(--ink)}
 .err-msg{font-size:13px;color:var(--ink3);line-height:1.6;max-width:260px}
 .err-detail{font-size:11px;color:var(--ink3);background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px 12px;max-width:300px;word-break:break-all;font-family:monospace}
-.err-btn{margin-top:4px;padding:10px 24px;background:var(--green);color:var(--white);font-size:13px;font-weight:600;font-family:var(--font);border:none;border-radius:var(--radius);cursor:pointer;transition:background .15s}
+.err-btn{margin-top:4px;padding:10px 24px;background:var(--green);color:var(--white);font-size:13px;font-weight:600;font-family:var(--font);border:none;border-radius:8px;cursor:pointer}
 .err-btn:hover{background:var(--green-hover)}
 
 /* Leaflet */
@@ -186,64 +313,81 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 .leaflet-control-zoom a:hover{background:var(--green-light)!important;color:var(--green)!important}
 .leaflet-control-attribution{font-size:10px!important;background:rgba(255,255,255,.8)!important}
 
-/* ── MOBILE ── */
-@media(max-width:640px){
-  #sidebar{display:none}
-  #panel{display:block}
-  #detail{display:none!important}
-  #app{display:block;height:100vh;height:100dvh}
-  #mapwrap{height:100%;position:relative}
-  #mobile-bar{display:flex;position:absolute;top:0;left:0;right:0;z-index:500;flex-direction:column;background:var(--white);border-bottom:1px solid var(--border)}
-  #mob-brand{padding:10px 14px 8px;background:var(--green)}
-  #mob-brand h2{font-size:15px;font-weight:700;color:var(--white)}
-  #mob-brand h2 span{color:var(--yellow)}
-  #mob-controls{padding:8px 10px;display:flex;flex-direction:column;gap:6px}
-  #mob-row1{display:flex;gap:7px}
-  #mob-search{flex:1;padding:7px 11px;font-size:13px;font-family:var(--font);border:1.5px solid var(--border);border-radius:20px;background:var(--bg);color:var(--ink);outline:none;min-width:0}
-  #mob-search:focus{border-color:var(--green)}
-  #mob-nbhd{padding:7px 9px;font-size:12px;font-family:var(--font);border:1.5px solid var(--border);border-radius:20px;background:var(--bg);color:var(--ink);outline:none;max-width:140px}
-  #mob-filters{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:1px}
-  #mob-filters::-webkit-scrollbar{display:none}
-  #mob-status{font-size:11px;color:var(--ink3);padding:0 2px 2px}
-}
+/* ════════════════════════════════════════
+   RESPONSIVE BREAKPOINTS
+════════════════════════════════════════ */
 @media(min-width:641px){
-  #mobile-bar{display:none}
+  /* Desktop: hide mobile-only elements */
+  #mob-view-bar{display:none!important}
+  #mob-results{display:none!important}
   #panel{display:none!important}
+  #nav-boro{display:flex}
+}
+
+@media(max-width:640px){
+  /* Mobile: hide desktop-only elements */
+  #sidebar{display:none}
+  #detail{display:none!important}
+  #nav-boro{display:none}
+
+  /* Mobile app fills screen */
+  #app{display:block;padding-top:var(--nav)}
+  #mapwrap{height:100%;position:relative}
+
+  /* Show mobile toggle + panel */
+  #mob-view-bar{display:flex}
+  #panel{display:block}
 }
 </style>
 </head>
 <body>
+
+<!-- ═══════════════ NAVBAR ═══════════════ -->
+<nav id="navbar">
+  <div id="nav-title">
+    NYC <span>Public</span> Spaces
+    <small>Last updated: 2026-05-04 22:35:31 EDT</small>
+  </div>
+  <div id="nav-search-wrap">
+    <input id="nav-search" type="text" placeholder="Search spaces, addresses…" autocomplete="off"/>
+    <button id="nav-search-clear">&#215;</button>
+  </div>
+  <select id="nav-boro">
+    <option value="">All boroughs</option>
+    <option value="Manhattan">Manhattan</option>
+    <option value="Brooklyn">Brooklyn</option>
+    <option value="Queens">Queens</option>
+    <option value="Bronx">Bronx</option>
+    <option value="Staten Island">Staten Island</option>
+  </select>
+  <button id="hamburger" aria-label="Filters">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ═══════════════ FILTER DRAWER ═══════════════ -->
+<div id="fd-overlay"></div>
+<div id="filter-drawer">
+  <div id="fd-label">Filter by amenity</div>
+  <div id="fd-filters">
+    <button class="fb on" data-f="all">All</button>
+    <button class="fb" data-f="outdoor">Outdoors</button>
+    <button class="fb" data-f="indoor">Indoors</button>
+    <button class="fb" data-f="seating">Seating</button>
+    <button class="fb" data-f="trees">Trees</button>
+    <button class="fb" data-f="food">Food</button>
+    <button class="fb" data-f="restrooms">Restrooms</button>
+    <button class="fb" data-f="water">Water</button>
+  </div>
+</div>
+
+<!-- ═══════════════ MAIN APP ═══════════════ -->
 <div id="app">
 
+  <!-- Desktop sidebar -->
   <div id="sidebar">
-    <div id="brand">
-      <h1>NYC <span>Public</span> Spaces</h1>
-      <p>Privately Owned Public Spaces (POPS)<br/>Live data · NYC Dept. of City Planning</p>
-      <p id="version-tag" style="font-size:10px;color:rgba(255,255,255,.35);margin-top:5px;font-weight:400;">Last updated: 2026-05-04 22:25:01 EDT</p>
-    </div>
-    <div id="search-wrap">
-      <input id="search" type="text" placeholder="Search name or address…" autocomplete="off"/>
-      <select id="nbhd">
-        <option value="">All boroughs</option>
-        <option value="Manhattan">Manhattan</option>
-        <option value="Brooklyn">Brooklyn</option>
-        <option value="Queens">Queens</option>
-        <option value="Bronx">Bronx</option>
-        <option value="Staten Island">Staten Island</option>
-      </select>
-    </div>
-    <div id="filter-wrap">
-      <div id="filter-label">Filter by amenity</div>
-      <div id="filters">
-        <button class="fb on" data-f="all">All</button>
-        <button class="fb" data-f="outdoor">Outdoors</button>
-        <button class="fb" data-f="indoor">Indoors</button>
-        <button class="fb" data-f="seating">Seating</button>
-        <button class="fb" data-f="trees">Trees</button>
-        <button class="fb" data-f="food">Food</button>
-        <button class="fb" data-f="restrooms">Restrooms</button>
-        <button class="fb" data-f="water">Water</button>
-      </div>
+    <div id="sb-meta">
+      <span><strong id="shown-count">0</strong> spaces shown</span>
     </div>
     <div id="legend">
       <div class="leg">
@@ -255,68 +399,32 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
         Indoors
       </div>
     </div>
-    <div id="list-header">
-      <span><strong id="shown-count">0</strong> spaces</span>
-    </div>
     <div id="list"></div>
   </div>
 
+  <!-- Map -->
   <div id="mapwrap">
-    <div id="mobile-bar">
-      <div id="mob-brand"><h2>NYC <span>Public</span> Spaces</h2></div>
-      <div id="mob-controls">
-        <div id="mob-row1">
-          <input id="mob-search" type="text" placeholder="Search spaces…"/>
-          <select id="mob-nbhd"><option value="">All boroughs</option><option value="Manhattan">Manhattan</option><option value="Brooklyn">Brooklyn</option><option value="Queens">Queens</option><option value="Bronx">Bronx</option><option value="Staten Island">Staten Island</option></select>
-        </div>
-        <div id="mob-filters">
-          <button class="fb on" data-f="all">All</button>
-          <button class="fb" data-f="outdoor">Outdoors</button>
-          <button class="fb" data-f="indoor">Indoors</button>
-          <button class="fb" data-f="seating">Seating</button>
-          <button class="fb" data-f="trees">Trees</button>
-          <button class="fb" data-f="food">Food</button>
-          <button class="fb" data-f="restrooms">Restrooms</button>
-          <button class="fb" data-f="water">Water</button>
-        </div>
-        <div id="mob-status"></div>
-      </div>
-    </div>
-
     <div id="map"></div>
 
+    <!-- Desktop detail card -->
     <div id="detail">
       <button id="detail-close">&#215;</button>
       <div id="d-header">
+        <div id="d-badge"><span class="badge-dot"></span><span id="d-badge-label"></span></div>
         <div id="d-name"></div>
         <div id="d-addr"></div>
       </div>
       <div id="detail-body">
-        <div id="d-tags"></div>
+        <div id="d-type-row"></div>
+        <div id="d-amenities-label">Amenities</div>
         <div id="d-amenities"></div>
         <div id="d-hours"></div>
+        <div id="d-ada"></div>
       </div>
     </div>
 
-    <div id="panel">
-      <div id="panel-handle"></div>
-      <button id="pclose">&#215;</button>
-      <div id="p-header">
-        <div id="p-badge"><span class="badge-dot"></span><span id="p-badge-label"></span></div>
-        <div id="p-name"></div>
-        <div id="p-addr"></div>
-      </div>
-      <div id="p-body">
-        <div id="p-type-row"></div>
-        <div id="p-amenities-label">Amenities</div>
-        <div id="p-amenities"></div>
-        <div id="p-hours"></div>
-        <div id="p-ada"></div>
-      </div>
-    </div>
-
+    <!-- Loading + error -->
     <div id="loading"><div class="spinner"></div><p>Fetching live POPS data…</p></div>
-
     <div id="api-error">
       <div class="err-icon">⚠️</div>
       <div class="err-title">Couldn't load data</div>
@@ -327,42 +435,62 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
   </div>
 </div>
 
+<!-- Mobile search results list (shown when searching on mobile) -->
+<div id="mob-results">
+  <div id="mob-results-header"><strong id="mob-res-count">0</strong> results</div>
+  <div id="mob-results-list"></div>
+</div>
+
+<!-- Mobile: Map / List toggle pill -->
+<div id="mob-view-bar">
+  <button class="vbtn active" id="vbtn-map" onclick="setMobView('map')">Map</button>
+  <button class="vbtn" id="vbtn-list" onclick="setMobView('list')">List</button>
+</div>
+
+<!-- Mobile slide-up panel (50% height) -->
+<div id="panel">
+  <div id="panel-handle"></div>
+  <button id="pclose">&#215;</button>
+  <div id="p-header">
+    <div id="p-badge"><span class="badge-dot"></span><span id="p-badge-label"></span></div>
+    <div id="p-name"></div>
+    <div id="p-addr"></div>
+  </div>
+  <div id="p-body">
+    <div id="p-type-row"></div>
+    <div id="p-amenities-label">Amenities</div>
+    <div id="p-amenities"></div>
+    <div id="p-hours"></div>
+    <div id="p-ada"></div>
+  </div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
-// ── Field resolvers — exact names from NYC Open Data API ────────────────────
+// ── Field resolvers ──────────────────────────────────────────────────────────
 function getName(r)    { return r.building_name || '' }
 function getAddr(r)    { return r.building_address_with_zip || [r.address_number, r.street_name].filter(Boolean).join(' ') || '' }
 function getBorough(r) { return r.borough_name || '' }
 function getType(r)    { return r.public_space_type || '' }
 function getLat(r)     { return parseFloat(r.latitude) }
 function getLng(r)     { return parseFloat(r.longitude) }
-function getHours(r)   { return r.hour_of_access_required || '' }
 
-// Indoor types based on public_space_type value
 const INDOOR_TYPES = ['atrium','arcade','gallery','covered','interior','enclosed','lobby','galleria'];
 function isIndoor(r) {
-  const t = (r.public_space_type || '').toLowerCase();
-  return INDOOR_TYPES.some(k => t.includes(k));
-}
-
-// amenities_required is a free-text field like "Seating, Trees, Litter receptacles"
-function getAmenitiesText(r) {
-  return (r.amenities_required || '').toLowerCase();
+  return INDOOR_TYPES.some(k => (r.public_space_type||'').toLowerCase().includes(k));
 }
 function getAmenity(r, keys) {
-  const txt = getAmenitiesText(r);
+  const txt = (r.amenities_required||'').toLowerCase();
   if (!txt || txt === 'none') return false;
-  return keys.some(k => txt.includes(k.toLowerCase()));
+  return keys.some(k => txt.includes(k));
 }
 
-
-
 const AMENITIES = [
-  { label:'Seating',       keys:['seating','seat'] },
-  { label:'Trees / plants',keys:['trees','planting','landscap','shrub'] },
-  { label:'Food service',  keys:['food','café','cafe','kiosk','vending'] },
-  { label:'Restrooms',     keys:['restroom','bathroom','toilet'] },
-  { label:'Water feature', keys:['water','fountain','waterfall'] },
+  { label:'Seating',        keys:['seating','seat'] },
+  { label:'Trees / plants', keys:['trees','planting','landscap','shrub'] },
+  { label:'Food service',   keys:['food','café','cafe','kiosk','vending'] },
+  { label:'Restrooms',      keys:['restroom','bathroom','toilet'] },
+  { label:'Water feature',  keys:['water','fountain','waterfall'] },
 ];
 
 const FILTER_MAP = {
@@ -375,257 +503,265 @@ const FILTER_MAP = {
   water:     r => getAmenity(r, ['water','fountain','waterfall']),
 };
 
-function isMobile(){ return window.innerWidth <= 640 }
+function isMobile() { return window.innerWidth <= 640 }
 
-// ── Map ──────────────────────────────────────────────────────────────────────
-const map = L.map('map', {zoomControl:false}).setView([40.745, -73.985], 12);
+// ── Map init ─────────────────────────────────────────────────────────────────
+const map = L.map('map', {zoomControl:false}).setView([40.745,-73.985], 12);
 L.control.zoom({position:'bottomright'}).addTo(map);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-  attribution:'&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> &copy; <a href="https://carto.com">CARTO</a> | <a href="https://data.cityofnewyork.us">NYC Open Data</a>',
+  attribution:'&copy; <a href="https://openstreetmap.org">OSM</a> &copy; <a href="https://carto.com">CARTO</a> | <a href="https://data.cityofnewyork.us">NYC Open Data</a>',
   maxZoom:19
 }).addTo(map);
 
-let allData=[], filtered=[], markers=[], activeFilter='all', searchQ='', selNbhd='', activeItem=null;
+let allData=[], filtered=[], markers=[], activeFilter='all', searchQ='', selBoro='', activeItem=null;
+let mobView = 'map'; // 'map' | 'list'
 
-// Distinct SVG icons: circle-pin for outdoor, rounded-square for indoor
+// ── Icons ────────────────────────────────────────────────────────────────────
 function makeOutdoorIcon(active) {
   const c = active ? '#005c4e' : '#007263';
-  const size = active ? 26 : 20;
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size+7}" viewBox="0 0 26 32">
-    <circle cx="13" cy="12" r="11" fill="${c}"/>
-    <polygon points="13,30 7,19 19,19" fill="${c}"/>
-    <circle cx="13" cy="12" r="5" fill="white" opacity=".95"/>
-  </svg>`;
-  return L.divIcon({html:svg, iconSize:[size,size+7], iconAnchor:[size/2,size+7], popupAnchor:[0,-(size+7)], className:''});
+  const s = active ? 26 : 20, h = s+7;
+  return L.divIcon({html:`<svg xmlns="http://www.w3.org/2000/svg" width="${s}" height="${h}" viewBox="0 0 26 32"><circle cx="13" cy="12" r="11" fill="${c}"/><polygon points="13,30 7,19 19,19" fill="${c}"/><circle cx="13" cy="12" r="5" fill="white" opacity=".95"/></svg>`, iconSize:[s,h], iconAnchor:[s/2,h], popupAnchor:[0,-h], className:''});
 }
-
 function makeIndoorIcon(active) {
   const c = active ? '#006fa8' : '#00A6ED';
-  const size = active ? 26 : 20;
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 26 26">
-    <rect x="1" y="1" width="24" height="24" rx="5" fill="${c}"/>
-    <rect x="8" y="8" width="10" height="10" rx="2" fill="white" opacity=".95"/>
-  </svg>`;
-  return L.divIcon({html:svg, iconSize:[size,size], iconAnchor:[size/2,size/2], popupAnchor:[0,-size/2], className:''});
+  const s = active ? 26 : 20;
+  return L.divIcon({html:`<svg xmlns="http://www.w3.org/2000/svg" width="${s}" height="${s}" viewBox="0 0 26 26"><rect x="1" y="1" width="24" height="24" rx="5" fill="${c}"/><rect x="8" y="8" width="10" height="10" rx="2" fill="white" opacity=".95"/></svg>`, iconSize:[s,s], iconAnchor:[s/2,s/2], popupAnchor:[0,-s/2], className:''});
 }
 
 // ── Render helpers ───────────────────────────────────────────────────────────
-function amenityRows(r, checkCls, yesCls, noCls) {
+function amenityRows(r, cls, yes, no) {
   return AMENITIES.map(a => {
-    const yes = getAmenity(r, a.keys);
-    return `<div class="${checkCls} ${yes ? yesCls : noCls}">
-      <span class="chk ${yes?'chk-yes':'chk-no'}">${yes?'✓':'✕'}</span>
-      ${a.label}
-    </div>`;
+    const ok = getAmenity(r, a.keys);
+    return `<div class="${cls} ${ok?yes:no}"><span class="chk ${ok?'chk-yes':'chk-no'}">${ok?'✓':'✕'}</span>${a.label}</div>`;
   }).join('');
 }
-
-function hoursBlock(r, hoursId) {
+function hoursBlock(r) {
   const h = r.hour_of_access_required || '';
-  return `<span class="hours-label">Hours of access</span><span class="hours-val">${h || 'Not listed'}</span>`;
+  return `<span class="hours-label">Hours of access</span><span class="hours-val">${h||'Not listed'}</span>`;
 }
-
 function adaBlock(r) {
-  const val = (r.physically_disabled || '').toLowerCase().trim();
-  if (val === 'full') {
-    return { cls:'ada-yes', icon:'♿', title:'Fully accessible', sub:'ADA compliant' };
-  } else if (val.includes('partial')) {
-    return { cls:'ada-partial', icon:'♿', title:'Partially accessible', sub:'Some ADA features' };
-  } else if (val === 'none' || val === 'no') {
-    return { cls:'ada-no', icon:'♿', title:'Not accessible', sub:'No ADA access listed' };
-  } else {
-    return { cls:'ada-no', icon:'♿', title:'Accessibility unknown', sub: val || 'No data' };
-  }
+  const v = (r.physically_disabled||'').toLowerCase().trim();
+  if (v==='full')           return {cls:'ada-yes',    icon:'♿', title:'Fully accessible',      sub:'ADA compliant'};
+  if (v.includes('partial'))return {cls:'ada-partial', icon:'♿', title:'Partially accessible',  sub:'Some ADA features'};
+  if (v==='none'||v==='no') return {cls:'ada-no',     icon:'♿', title:'Not accessible',         sub:'No ADA access listed'};
+  return                           {cls:'ada-no',     icon:'♿', title:'Accessibility unknown',  sub:v||'No data'};
 }
-
-function adaHTML(r, iconCls, textCls) {
+function adaHTML(r, ic, tc) {
   const a = adaBlock(r);
-  return `<span class="${iconCls}">${a.icon}</span><div class="${textCls}"><strong>${a.title}</strong><span>${a.sub}</span></div>`;
+  return `<span class="${ic}">${a.icon}</span><div class="${tc}"><strong>${a.title}</strong><span>${a.sub}</span></div>`;
 }
 
-// ── Detail card / panel ──────────────────────────────────────────────────────
-function selectSpace(r, mo) {
-  const ind = isIndoor(r);
-  const label = ind ? 'Indoors' : 'Outdoors';
-  document.getElementById('d-badge-label').textContent = label;
-  document.getElementById('d-name').textContent = getName(r) || 'Unnamed space';
-  document.getElementById('d-addr').textContent = [getBorough(r), getAddr(r)].filter(Boolean).join(' · ');
-  document.getElementById('d-header').className = ind ? 'in' : 'out';
+// ── Space card fill ──────────────────────────────────────────────────────────
+function fillCard(r, prefix, indoorCls) {
+  const ind = isIndoor(r), label = ind?'Indoors':'Outdoors';
+  document.getElementById(`${prefix}-badge-label`).textContent = label;
+  document.getElementById(`${prefix}-name`).textContent = getName(r)||'Unnamed space';
+  document.getElementById(`${prefix}-addr`).textContent = [getBorough(r), getAddr(r)].filter(Boolean).join(' · ');
+  document.getElementById(`${prefix}-header`).className = ind?'in':'out';
   const type = getType(r);
-  document.getElementById('d-type-row').innerHTML = type ? `<span class="dtype ${ind?'dtype-in':'dtype-out'}">${type}</span>` : '';
-  document.getElementById('d-amenities').innerHTML = amenityRows(r, 'dam', 'dam-yes', 'dam-no');
-  document.getElementById('d-hours').innerHTML = hoursBlock(r);
+  document.getElementById(`${prefix}-type-row`).innerHTML = type ? `<span class="${prefix==='p'?'ptype':'dtype'} ${ind?(prefix==='p'?'ptype-in':'dtype-in'):(prefix==='p'?'ptype-out':'dtype-out')}">${type}</span>` : '';
+  document.getElementById(`${prefix}-amenities`).innerHTML = prefix==='p'
+    ? amenityRows(r,'pam','pam-yes','pam-no')
+    : amenityRows(r,'dam','dam-yes','dam-no');
+  document.getElementById(`${prefix}-hours`).innerHTML = hoursBlock(r);
   const ada = adaBlock(r);
-  document.getElementById('d-ada').className = ada.cls;
-  document.getElementById('d-ada').innerHTML = adaHTML(r, 'ada-icon', 'ada-text');
+  const adaEl = document.getElementById(`${prefix}-ada`);
+  adaEl.className = ada.cls;
+  adaEl.innerHTML = adaHTML(r, prefix==='p'?'p-ada-icon':'ada-icon', prefix==='p'?'p-ada-text':'ada-text');
+}
+
+// ── Desktop: select space ────────────────────────────────────────────────────
+function selectSpace(r, mo) {
+  fillCard(r, 'd', 'dtype');
   document.getElementById('detail').classList.add('show');
   document.querySelectorAll('.space-item').forEach(el => el.classList.remove('active'));
-  if (mo && mo.listEl) { mo.listEl.classList.add('active'); mo.listEl.scrollIntoView({block:'nearest'}) }
-  if (activeItem && activeItem !== mo) {
-    const wasIndoor = isIndoor(activeItem.r);
-    activeItem.layer.setIcon(wasIndoor ? makeIndoorIcon(false) : makeOutdoorIcon(false));
-  }
+  if (mo?.listEl) { mo.listEl.classList.add('active'); mo.listEl.scrollIntoView({block:'nearest'}) }
+  if (activeItem && activeItem!==mo) activeItem.layer.setIcon(isIndoor(activeItem.r)?makeIndoorIcon(false):makeOutdoorIcon(false));
   activeItem = mo;
-  if (mo) mo.layer.setIcon(ind ? makeIndoorIcon(true) : makeOutdoorIcon(true));
+  if (mo) mo.layer.setIcon(isIndoor(r)?makeIndoorIcon(true):makeOutdoorIcon(true));
 }
 
+// ── Mobile: open panel ───────────────────────────────────────────────────────
 function openPanel(r) {
-  const ind = isIndoor(r);
-  const label = ind ? 'Indoors' : 'Outdoors';
-  document.getElementById('p-badge-label').textContent = label;
-  document.getElementById('p-name').textContent = getName(r) || 'Unnamed space';
-  document.getElementById('p-addr').textContent = [getBorough(r), getAddr(r)].filter(Boolean).join(' · ');
-  document.getElementById('p-header').className = ind ? 'in' : 'out';
-  const type = getType(r);
-  document.getElementById('p-type-row').innerHTML = type ? `<span class="ptype ${ind?'ptype-in':'ptype-out'}">${type}</span>` : '';
-  document.getElementById('p-amenities').innerHTML = amenityRows(r, 'pam', 'pam-yes', 'pam-no');
-  document.getElementById('p-hours').innerHTML = hoursBlock(r);
-  const ada = adaBlock(r);
-  document.getElementById('p-ada').className = ada.cls;
-  document.getElementById('p-ada').innerHTML = adaHTML(r, 'p-ada-icon', 'p-ada-text');
+  fillCard(r, 'p', 'ptype');
   document.getElementById('panel').classList.add('open');
 }
+function closePanel() { document.getElementById('panel').classList.remove('open') }
 
 function closeDetail() {
   document.getElementById('detail').classList.remove('show');
-  if (activeItem) {
-    activeItem.layer.setIcon(isIndoor(activeItem.r) ? makeIndoorIcon(false) : makeOutdoorIcon(false));
-    activeItem = null;
-  }
+  if (activeItem) { activeItem.layer.setIcon(isIndoor(activeItem.r)?makeIndoorIcon(false):makeOutdoorIcon(false)); activeItem=null; }
   document.querySelectorAll('.space-item').forEach(el => el.classList.remove('active'));
 }
-function closePanel() { document.getElementById('panel').classList.remove('open') }
 
 document.getElementById('detail-close').addEventListener('click', closeDetail);
 document.getElementById('pclose').addEventListener('click', closePanel);
 map.on('click', () => { closeDetail(); closePanel(); });
 
-// ── List ─────────────────────────────────────────────────────────────────────
+// ── Mobile view toggle ───────────────────────────────────────────────────────
+function setMobView(v) {
+  mobView = v;
+  document.getElementById('vbtn-map').classList.toggle('active', v==='map');
+  document.getElementById('vbtn-list').classList.toggle('active', v==='list');
+  const res = document.getElementById('mob-results');
+  if (v === 'list') {
+    res.classList.add('show');
+    buildMobList();
+    closePanel();
+  } else {
+    res.classList.remove('show');
+  }
+}
+
+// ── Build sidebar list (desktop) ─────────────────────────────────────────────
+function buildListItem(r, mo, forMobile) {
+  const el = document.createElement('div');
+  el.className = 'space-item';
+  const ind = isIndoor(r), type = getType(r);
+  el.innerHTML = `<div class="si-row">
+    <span class="si-dot ${ind?'si-dot-in':'si-dot-out'}"></span>
+    <div class="si-content">
+      <div class="si-name">${getName(r)||'Unnamed'}</div>
+      <div class="si-addr">${[getBorough(r),getAddr(r)].filter(Boolean).join(' · ')}</div>
+      <div class="si-tags">
+        <span class="si-tag ${ind?'si-tag-in':'si-tag-out'}">${ind?'Indoors':'Outdoors'}</span>
+        ${type?`<span class="si-tag si-tag-type">${type}</span>`:''}
+      </div>
+    </div>
+  </div>`;
+  el.addEventListener('click', () => {
+    const lat=getLat(r), lng=getLng(r);
+    if (!isNaN(lat)&&!isNaN(lng)) map.panTo([lat,lng],{animate:true,duration:.4});
+    if (forMobile) { setMobView('map'); openPanel(r); }
+    else selectSpace(r, mo);
+  });
+  if (!forMobile && mo) mo.listEl = el;
+  return el;
+}
+
 function buildList() {
   const list = document.getElementById('list');
   list.innerHTML = '';
   if (!filtered.length) {
-    list.innerHTML = '<div id="list-empty">No spaces match your filters.<br/>Try adjusting the search or filters above.</div>';
+    list.innerHTML = '<div id="list-empty">No spaces match.<br/>Try adjusting filters.</div>';
     return;
   }
   const frag = document.createDocumentFragment();
-  filtered.forEach(({r, mo}) => {
-    const el = document.createElement('div');
-    el.className = 'space-item';
-    const ind = isIndoor(r);
-    const type = getType(r);
-    el.innerHTML = `<div class="si-row">
-      <span class="si-dot ${ind?'si-dot-in':'si-dot-out'}"></span>
-      <div class="si-content">
-        <div class="si-name">${getName(r)||'Unnamed'}</div>
-        <div class="si-addr">${[getBorough(r),getAddr(r)].filter(Boolean).join(' · ')}</div>
-        <div class="si-tags">
-          <span class="si-tag ${ind?'si-tag-in':'si-tag-out'}">${ind?'Indoors':'Outdoors'}</span>
-          ${type?`<span class="si-tag si-tag-type">${type}</span>`:''}
-        </div>
-      </div>
-    </div>`;
-    el.addEventListener('click', () => {
-      const lat = getLat(r), lng = getLng(r);
-      if (lat && lng && !isNaN(lat) && !isNaN(lng)) map.panTo([lat,lng], {animate:true, duration:.4});
-      selectSpace(r, mo);
-    });
-    if (mo) mo.listEl = el;
-    frag.appendChild(el);
-  });
+  filtered.forEach(({r,mo}) => frag.appendChild(buildListItem(r, mo, false)));
   list.appendChild(frag);
 }
 
-// ── Filters ──────────────────────────────────────────────────────────────────
+function buildMobList() {
+  const list = document.getElementById('mob-results-list');
+  list.innerHTML = '';
+  document.getElementById('mob-res-count').textContent = filtered.length;
+  if (!filtered.length) {
+    list.innerHTML = '<div id="list-empty" style="padding:36px 18px;text-align:center;color:var(--ink3);font-size:13px;line-height:1.7">No spaces match.<br/>Try adjusting filters.</div>';
+    return;
+  }
+  const frag = document.createDocumentFragment();
+  filtered.forEach(({r,mo}) => frag.appendChild(buildListItem(r, mo, true)));
+  list.appendChild(frag);
+}
+
+// ── Apply filters ────────────────────────────────────────────────────────────
 function applyFilters() {
   const q = searchQ.toLowerCase();
   filtered = [];
   markers.forEach(mo => {
     const r = mo.r;
-    const name = getName(r).toLowerCase();
-    const addr = getAddr(r).toLowerCase();
-    const boro = getBorough(r).toLowerCase();
-    const mS = !q || name.includes(q) || addr.includes(q) || boro.includes(q);
-    const mN = !selNbhd || getBorough(r).toLowerCase() === selNbhd.toLowerCase();
-    const mF = activeFilter === 'all' || (FILTER_MAP[activeFilter] && FILTER_MAP[activeFilter](r));
-    if (mS && mN && mF) { map.addLayer(mo.layer); filtered.push({r, mo}); }
+    const mS = !q || getName(r).toLowerCase().includes(q) || getAddr(r).toLowerCase().includes(q) || getBorough(r).toLowerCase().includes(q);
+    const mB = !selBoro || getBorough(r).toLowerCase() === selBoro.toLowerCase();
+    const mF = activeFilter==='all' || (FILTER_MAP[activeFilter]&&FILTER_MAP[activeFilter](r));
+    if (mS && mB && mF) { map.addLayer(mo.layer); filtered.push({r,mo}); }
     else map.removeLayer(mo.layer);
   });
   document.getElementById('shown-count').textContent = filtered.length;
-  document.getElementById('mob-status').textContent = `${filtered.length} of ${allData.length} spaces`;
   buildList();
+  if (isMobile() && mobView==='list') buildMobList();
+  // On mobile: if user is searching, auto-show list view
+  if (isMobile() && searchQ) setMobView('list');
 }
 
-// ── Markers ──────────────────────────────────────────────────────────────────
+// ── Build markers ────────────────────────────────────────────────────────────
 function buildMarkers() {
-  markers.forEach(({layer}) => { try { map.removeLayer(layer) } catch(e) {} });
+  markers.forEach(({layer}) => { try{map.removeLayer(layer)}catch(e){} });
   markers = [];
-  let skipped = 0;
   allData.forEach(r => {
-    const lat = getLat(r), lng = getLng(r);
-    if (!lat || !lng || isNaN(lat) || isNaN(lng)) { skipped++; return; }
+    const lat=getLat(r), lng=getLng(r);
+    if (!lat||!lng||isNaN(lat)||isNaN(lng)) return;
     const ind = isIndoor(r);
-    const layer = L.marker([lat, lng], {icon: ind ? makeIndoorIcon(false) : makeOutdoorIcon(false)});
+    const layer = L.marker([lat,lng], {icon: ind?makeIndoorIcon(false):makeOutdoorIcon(false)});
     const mo = {layer, r, listEl:null};
     layer.on('click', e => {
       e.originalEvent.stopPropagation();
-      if (isMobile()) openPanel(r);
+      if (isMobile()) { setMobView('map'); openPanel(r); }
       else selectSpace(r, mo);
     });
     map.addLayer(layer);
     markers.push(mo);
   });
-  console.log(`Built ${markers.length} markers, skipped ${skipped} (no coords)`);
+  console.log(`Built ${markers.length} markers`);
   applyFilters();
 }
 
-function populateNeighborhoods(sel) {
-  const nbhds = [...new Set(allData.map(r => getNbhd(r)).filter(Boolean))].sort();
-  nbhds.forEach(nb => { const o = document.createElement('option'); o.value=nb; o.textContent=nb; sel.appendChild(o) });
-}
-
-// ── Load ─────────────────────────────────────────────────────────────────────
-function showError(msg) {
-  document.getElementById('loading').style.display = 'none';
-  document.getElementById('err-detail-msg').textContent = msg || '';
-  document.getElementById('api-error').classList.add('show');
-}
-
+// ── Load data ────────────────────────────────────────────────────────────────
 async function loadData() {
-  const URL = 'https://data.cityofnewyork.us/resource/rvih-nhyn.json?$limit=600';
   try {
-    console.log('Fetching:', URL);
-    const res = await fetch(URL);
-    console.log('Response status:', res.status, res.statusText);
-    if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
+    const res = await fetch('https://data.cityofnewyork.us/resource/rvih-nhyn.json?$limit=600');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
-    console.log(`Got ${data.length} records. First record keys:`, data[0] ? Object.keys(data[0]) : 'none');
-    if (!data || !data.length) throw new Error('API returned 0 records');
+    if (!data?.length) throw new Error('Empty response');
     allData = data;
     document.getElementById('loading').style.display = 'none';
     buildMarkers();
   } catch(e) {
-    console.error('POPS load failed:', e);
-    showError(e.message);
+    console.error('Load failed:', e);
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('err-detail-msg').textContent = e.message;
+    document.getElementById('api-error').classList.add('show');
   }
 }
 
-// ── Controls ─────────────────────────────────────────────────────────────────
-document.getElementById('search').addEventListener('input', e => { searchQ=e.target.value; applyFilters() });
-document.getElementById('nbhd').addEventListener('change', e => { selNbhd=e.target.value; applyFilters() });
-document.querySelectorAll('#filters .fb').forEach(b => {
+// ── Hamburger / filter drawer ─────────────────────────────────────────────────
+const hamburger = document.getElementById('hamburger');
+const drawer = document.getElementById('filter-drawer');
+const overlay = document.getElementById('fd-overlay');
+function toggleDrawer(open) {
+  hamburger.classList.toggle('open', open);
+  drawer.classList.toggle('open', open);
+  overlay.classList.toggle('show', open);
+}
+hamburger.addEventListener('click', () => toggleDrawer(!drawer.classList.contains('open')));
+overlay.addEventListener('click', () => toggleDrawer(false));
+
+document.querySelectorAll('#fd-filters .fb').forEach(b => {
   b.addEventListener('click', () => {
-    document.querySelectorAll('#filters .fb').forEach(x => x.classList.remove('on'));
-    b.classList.add('on'); activeFilter=b.dataset.f; applyFilters();
+    document.querySelectorAll('#fd-filters .fb').forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+    activeFilter = b.dataset.f;
+    applyFilters();
+    toggleDrawer(false);
   });
 });
-document.getElementById('mob-search').addEventListener('input', e => { searchQ=e.target.value; applyFilters() });
-document.getElementById('mob-nbhd').addEventListener('change', e => { selNbhd=e.target.value; applyFilters() });
-document.querySelectorAll('#mob-filters .fb').forEach(b => {
-  b.addEventListener('click', () => {
-    document.querySelectorAll('#mob-filters .fb').forEach(x => x.classList.remove('on'));
-    b.classList.add('on'); activeFilter=b.dataset.f; applyFilters();
-  });
+
+// ── Search + borough controls ─────────────────────────────────────────────────
+const navSearch = document.getElementById('nav-search');
+const clearBtn = document.getElementById('nav-search-clear');
+
+navSearch.addEventListener('input', e => {
+  searchQ = e.target.value;
+  clearBtn.classList.toggle('show', !!searchQ);
+  applyFilters();
+});
+clearBtn.addEventListener('click', () => {
+  navSearch.value = ''; searchQ = '';
+  clearBtn.classList.remove('show');
+  if (isMobile()) setMobView('map');
+  applyFilters();
+});
+document.getElementById('nav-boro').addEventListener('change', e => {
+  selBoro = e.target.value; applyFilters();
 });
 
 loadData();
