@@ -27,32 +27,38 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
   position:fixed;top:0;left:0;right:0;
   height:var(--nav);z-index:1000;
   background:var(--green);
-  display:flex;align-items:center;gap:10px;
-  padding:0 14px;
+  display:flex;align-items:center;
+  gap:8px;
+  padding:0 16px;
   box-shadow:0 2px 12px rgba(0,0,0,.15);
+  width:100%;
+  min-width:0;
 }
 #nav-title{
   font-size:15px;font-weight:700;color:var(--white);
   white-space:nowrap;letter-spacing:-.2px;flex-shrink:0;
+  line-height:1.2;
 }
 #nav-title span{color:var(--yellow)}
 #nav-title small{
   display:block;font-size:9px;font-weight:400;
-  color:rgba(255,255,255,.45);letter-spacing:0;margin-top:1px;
+  color:rgba(255,255,255,.4);letter-spacing:0;margin-top:1px;
 }
 
-/* Search in navbar */
-#nav-search-wrap{flex:1;position:relative;max-width:420px}
+/* Search — takes remaining space */
+#nav-search-wrap{flex:1 1 0;position:relative;min-width:0;}
 #nav-search{
-  width:100%;padding:7px 36px 7px 12px;
+  width:100%;
+  padding:7px 32px 7px 14px;
   font-size:13px;font-family:var(--font);
   border:none;border-radius:20px;
-  background:rgba(255,255,255,.15);
+  background:rgba(255,255,255,.18);
   color:var(--white);outline:none;
   transition:background .15s;
+  min-width:0;
 }
-#nav-search::placeholder{color:rgba(255,255,255,.55)}
-#nav-search:focus{background:rgba(255,255,255,.25)}
+#nav-search::placeholder{color:rgba(255,255,255,.5)}
+#nav-search:focus{background:rgba(255,255,255,.26)}
 #nav-search-clear{
   position:absolute;right:10px;top:50%;transform:translateY(-50%);
   background:none;border:none;color:rgba(255,255,255,.6);
@@ -62,10 +68,10 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 
 /* Borough select */
 #nav-boro{
-  padding:6px 10px;font-size:12px;font-family:var(--font);
+  padding:6px 8px;font-size:12px;font-family:var(--font);
   border:1.5px solid rgba(255,255,255,.3);border-radius:20px;
   background:transparent;color:var(--white);outline:none;cursor:pointer;
-  flex-shrink:0;
+  flex-shrink:0;max-width:130px;
 }
 #nav-boro option{color:var(--ink);background:var(--white)}
 
@@ -81,6 +87,12 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 #hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
 #hamburger.open span:nth-child(2){opacity:0}
 #hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+/* Mobile: tighten nav title on small screens */
+@media(max-width:400px){
+  #nav-title small{display:none}
+  #nav-title{font-size:13px}
+}
 
 /* ════════════════════════════════════════
    FILTER DRAWER (drops from navbar)
@@ -197,7 +209,9 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 .chk-no{background:#f0f0f0;color:#bbb}
 #d-hours{font-size:12px;color:var(--ink2);background:var(--yellow-light);border:1px solid #e8c040;border-radius:10px;padding:9px 12px;line-height:1.5;margin-bottom:10px}
 #d-hours .hours-label{font-size:9.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:2px}
-#d-hours .hours-val{font-weight:600;color:var(--ink)}
+#d-hours .hours-val{font-weight:600;color:var(--ink);display:block;margin-bottom:5px}
+.hours-src{display:inline-block;font-size:10.5px;color:var(--green-text);text-decoration:none;border-bottom:1px solid var(--green);line-height:1.3;margin-top:2px}
+.hours-src:hover{color:var(--green)}
 #d-ada{display:flex;align-items:center;gap:8px;font-size:12px;border-radius:10px;padding:9px 12px}
 #d-ada.ada-yes{background:var(--blue-light);color:var(--blue-text)}
 #d-ada.ada-no{background:#f5f5f5;color:var(--ink3)}
@@ -285,7 +299,7 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 .pam-yes{color:var(--ink)}.pam-no{color:var(--ink3)}
 #p-hours{font-size:13px;color:var(--ink2);background:var(--yellow-light);border:1px solid #e8c040;border-radius:14px;padding:12px 14px;line-height:1.5;margin-bottom:12px}
 #p-hours .hours-label{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:3px}
-#p-hours .hours-val{font-weight:600;color:var(--ink);font-size:14px}
+#p-hours .hours-val{font-weight:600;color:var(--ink);font-size:14px;display:block;margin-bottom:6px}
 #p-ada{display:flex;align-items:center;gap:10px;font-size:13px;border-radius:14px;padding:12px 14px}
 #p-ada.ada-yes{background:var(--blue-light);color:var(--blue-text)}
 #p-ada.ada-no{background:#f5f5f5;color:var(--ink3)}
@@ -346,7 +360,7 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 <nav id="navbar">
   <div id="nav-title">
     NYC <span>Public</span> Spaces
-    <small>Last updated: 2026-05-04 22:35:31 EDT</small>
+    <small>Last updated: 2026-05-05 00:13:48 EDT</small>
   </div>
   <div id="nav-search-wrap">
     <input id="nav-search" type="text" placeholder="Search spaces, addresses…" autocomplete="off"/>
@@ -468,7 +482,16 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 // ── Field resolvers ──────────────────────────────────────────────────────────
-function getName(r)    { return r.building_name || '' }
+function getName(r) {
+  // Fall through all known name fields before giving up
+  return r.building_name
+    || r.principal_public_space
+    || r.space_name
+    || r.pops_name
+    || (r.address_number && r.street_name ? r.address_number + ' ' + r.street_name : '')
+    || r.building_address_with_zip
+    || 'Unnamed space';
+}
 function getAddr(r)    { return r.building_address_with_zip || [r.address_number, r.street_name].filter(Boolean).join(' ') || '' }
 function getBorough(r) { return r.borough_name || '' }
 function getType(r)    { return r.public_space_type || '' }
@@ -486,11 +509,12 @@ function getAmenity(r, keys) {
 }
 
 const AMENITIES = [
-  { label:'Seating',        keys:['seating','seat'] },
-  { label:'Trees / plants', keys:['trees','planting','landscap','shrub'] },
-  { label:'Food service',   keys:['food','café','cafe','kiosk','vending'] },
-  { label:'Restrooms',      keys:['restroom','bathroom','toilet'] },
-  { label:'Water feature',  keys:['water','fountain','waterfall'] },
+  { label:'Seating',        keys:['seating','seat'],                    adaKey:false },
+  { label:'Trees / plants', keys:['trees','planting','landscap','shrub'], adaKey:false },
+  { label:'Food service',   keys:['food','café','cafe','kiosk','vending'], adaKey:false },
+  { label:'Restrooms',      keys:['restroom','bathroom','toilet'],       adaKey:false },
+  { label:'Water feature',  keys:['water','fountain','waterfall'],       adaKey:false },
+  { label:'ADA accessible', keys:[],                                     adaKey:true  },
 ];
 
 const FILTER_MAP = {
@@ -529,15 +553,25 @@ function makeIndoorIcon(active) {
 }
 
 // ── Render helpers ───────────────────────────────────────────────────────────
+function isADAok(r) {
+  const v = (r.physically_disabled||'').toLowerCase().trim();
+  return v === 'full' || v.includes('partial');
+}
 function amenityRows(r, cls, yes, no) {
   return AMENITIES.map(a => {
-    const ok = getAmenity(r, a.keys);
+    const ok = a.adaKey ? isADAok(r) : getAmenity(r, a.keys);
     return `<div class="${cls} ${ok?yes:no}"><span class="chk ${ok?'chk-yes':'chk-no'}">${ok?'✓':'✕'}</span>${a.label}</div>`;
   }).join('');
 }
 function hoursBlock(r) {
   const h = r.hour_of_access_required || '';
-  return `<span class="hours-label">Hours of access</span><span class="hours-val">${h||'Not listed'}</span>`;
+  const popsNum = r.pops_number || '';
+  const sourceUrl = popsNum
+    ? `https://data.cityofnewyork.us/City-Government/Privately-Owned-Public-Spaces-POPS-/rvih-nhyn`
+    : 'https://data.cityofnewyork.us/City-Government/Privately-Owned-Public-Spaces-POPS-/rvih-nhyn';
+  return `<span class="hours-label">Hours of access</span>` +
+    `<span class="hours-val">${h||'Not listed'}</span>` +
+    `<a class="hours-src" href="${sourceUrl}" target="_blank" rel="noopener">Verify on NYC Open Data ↗</a>`;
 }
 function adaBlock(r) {
   const v = (r.physically_disabled||'').toLowerCase().trim();
