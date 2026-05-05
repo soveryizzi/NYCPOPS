@@ -194,8 +194,15 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
       <p>Privately Owned Public Spaces (POPS)<br/>Live data · NYC Dept. of City Planning</p>
     </div>
     <div id="search-wrap">
-      <input id="search" type="text" placeholder="Search name, address, neighborhood…" autocomplete="off"/>
-      <select id="nbhd"><option value="">All neighborhoods</option></select>
+      <input id="search" type="text" placeholder="Search name or address…" autocomplete="off"/>
+      <select id="nbhd">
+        <option value="">All boroughs</option>
+        <option value="Manhattan">Manhattan</option>
+        <option value="Brooklyn">Brooklyn</option>
+        <option value="Queens">Queens</option>
+        <option value="Bronx">Bronx</option>
+        <option value="Staten Island">Staten Island</option>
+      </select>
     </div>
     <div id="filter-wrap">
       <div id="filter-label">Filter by amenity</div>
@@ -232,7 +239,7 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
       <div id="mob-controls">
         <div id="mob-row1">
           <input id="mob-search" type="text" placeholder="Search spaces…"/>
-          <select id="mob-nbhd"><option value="">All</option></select>
+          <select id="mob-nbhd"><option value="">All boroughs</option><option value="Manhattan">Manhattan</option><option value="Brooklyn">Brooklyn</option><option value="Queens">Queens</option><option value="Bronx">Bronx</option><option value="Staten Island">Staten Island</option></select>
         </div>
         <div id="mob-filters">
           <button class="fb on" data-f="all">All</button>
@@ -325,6 +332,7 @@ function getIndoorOutdoor(r) {
 }
 function getHours(r)   { return getField(r, ['hours_details','hours','public_hours','hours_of_operation','pops_hours']) }
 function getAmenity(r, keys) {
+  // Try exact key matches first
   for (const k of keys) {
     const v = r[k];
     if (v !== undefined && v !== null && v !== '') {
@@ -332,7 +340,25 @@ function getAmenity(r, keys) {
       return n === 'yes' || n === 'y' || n === 'true' || n === '1';
     }
   }
+  // Fallback: scan all keys for partial matches
+  for (const rk of Object.keys(r)) {
+    const rkl = rk.toLowerCase();
+    if (keys.some(k => rkl.includes(k.toLowerCase()) || k.toLowerCase().includes(rkl))) {
+      const v = r[rk];
+      if (v !== undefined && v !== null && v !== '') {
+        const n = String(v).toLowerCase().trim();
+        if (n === 'yes' || n === 'y' || n === 'true' || n === '1') return true;
+      }
+    }
+  }
   return false;
+}
+
+// Log first record's keys and values for debugging
+function debugRecord(r) {
+  if (!r) return;
+  console.log('Sample record fields:');
+  Object.entries(r).forEach(([k,v]) => console.log(' ', k, '=', v));
 }
 
 function isIndoor(r) {
@@ -402,7 +428,7 @@ function amenityRows(r, cls) {
 function renderTags(r, prefix) {
   const ind = isIndoor(r);
   const type = getType(r);
-  const nbhd = getNbhd(r);
+  const nbhd = getBorough(r);
   return `<span class="${prefix}-tag ${prefix}-tag-${ind?'in':'out'}">${ind?'Indoors':'Outdoors'}</span>`+
     (type ? `<span class="${prefix}-tag ${prefix}-tag-type">${type}</span>` : '')+
     (nbhd ? `<span class="${prefix}-tag ${prefix}-tag-type">${nbhd}</span>` : '');
@@ -502,10 +528,9 @@ function applyFilters() {
     const r = mo.r;
     const name = getName(r).toLowerCase();
     const addr = getAddr(r).toLowerCase();
-    const nbhd = getNbhd(r).toLowerCase();
     const boro = getBorough(r).toLowerCase();
-    const mS = !q || name.includes(q) || addr.includes(q) || nbhd.includes(q) || boro.includes(q);
-    const mN = !selNbhd || getNbhd(r) === selNbhd;
+    const mS = !q || name.includes(q) || addr.includes(q) || boro.includes(q);
+    const mN = !selNbhd || getBorough(r).toLowerCase() === selNbhd.toLowerCase();
     const mF = activeFilter === 'all' || (FILTER_MAP[activeFilter] && FILTER_MAP[activeFilter](r));
     if (mS && mN && mF) { map.addLayer(mo.layer); filtered.push({r, mo}); }
     else map.removeLayer(mo.layer);
@@ -559,11 +584,10 @@ async function loadData() {
     if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
     const data = await res.json();
     console.log(`Got ${data.length} records. First record keys:`, data[0] ? Object.keys(data[0]) : 'none');
+    if (data[0]) debugRecord(data[0]);
     if (!data || !data.length) throw new Error('API returned 0 records');
     allData = data;
     document.getElementById('loading').style.display = 'none';
-    populateNeighborhoods(document.getElementById('nbhd'));
-    populateNeighborhoods(document.getElementById('mob-nbhd'));
     buildMarkers();
   } catch(e) {
     console.error('POPS load failed:', e);
