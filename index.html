@@ -94,49 +94,76 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 #map{width:100%;height:100%}
 
 /* ── DETAIL CARD ── */
-#detail{position:absolute;top:16px;right:16px;width:284px;background:var(--white);border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 4px 24px rgba(0,114,99,.12);z-index:600;display:none;overflow:hidden;animation:fadeUp .18s ease}
-@keyframes fadeUp{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+#detail{position:absolute;top:16px;right:16px;width:300px;background:var(--white);border-radius:32px;box-shadow:0 8px 32px rgba(0,114,99,.15);z-index:600;display:none;overflow:hidden;animation:fadeUp .2s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 #detail.show{display:block}
-#detail-close{position:absolute;top:9px;right:10px;font-size:18px;line-height:1;cursor:pointer;color:rgba(255,255,255,.7);background:none;border:none;font-family:var(--font);z-index:1;padding:4px 6px}
-#detail-close:hover{color:var(--white)}
-#d-header{padding:14px 14px 12px}
+#detail-close{position:absolute;top:12px;right:14px;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;line-height:1;cursor:pointer;color:rgba(255,255,255,.8);background:rgba(0,0,0,.15);border:none;font-family:var(--font);z-index:1}
+#detail-close:hover{background:rgba(0,0,0,.28);color:var(--white)}
+#d-header{padding:20px 20px 16px}
 #d-header.out{background:var(--green)}
 #d-header.in{background:var(--blue)}
-#d-name{font-size:14px;font-weight:700;color:var(--white);margin-bottom:2px;line-height:1.3;padding-right:22px}
-#d-addr{font-size:11px;color:rgba(255,255,255,.65)}
-#detail-body{padding:12px 14px 14px}
-#d-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:11px}
-.dtag{font-size:10.5px;padding:3px 9px;border-radius:20px;font-weight:500}
-.dtag-out{background:var(--green-light);color:var(--green-text)}
-.dtag-in{background:var(--blue-light);color:var(--blue-text)}
-.dtag-type{background:var(--slate-light);color:var(--ink2)}
-#d-amenities{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;margin-bottom:11px}
-.dam{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--ink)}
-.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.dy{background:var(--green)}.dn{background:#ccd6d4}
-#d-hours{font-size:11.5px;color:var(--ink2);background:var(--yellow-light);border:1px solid var(--yellow);border-radius:6px;padding:7px 10px;line-height:1.4}
-#d-hours strong{color:var(--ink);font-weight:600}
+#d-badge{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:rgba(255,255,255,.75);margin-bottom:8px}
+#d-badge .badge-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.8)}
+#d-name{font-size:15px;font-weight:700;color:var(--white);margin-bottom:3px;line-height:1.3;padding-right:28px}
+#d-addr{font-size:11px;color:rgba(255,255,255,.6);line-height:1.4}
+#detail-body{padding:16px 20px 20px}
+#d-type-row{margin-bottom:12px}
+.dtype{display:inline-block;font-size:11px;padding:4px 12px;border-radius:20px;font-weight:600}
+.dtype-out{background:var(--green-light);color:var(--green-text)}
+.dtype-in{background:var(--blue-light);color:var(--blue-text)}
+#d-amenities-label{font-size:9.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px}
+#d-amenities{display:grid;grid-template-columns:1fr 1fr;gap:7px 8px;margin-bottom:14px}
+.dam{display:flex;align-items:center;gap:7px;font-size:12px}
+.dam-yes{color:var(--ink)}
+.dam-no{color:var(--ink3)}
+.chk{width:18px;height:18px;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700}
+.chk-yes{background:var(--green-light);color:var(--green)}
+.chk-no{background:#f0f0f0;color:#bbb}
+#d-hours{font-size:12px;color:var(--ink2);background:var(--yellow-light);border:1px solid #e8c040;border-radius:10px;padding:9px 12px;line-height:1.5;margin-bottom:10px}
+#d-hours .hours-label{font-size:9.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:2px}
+#d-hours .hours-val{font-weight:600;color:var(--ink)}
+#d-ada{display:flex;align-items:center;gap:8px;font-size:12px;border-radius:10px;padding:9px 12px}
+#d-ada.ada-yes{background:var(--blue-light);color:var(--blue-text)}
+#d-ada.ada-no{background:#f5f5f5;color:var(--ink3)}
+#d-ada.ada-partial{background:var(--slate-light);color:#4a6a7a}
+.ada-icon{font-size:16px;flex-shrink:0}
+.ada-text strong{display:block;font-size:11px;font-weight:600;margin-bottom:1px}
+.ada-text span{font-size:10.5px;opacity:.8}
 
 /* ── MOBILE PANEL ── */
-#panel{position:absolute;bottom:0;left:0;right:0;z-index:800;background:var(--white);border-top:1px solid var(--border);border-radius:14px 14px 0 0;transform:translateY(100%);transition:transform .28s cubic-bezier(.32,.72,0,1);max-height:66%;overflow-y:auto;-webkit-overflow-scrolling:touch;display:none}
+#panel{position:absolute;bottom:0;left:0;right:0;z-index:800;background:var(--white);border-radius:32px 32px 0 0;transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,0,1);max-height:80%;overflow-y:auto;-webkit-overflow-scrolling:touch;display:none;box-shadow:0 -4px 32px rgba(0,0,0,.1)}
 #panel.open{transform:translateY(0)}
-#panel-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:10px auto 0}
-#pclose{position:absolute;top:9px;right:12px;font-size:20px;line-height:1;cursor:pointer;color:rgba(255,255,255,.7);background:none;border:none;font-family:var(--font);padding:4px 6px;z-index:2}
-#p-header{padding:14px 16px 12px;margin-top:8px}
-#p-header.out{background:var(--green)}
-#p-header.in{background:var(--blue)}
-#p-name{font-size:16px;font-weight:700;color:var(--white);margin-bottom:2px;line-height:1.3;padding-right:28px}
-#p-addr{font-size:11.5px;color:rgba(255,255,255,.65)}
-#p-body{padding:12px 16px 28px}
-#p-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
-.ptag{font-size:10.5px;padding:3px 9px;border-radius:20px;font-weight:500}
-.ptag-out{background:var(--green-light);color:var(--green-text)}
-.ptag-in{background:var(--blue-light);color:var(--blue-text)}
-.ptag-type{background:var(--slate-light);color:var(--ink2)}
-#p-amenities{display:grid;grid-template-columns:1fr 1fr;gap:7px 14px;margin-bottom:12px}
-.pam{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--ink)}
-#p-hours{font-size:12px;color:var(--ink2);background:var(--yellow-light);border:1px solid var(--yellow);border-radius:6px;padding:8px 11px;line-height:1.4}
-#p-hours strong{color:var(--ink);font-weight:600}
+#panel-handle{width:40px;height:4px;background:rgba(255,255,255,.4);border-radius:2px;margin:14px auto 0;position:relative;z-index:3}
+#panel-handle.dark{background:var(--border)}
+#pclose{position:absolute;top:12px;right:16px;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;color:rgba(255,255,255,.8);background:rgba(0,0,0,.15);border:none;font-family:var(--font);z-index:3}
+#pclose:hover{background:rgba(0,0,0,.28);color:var(--white)}
+#p-header{padding:16px 20px 16px;margin-top:0}
+#p-header.out{background:var(--green);border-radius:32px 32px 0 0}
+#p-header.in{background:var(--blue);border-radius:32px 32px 0 0}
+#p-badge{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:rgba(255,255,255,.75);margin-bottom:8px}
+#p-badge .badge-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.8)}
+#p-name{font-size:18px;font-weight:700;color:var(--white);margin-bottom:3px;line-height:1.3;padding-right:34px}
+#p-addr{font-size:12px;color:rgba(255,255,255,.6);line-height:1.4}
+#p-body{padding:16px 20px 36px}
+#p-type-row{margin-bottom:14px}
+.ptype{display:inline-block;font-size:11px;padding:4px 12px;border-radius:20px;font-weight:600}
+.ptype-out{background:var(--green-light);color:var(--green-text)}
+.ptype-in{background:var(--blue-light);color:var(--blue-text)}
+#p-amenities-label{font-size:9.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px}
+#p-amenities{display:grid;grid-template-columns:1fr 1fr;gap:9px 8px;margin-bottom:16px}
+.pam{display:flex;align-items:center;gap:8px;font-size:13px}
+.pam-yes{color:var(--ink)}
+.pam-no{color:var(--ink3)}
+#p-hours{font-size:13px;color:var(--ink2);background:var(--yellow-light);border:1px solid #e8c040;border-radius:14px;padding:12px 14px;line-height:1.5;margin-bottom:12px}
+#p-hours .hours-label{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:3px}
+#p-hours .hours-val{font-weight:600;color:var(--ink);font-size:14px}
+#p-ada{display:flex;align-items:center;gap:10px;font-size:13px;border-radius:14px;padding:12px 14px}
+#p-ada.ada-yes{background:var(--blue-light);color:var(--blue-text)}
+#p-ada.ada-no{background:#f5f5f5;color:var(--ink3)}
+#p-ada.ada-partial{background:var(--slate-light);color:#4a6a7a}
+.p-ada-icon{font-size:20px;flex-shrink:0}
+.p-ada-text strong{display:block;font-size:12px;font-weight:700;margin-bottom:1px}
+.p-ada-text span{font-size:11px;opacity:.75}
 
 /* ── LOADING / ERROR ── */
 #loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;background:rgba(244,250,248,.94);z-index:900;backdrop-filter:blur(4px)}
@@ -192,7 +219,7 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
     <div id="brand">
       <h1>NYC <span>Public</span> Spaces</h1>
       <p>Privately Owned Public Spaces (POPS)<br/>Live data · NYC Dept. of City Planning</p>
-      <p id="version-tag" style="font-size:10px;color:rgba(255,255,255,.35);margin-top:5px;font-weight:400;">Last updated: 2026-05-04 22:11:52 EDT</p>
+      <p id="version-tag" style="font-size:10px;color:rgba(255,255,255,.35);margin-top:5px;font-weight:400;">Last updated: 2026-05-04 22:25:01 EDT</p>
     </div>
     <div id="search-wrap">
       <input id="search" type="text" placeholder="Search name or address…" autocomplete="off"/>
@@ -275,13 +302,16 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
       <div id="panel-handle"></div>
       <button id="pclose">&#215;</button>
       <div id="p-header">
+        <div id="p-badge"><span class="badge-dot"></span><span id="p-badge-label"></span></div>
         <div id="p-name"></div>
         <div id="p-addr"></div>
       </div>
       <div id="p-body">
-        <div id="p-tags"></div>
+        <div id="p-type-row"></div>
+        <div id="p-amenities-label">Amenities</div>
         <div id="p-amenities"></div>
         <div id="p-hours"></div>
+        <div id="p-ada"></div>
       </div>
     </div>
 
@@ -299,90 +329,50 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
-// ── Field name resolver ──────────────────────────────────────────────────────
-// The NYC API has changed column names over time. This tries all known variants.
-function getField(r, candidates) {
-  for (const k of candidates) {
-    if (r[k] !== undefined && r[k] !== null && r[k] !== '') return r[k];
-  }
-  return '';
-}
+// ── Field resolvers — exact names from NYC Open Data API ────────────────────
+function getName(r)    { return r.building_name || '' }
+function getAddr(r)    { return r.building_address_with_zip || [r.address_number, r.street_name].filter(Boolean).join(' ') || '' }
+function getBorough(r) { return r.borough_name || '' }
+function getType(r)    { return r.public_space_type || '' }
+function getLat(r)     { return parseFloat(r.latitude) }
+function getLng(r)     { return parseFloat(r.longitude) }
+function getHours(r)   { return r.hour_of_access_required || '' }
 
-function getName(r)    { return getField(r, ['name','building_name','pops_name','space_name']) }
-function getAddr(r)    { return getField(r, ['address','address_line1','street_address','location_1_address']) }
-function getBorough(r) { return getField(r, ['borough','boro','borough_name']) }
-function getNbhd(r)    { return getField(r, ['neighborhood','nta_name','ntaname','community_district']) }
-function getType(r)    { return getField(r, ['space_type','pops_type','type_of_space','type']) }
-function getLat(r)     {
-  if (r.latitude)  return parseFloat(r.latitude);
-  if (r.lat)       return parseFloat(r.lat);
-  if (r.the_geom && r.the_geom.coordinates) return r.the_geom.coordinates[1];
-  if (r.location && r.location.latitude)    return parseFloat(r.location.latitude);
-  return NaN;
-}
-function getLng(r)     {
-  if (r.longitude) return parseFloat(r.longitude);
-  if (r.long)      return parseFloat(r.long);
-  if (r.lng)       return parseFloat(r.lng);
-  if (r.the_geom && r.the_geom.coordinates) return r.the_geom.coordinates[0];
-  if (r.location && r.location.longitude)   return parseFloat(r.location.longitude);
-  return NaN;
-}
-function getIndoorOutdoor(r) {
-  return getField(r, ['indoor_outdoor','indooroutdoor','location_type','space_location','indoor_or_outdoor']);
-}
-function getHours(r)   { return getField(r, ['hours_details','hours','public_hours','hours_of_operation','pops_hours']) }
-function getAmenity(r, keys) {
-  // Try exact key matches first
-  for (const k of keys) {
-    const v = r[k];
-    if (v !== undefined && v !== null && v !== '') {
-      const n = String(v).toLowerCase().trim();
-      return n === 'yes' || n === 'y' || n === 'true' || n === '1';
-    }
-  }
-  // Fallback: scan all keys for partial matches
-  for (const rk of Object.keys(r)) {
-    const rkl = rk.toLowerCase();
-    if (keys.some(k => rkl.includes(k.toLowerCase()) || k.toLowerCase().includes(rkl))) {
-      const v = r[rk];
-      if (v !== undefined && v !== null && v !== '') {
-        const n = String(v).toLowerCase().trim();
-        if (n === 'yes' || n === 'y' || n === 'true' || n === '1') return true;
-      }
-    }
-  }
-  return false;
-}
-
-// Log first record's keys and values for debugging
-function debugRecord(r) {
-  if (!r) return;
-  console.log('Sample record fields:');
-  Object.entries(r).forEach(([k,v]) => console.log(' ', k, '=', v));
-}
-
+// Indoor types based on public_space_type value
+const INDOOR_TYPES = ['atrium','arcade','gallery','covered','interior','enclosed','lobby','galleria'];
 function isIndoor(r) {
-  const v = getIndoorOutdoor(r).toLowerCase();
-  return v === 'indoor' || v === 'indoors' || v === 'interior';
+  const t = (r.public_space_type || '').toLowerCase();
+  return INDOOR_TYPES.some(k => t.includes(k));
 }
+
+// amenities_required is a free-text field like "Seating, Trees, Litter receptacles"
+function getAmenitiesText(r) {
+  return (r.amenities_required || '').toLowerCase();
+}
+function getAmenity(r, keys) {
+  const txt = getAmenitiesText(r);
+  if (!txt || txt === 'none') return false;
+  return keys.some(k => txt.includes(k.toLowerCase()));
+}
+
+
 
 const AMENITIES = [
-  { label:'Seating',       keys:['seating','seats'] },
-  { label:'Trees / plants',keys:['trees_planting','trees','planting','landscaping'] },
-  { label:'Food service',  keys:['food_service','food','retail_food'] },
-  { label:'Restrooms',     keys:['public_restroom','restrooms','restroom','bathroom'] },
-  { label:'Water feature', keys:['water_feature','water','fountain'] },
+  { label:'Seating',       keys:['seating','seat'] },
+  { label:'Trees / plants',keys:['trees','planting','landscap','shrub'] },
+  { label:'Food service',  keys:['food','café','cafe','kiosk','vending'] },
+  { label:'Restrooms',     keys:['restroom','bathroom','toilet'] },
+  { label:'Water feature', keys:['water','fountain','waterfall'] },
 ];
 
 const FILTER_MAP = {
   outdoor:   r => !isIndoor(r),
   indoor:    r => isIndoor(r),
-  seating:   r => getAmenity(r, ['seating','seats']),
-  trees:     r => getAmenity(r, ['trees_planting','trees','planting']),
-  food:      r => getAmenity(r, ['food_service','food','retail_food']),
-  restrooms: r => getAmenity(r, ['public_restroom','restrooms','restroom']),
-  water:     r => getAmenity(r, ['water_feature','water','fountain']),
+  seating:   r => getAmenity(r, ['seating','seat']),
+  trees:     r => getAmenity(r, ['trees','planting','landscap','shrub']),
+  food:      r => getAmenity(r, ['food','café','cafe','kiosk','vending']),
+  restrooms: r => getAmenity(r, ['restroom','bathroom','toilet']),
+  water:     r => getAmenity(r, ['water','fountain','waterfall']),
 };
 
 function isMobile(){ return window.innerWidth <= 640 }
@@ -420,35 +410,54 @@ function makeIndoorIcon(active) {
 }
 
 // ── Render helpers ───────────────────────────────────────────────────────────
-function amenityRows(r, cls) {
-  return AMENITIES.map(a =>
-    `<div class="${cls}"><span class="dot ${getAmenity(r,a.keys)?'dy':'dn'}"></span>${a.label}</div>`
-  ).join('');
+function amenityRows(r, checkCls, yesCls, noCls) {
+  return AMENITIES.map(a => {
+    const yes = getAmenity(r, a.keys);
+    return `<div class="${checkCls} ${yes ? yesCls : noCls}">
+      <span class="chk ${yes?'chk-yes':'chk-no'}">${yes?'✓':'✕'}</span>
+      ${a.label}
+    </div>`;
+  }).join('');
 }
 
-function renderTags(r, prefix) {
-  const ind = isIndoor(r);
-  const type = getType(r);
-  const nbhd = getBorough(r);
-  return `<span class="${prefix}-tag ${prefix}-tag-${ind?'in':'out'}">${ind?'Indoors':'Outdoors'}</span>`+
-    (type ? `<span class="${prefix}-tag ${prefix}-tag-type">${type}</span>` : '')+
-    (nbhd ? `<span class="${prefix}-tag ${prefix}-tag-type">${nbhd}</span>` : '');
+function hoursBlock(r, hoursId) {
+  const h = r.hour_of_access_required || '';
+  return `<span class="hours-label">Hours of access</span><span class="hours-val">${h || 'Not listed'}</span>`;
 }
 
-function hoursHTML(r) {
-  const h = getHours(r);
-  return h ? `<strong>Hours:</strong> ${h}` : 'Hours not listed';
+function adaBlock(r) {
+  const val = (r.physically_disabled || '').toLowerCase().trim();
+  if (val === 'full') {
+    return { cls:'ada-yes', icon:'♿', title:'Fully accessible', sub:'ADA compliant' };
+  } else if (val.includes('partial')) {
+    return { cls:'ada-partial', icon:'♿', title:'Partially accessible', sub:'Some ADA features' };
+  } else if (val === 'none' || val === 'no') {
+    return { cls:'ada-no', icon:'♿', title:'Not accessible', sub:'No ADA access listed' };
+  } else {
+    return { cls:'ada-no', icon:'♿', title:'Accessibility unknown', sub: val || 'No data' };
+  }
+}
+
+function adaHTML(r, iconCls, textCls) {
+  const a = adaBlock(r);
+  return `<span class="${iconCls}">${a.icon}</span><div class="${textCls}"><strong>${a.title}</strong><span>${a.sub}</span></div>`;
 }
 
 // ── Detail card / panel ──────────────────────────────────────────────────────
 function selectSpace(r, mo) {
   const ind = isIndoor(r);
+  const label = ind ? 'Indoors' : 'Outdoors';
+  document.getElementById('d-badge-label').textContent = label;
   document.getElementById('d-name').textContent = getName(r) || 'Unnamed space';
-  document.getElementById('d-addr').textContent = [getAddr(r), getBorough(r)].filter(Boolean).join(', ');
+  document.getElementById('d-addr').textContent = [getBorough(r), getAddr(r)].filter(Boolean).join(' · ');
   document.getElementById('d-header').className = ind ? 'in' : 'out';
-  document.getElementById('d-tags').innerHTML = renderTags(r, 'dtag');
-  document.getElementById('d-amenities').innerHTML = amenityRows(r, 'dam');
-  document.getElementById('d-hours').innerHTML = hoursHTML(r);
+  const type = getType(r);
+  document.getElementById('d-type-row').innerHTML = type ? `<span class="dtype ${ind?'dtype-in':'dtype-out'}">${type}</span>` : '';
+  document.getElementById('d-amenities').innerHTML = amenityRows(r, 'dam', 'dam-yes', 'dam-no');
+  document.getElementById('d-hours').innerHTML = hoursBlock(r);
+  const ada = adaBlock(r);
+  document.getElementById('d-ada').className = ada.cls;
+  document.getElementById('d-ada').innerHTML = adaHTML(r, 'ada-icon', 'ada-text');
   document.getElementById('detail').classList.add('show');
   document.querySelectorAll('.space-item').forEach(el => el.classList.remove('active'));
   if (mo && mo.listEl) { mo.listEl.classList.add('active'); mo.listEl.scrollIntoView({block:'nearest'}) }
@@ -462,12 +471,18 @@ function selectSpace(r, mo) {
 
 function openPanel(r) {
   const ind = isIndoor(r);
+  const label = ind ? 'Indoors' : 'Outdoors';
+  document.getElementById('p-badge-label').textContent = label;
   document.getElementById('p-name').textContent = getName(r) || 'Unnamed space';
-  document.getElementById('p-addr').textContent = [getAddr(r), getBorough(r)].filter(Boolean).join(', ');
+  document.getElementById('p-addr').textContent = [getBorough(r), getAddr(r)].filter(Boolean).join(' · ');
   document.getElementById('p-header').className = ind ? 'in' : 'out';
-  document.getElementById('p-tags').innerHTML = renderTags(r, 'ptag');
-  document.getElementById('p-amenities').innerHTML = amenityRows(r, 'pam');
-  document.getElementById('p-hours').innerHTML = hoursHTML(r);
+  const type = getType(r);
+  document.getElementById('p-type-row').innerHTML = type ? `<span class="ptype ${ind?'ptype-in':'ptype-out'}">${type}</span>` : '';
+  document.getElementById('p-amenities').innerHTML = amenityRows(r, 'pam', 'pam-yes', 'pam-no');
+  document.getElementById('p-hours').innerHTML = hoursBlock(r);
+  const ada = adaBlock(r);
+  document.getElementById('p-ada').className = ada.cls;
+  document.getElementById('p-ada').innerHTML = adaHTML(r, 'p-ada-icon', 'p-ada-text');
   document.getElementById('panel').classList.add('open');
 }
 
@@ -503,7 +518,7 @@ function buildList() {
       <span class="si-dot ${ind?'si-dot-in':'si-dot-out'}"></span>
       <div class="si-content">
         <div class="si-name">${getName(r)||'Unnamed'}</div>
-        <div class="si-addr">${[getAddr(r),getBorough(r)].filter(Boolean).join(', ')}</div>
+        <div class="si-addr">${[getBorough(r),getAddr(r)].filter(Boolean).join(' · ')}</div>
         <div class="si-tags">
           <span class="si-tag ${ind?'si-tag-in':'si-tag-out'}">${ind?'Indoors':'Outdoors'}</span>
           ${type?`<span class="si-tag si-tag-type">${type}</span>`:''}
@@ -585,7 +600,6 @@ async function loadData() {
     if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
     const data = await res.json();
     console.log(`Got ${data.length} records. First record keys:`, data[0] ? Object.keys(data[0]) : 'none');
-    if (data[0]) debugRecord(data[0]);
     if (!data || !data.length) throw new Error('API returned 0 records');
     allData = data;
     document.getElementById('loading').style.display = 'none';
