@@ -192,6 +192,7 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
 /* ── MAP ── */
 #mapwrap{position:absolute;inset:0;overflow:hidden;z-index:0}
 #map{width:100%;height:100%;background:var(--bg)}
+.leaflet-tile-pane{filter:sepia(0.25) hue-rotate(80deg) saturate(0.85) brightness(0.97)}
 
 /* ── DESKTOP DETAIL CARD ── */
 #detail{
@@ -268,9 +269,6 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
 .vbtn.active{background:var(--white);color:var(--ink)}
 
 /* ── MOBILE RESULTS LIST ── */
-#mob-results{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:600;background:var(--white);overflow-y:auto;-webkit-overflow-scrolling:touch;padding-top:0;-webkit-overflow-scrolling:touch}
-#mob-results.show{display:block}
-#mob-results-list{padding:8px 10px 80px;display:flex;flex-direction:column;gap:6px}
 #mob-status{font-size:16px;color:var(--ink3)}
 
 /* ── MOBILE PANEL ── */
@@ -329,14 +327,7 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
 .p-ada-text span{font-size:16px;opacity:.75}
 
 /* ── MOBILE TOP BAR ── */
-/* Mobile nav — matches sidebar header */
-#mobile-bar{
-  display:none;position:fixed;top:0;left:0;right:0;
-  z-index:800;flex-direction:column;
-  background:var(--green);
-  box-shadow:0 2px 12px rgba(0,0,0,.15);
-  border-radius:0 0 32px 32px;
-}
+
 #mob-brand{
   padding:16px 16px 12px;
   display:flex;align-items:flex-start;justify-content:space-between;
@@ -370,32 +361,140 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
 /* Filter panel */
 #mob-filters-panel{overflow:hidden;max-height:0;transition:max-height .25s cubic-bezier(.32,.72,0,1)}
 #mob-filters-panel.open{max-height:55vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
-/* Compact filter rows — label left, chips scroll right */
-#mob-filters-panel .fd-section{
-  display:flex;align-items:flex-start;gap:10px;
-  padding:8px 16px;
-  border-bottom:1px solid rgba(255,255,255,.12);
+#mob-filter-done{
+  font-size:14px;font-family:var(--font);font-weight:600;
+  background:rgba(255,255,255,.2);color:var(--white);
+  border:1.5px solid rgba(255,255,255,.4);border-radius:20px;
+  padding:4px 12px;cursor:pointer;margin-left:auto;
 }
-#mob-filters-panel .fd-section:last-of-type{padding-bottom:12px}
-#mob-filters-panel .fd-section-label{
-  font-size:16px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
-  color:rgba(255,255,255,.55);white-space:nowrap;padding-top:6px;min-width:52px;
-}
-#mob-filters-panel .fd-chips{
-  display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;
-  -webkit-overflow-scrolling:touch;flex:1;padding-bottom:2px;
-}
-#mob-filters-panel .fd-chips::-webkit-scrollbar{display:none}
-#mob-filters-panel .fc{
-  padding:5px 12px;font-size:12.5px;flex-shrink:0;
-}
+#mob-filter-done:hover{background:rgba(255,255,255,.32)}
+/* mob filter panel inherits .fd-section, .fd-section-label, .fc styles from shared CSS */
 
-#mob-status-bar{display:flex;align-items:center;gap:8px;padding:10px 16px 16px;background:transparent;flex-shrink:0}
-#mob-status-bar span{font-size:16px;color:rgba(255,255,255,.7)}
-#mob-status-bar strong{font-size:16px;color:var(--white);font-weight:700}
-#mob-status-count{font-size:14px;color:rgba(255,255,255,.7)}
 #mob-clear{font-size:14px;font-family:var(--font);font-weight:600;background:transparent;color:var(--yellow);border:1.5px solid rgba(245,203,92,.5);border-radius:20px;padding:3px 10px;cursor:pointer;display:none;margin-left:auto}
 #mob-clear:hover{background:rgba(245,203,92,.12)}
+
+/* ════════════════════════════════════════
+   MOBILE — mirrors desktop sidebar
+════════════════════════════════════════ */
+
+/* Fixed green header — same structure as #sb-header */
+#mobile-bar{
+  display:none;
+  position:fixed;top:0;left:0;right:0;
+  z-index:800;
+  background:var(--green);
+  border-radius:0 0 32px 32px;
+  box-shadow:0 4px 16px rgba(0,0,0,.15);
+  flex-direction:column;
+}
+/* Title row */
+#mob-title-row{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  padding:16px 16px 0;
+}
+#mob-title{font-size:28px;font-weight:800;color:var(--white);letter-spacing:-.5px;line-height:1}
+#mob-title span{color:var(--yellow)}
+#mob-icon-row{display:flex;gap:7px;padding-top:2px;flex-shrink:0}
+
+/* Search panel — same as #sb-search-panel */
+#mob-search-panel{overflow:hidden;max-height:0;transition:max-height .2s ease}
+#mob-search-panel.open{max-height:56px;margin:10px 0;padding:0 16px}
+#mob-search-wrap{position:relative}
+#mob-search{
+  width:100%;padding:9px 38px 9px 12px;
+  font-size:16px;font-family:var(--font);
+  border:none;border-radius:8px;
+  background:rgba(255,255,255,.2);color:var(--white);outline:none;
+}
+#mob-search::placeholder{color:rgba(255,255,255,.55)}
+#mob-search:focus{background:rgba(255,255,255,.28)}
+#mob-search-clear{
+  position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  background:rgba(255,255,255,.15);border:none;color:rgba(255,255,255,.7);
+  font-size:16px;font-weight:700;cursor:pointer;
+  width:24px;height:24px;display:none;align-items:center;justify-content:center;border-radius:50%;
+}
+#mob-search-clear.show{display:flex}
+#mob-filter-badge{
+  position:absolute;top:-5px;right:-5px;
+  width:18px;height:18px;border-radius:50%;
+  background:var(--yellow);color:var(--dark);
+  font-size:10px;font-weight:800;
+  display:none;align-items:center;justify-content:center;
+  border:2px solid var(--green);line-height:1;
+}
+#mob-filter-badge.show{display:flex}
+
+/* Filter panel — same structure as #sb-filters */
+#mob-filters-panel{overflow:hidden;max-height:0;transition:max-height .25s cubic-bezier(.32,.72,0,1)}
+#mob-filters-panel.open{max-height:60vh;overflow-y:auto}
+
+/* Count bar — same as #sb-meta */
+#mob-meta{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 16px 16px;
+  background:transparent;flex-shrink:0;min-height:44px;
+}
+#mob-meta span{font-size:16px;color:rgba(255,255,255,.7)}
+#mob-meta strong{font-size:16px;color:var(--white);font-weight:700}
+#mob-active-count{font-size:14px;color:rgba(255,255,255,.7)}
+#mob-active-count strong{color:var(--yellow)}
+#mob-clear{
+  font-size:14px;font-family:var(--font);font-weight:600;
+  background:transparent;color:var(--yellow);
+  border:1.5px solid rgba(245,203,92,.5);border-radius:20px;
+  padding:3px 10px;cursor:pointer;display:none;
+}
+#mob-clear:hover{background:rgba(245,203,92,.12)}
+#mob-filter-done-btn{
+  font-size:14px;font-family:var(--font);font-weight:600;
+  background:rgba(255,255,255,.2);color:var(--white);
+  border:1.5px solid rgba(255,255,255,.4);border-radius:20px;
+  padding:3px 10px;cursor:pointer;display:none;margin-left:auto;
+}
+#mob-filter-done-btn:hover{background:rgba(255,255,255,.32)}
+
+/* Results list */
+#mob-results{
+  display:none;position:fixed;
+  top:0;left:0;right:0;bottom:0;
+  z-index:600;background:var(--white);
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
+}
+#mob-results.show{display:block}
+#mob-results-list{padding:8px 10px 80px;display:flex;flex-direction:column;gap:6px}
+
+/* Map/list toggle */
+#mob-view-bar{
+  display:none;
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  z-index:1000;background:var(--dark);border-radius:24px;padding:4px;
+  box-shadow:0 4px 20px rgba(0,0,0,.25);gap:2px;
+}
+.vbtn{padding:8px 20px;font-size:16px;font-weight:600;font-family:var(--font);border:none;border-radius:20px;cursor:pointer;transition:all .15s;color:rgba(255,255,255,.6);background:transparent}
+.vbtn.active{background:var(--white);color:var(--ink)}
+
+/* Panel (detail sheet) */
+#panel{
+  position:fixed;bottom:0;left:0;right:0;z-index:800;
+  background:var(--white);border-radius:32px 32px 0 0;
+  transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,0,1);
+  height:50%;display:flex;flex-direction:column;
+  box-shadow:0 -4px 32px rgba(0,0,0,.12);overflow:hidden;display:none;
+}
+#panel.open{transform:translateY(0)}
+#p-sticky{flex-shrink:0;position:relative;border-radius:32px 32px 0 0;overflow:hidden}
+#p-sticky.out{background:var(--orange)}
+#p-sticky.in{background:var(--blue)}
+#p-sticky-name-row{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 12px;gap:10px}
+#p-name{font-size:18px;font-weight:700;color:var(--white);line-height:1.3;flex:1;min-width:0}
+#pclose{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;color:rgba(255,255,255,.8);background:rgba(0,0,0,.15);border:none;font-family:var(--font);flex-shrink:0;position:static}
+#pclose:hover{background:rgba(0,0,0,.28)}
+#p-sub-header{padding:0 18px 14px}
+#p-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+#p-top-row{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:6px}
+#p-addr-link{font-size:14px;color:rgba(255,255,255,.7);line-height:1.4;text-decoration:underline;text-underline-offset:3px;display:inline-flex;align-items:center;gap:4px}
+#p-addr-link:hover{color:white}
 
 /* ── LOADING / ERROR ── */
 #loading{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;background:rgba(244,250,248,.94);z-index:950;backdrop-filter:blur(4px)}
@@ -422,17 +521,16 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
   #mob-results{display:none!important}
   #panel{display:none!important}
   #mobile-bar{display:none!important}
+  #mob-view-bar{display:none!important}
 }
 @media(max-width:640px){
-  #sidebar{display:none}
+  #sidebar{display:none!important}
   #panel{display:flex!important}
   #mob-view-bar{display:flex}
   #mobile-bar{display:flex}
   html,body,#app{overflow-x:hidden;max-width:100vw}
-  #app{display:block;height:100vh;height:100dvh;width:100%}
-  #mapwrap{position:absolute;top:0;left:0;right:0;bottom:0;width:100%;overflow:hidden;padding-top:0}
-  #panel{left:0;right:0;width:100%;max-width:100vw;overflow-x:hidden}
-  #mob-results{left:0;right:0;width:100%;max-width:100vw;overflow-x:hidden}
+  #app{position:relative;height:100vh;height:100dvh;width:100%}
+  #mapwrap{position:absolute;top:0;left:0;right:0;bottom:0;overflow:hidden}
   .si-addr{white-space:normal;overflow:visible;text-overflow:unset}
 }
 </style>
@@ -525,83 +623,6 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
   <!-- MAP -->
   <div id="mapwrap">
 
-    <!-- Mobile top bar -->
-    <div id="mobile-bar">
-      <div id="mob-brand">
-        <div>
-          <div id="mob-title">NYC <span>POPS</span></div>
-        </div>
-        <div id="mob-icon-row">
-          <button class="sb-icon-btn" id="mob-search-btn" onclick="toggleMobSearch()" aria-label="Search">
-            <svg width="17" height="17" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="white" stroke-width="1.8"/><path d="M12 12l3.5 3.5" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
-          </button>
-          <button class="sb-icon-btn" id="mob-filter-btn" onclick="toggleMobFilters()" aria-label="Filters">
-            <svg width="17" height="17" viewBox="0 0 18 18" fill="none"><path d="M2 4h14M5 9h8M7.5 14h3" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
-            <span class="sb-icon-badge" id="mob-filter-badge"></span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Mobile search -->
-      <div id="mob-search-panel">
-        <div id="mob-search-wrap-inner">
-          <input id="mob-search" type="text" placeholder="Search spaces…" autocomplete="off"/>
-          <button id="mob-search-clear">&#215;</button>
-        </div>
-      </div>
-
-      <!-- Mobile filters (mirrors sidebar filters) -->
-      <div id="mob-filters-panel">
-        <div class="fd-section fd-row">
-          <div class="fd-col">
-            <div class="fd-section-label">Borough</div>
-            <div class="fd-chips fd-chips-col" id="mob-fd-boroughs">
-              <button class="fc" data-b="Manhattan">Manhattan</button>
-              <button class="fc" data-b="Brooklyn">Brooklyn</button>
-              <button class="fc" data-b="Queens">Queens</button>
-              <button class="fc" data-b="Bronx">Bronx</button>
-              <button class="fc" data-b="Staten Island">Staten Island</button>
-            </div>
-          </div>
-          <div class="fd-col fd-col-type">
-            <div class="fd-section-label">Type</div>
-            <div class="fd-chips fd-chips-col" id="mob-fd-types">
-              <button class="fc" data-t="outdoor">Outdoors</button>
-              <button class="fc" data-t="indoor">Indoors</button>
-            </div>
-          </div>
-        </div>
-        <div class="fd-section">
-          <div class="fd-section-label" style="color:rgba(255,255,255,.6)">Amenities</div>
-          <div class="fd-chips" id="mob-fd-amenities">
-              <button class="fc" data-a="seating">Seating</button>
-              <button class="fc" data-a="restrooms">Restrooms</button>
-              <button class="fc" data-a="food">Food service</button>
-              <button class="fc" data-a="24hr">24-hour access</button>
-              <button class="fc" data-a="tables">Tables</button>
-              <button class="fc" data-a="subway">Subway access</button>
-              
-            <div class="fd-amenity-divider"></div>
-            <button class="fc" data-a="climate">Climate control</button>
-            <button class="fc" data-a="water">Water feature</button>
-            <button class="fc" data-a="trees">Trees / planting</button>
-            <button class="fc" data-a="lighting">Lighting</button>
-            <button class="fc" data-a="artwork">Artwork</button>
-            <button class="fc" data-a="bicycle">Bicycle parking</button>
-            <button class="fc" data-a="elevator">Elevator</button>
-            <button class="fc" data-a="escalator">Escalator</button>
-            <button class="fc" data-a="retail">Retail frontage</button>
-            <button class="fc" data-a="programs">Programs</button>
-          </div>
-        </div>
-      </div>
-
-      <div id="mob-status-bar">
-        <strong id="mob-shown-count">0</strong><span>spaces</span>
-        <span id="mob-status-count"></span>
-        <button id="mob-clear" onclick="clearAllFilters()">Clear ✕</button>
-      </div>
-    </div>
 
     <div id="map"></div>
 
@@ -626,7 +647,7 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
     <div id="api-error">
       <div class="err-icon">⚠️</div>
       <div class="err-title">Couldn't load data</div>
-      <div class="err-msg">The NYC Open Data API didn't respond. Check your connection and try again.</div>
+      <div class="err-msg">Couldn't load POPS data. This may be a network issue or the API is temporarily down. Try refreshing — it usually resolves quickly.</div>
       <div class="err-detail" id="err-detail-msg"></div>
       <button class="err-btn" onclick="location.reload()">Refresh page</button>
     </div>
@@ -640,11 +661,90 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
   <button class="vbtn" id="vbtn-list" onclick="setMobView('list')">List</button>
 </div>
 
-<div id="mob-filter-overlay" onclick="closeMobFilters()" style="display:none;position:fixed;inset:0;z-index:498;background:rgba(0,0,0,.2)"></div>
 
 <!-- Mobile results list -->
 <div id="mob-results">
   <div id="mob-results-list"></div>
+</div>
+
+<!-- ═══════════ MOBILE GREEN NAV ═══════════ -->
+<div id="mobile-bar">
+  <div id="mob-title-row">
+    <div id="mob-title">NYC <span>POPS</span></div>
+    <div id="mob-icon-row">
+      <button class="sb-icon-btn" id="mob-search-btn" onclick="toggleMobSearch()" aria-label="Search">
+        <svg width="17" height="17" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="white" stroke-width="1.8"/><path d="M12 12l3.5 3.5" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      <button class="sb-icon-btn" id="mob-filter-btn" style="position:relative" onclick="toggleMobFilters()" aria-label="Filters">
+        <svg width="17" height="17" viewBox="0 0 18 18" fill="none"><path d="M2 4h14M5 9h8M7.5 14h3" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span id="mob-filter-badge"></span>
+      </button>
+    </div>
+  </div>
+
+  <div id="mob-search-panel">
+    <div id="mob-search-wrap">
+      <input id="mob-search" type="text" placeholder="Search spaces, addresses…" autocomplete="off"/>
+      <button id="mob-search-clear">&#215;</button>
+    </div>
+  </div>
+
+  <div id="mob-filters-panel">
+    <div class="fd-section fd-row">
+      <div class="fd-col">
+        <div class="fd-section-label">Borough</div>
+        <div class="fd-chips fd-chips-col" id="mob-fd-boroughs">
+          <button class="fc" data-b="Manhattan">Manhattan</button>
+          <button class="fc" data-b="Brooklyn">Brooklyn</button>
+          <button class="fc" data-b="Queens">Queens</button>
+          <button class="fc" data-b="Bronx">Bronx</button>
+          <button class="fc" data-b="Staten Island">Staten Island</button>
+        </div>
+      </div>
+      <div class="fd-col fd-col-type">
+        <div class="fd-section-label">Type</div>
+        <div class="fd-chips fd-chips-col" id="mob-fd-types">
+          <button class="fc" data-t="outdoor">Outdoors</button>
+          <button class="fc" data-t="indoor">Indoors</button>
+        </div>
+      </div>
+    </div>
+    <div class="fd-section">
+      <div class="fd-section-label">Amenities</div>
+      <div class="fd-chips" id="mob-fd-amenities">
+        <button class="fc" data-a="seating">Seating</button>
+        <button class="fc" data-a="restrooms">Restrooms</button>
+        <button class="fc" data-a="food">Food service</button>
+        <button class="fc" data-a="24hr">24-hour access</button>
+        <button class="fc" data-a="tables">Tables</button>
+        <button class="fc" data-a="subway">Subway access</button>
+        <div class="fd-amenity-divider"></div>
+        <button class="fc" data-a="climate">Climate control</button>
+        <button class="fc" data-a="water">Water feature</button>
+        <button class="fc" data-a="trees">Trees / planting</button>
+        <button class="fc" data-a="lighting">Lighting</button>
+        <button class="fc" data-a="artwork">Artwork</button>
+        <button class="fc" data-a="bicycle">Bicycle parking</button>
+        <button class="fc" data-a="elevator">Elevator</button>
+        <button class="fc" data-a="escalator">Escalator</button>
+        <button class="fc" data-a="retail">Retail frontage</button>
+        <button class="fc" data-a="programs">Programs</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="mob-meta">
+    <strong id="mob-shown-count">0</strong><span>spaces</span>
+    <button id="mob-clear" onclick="clearAllFilters()" style="display:none"></button>
+    <button id="mob-filter-done-btn" onclick="toggleMobFilters()" style="display:none;margin-left:auto">Done</button>
+  </div>
+</div>
+
+
+<!-- Map/List toggle -->
+<div id="mob-view-bar">
+  <button class="vbtn active" id="vbtn-map" onclick="setMobView('map')">Map</button>
+  <button class="vbtn" id="vbtn-list" onclick="setMobView('list')">List</button>
 </div>
 
 <!-- Mobile slide-up panel -->
@@ -859,8 +959,6 @@ function selectSpace(r, mo) {
   if (mo) { mo.layer.setIcon(isIndoor(r)?makeIndoorIcon(true):makeOutdoorIcon(true)); mo.layer.setZIndexOffset(1000); }
 }
 function openPanel(r) {
-  // Close filters if open
-  closeMobFilters();
   fillCard(r, 'p');
   document.getElementById('panel').classList.add('open');
 }
@@ -967,14 +1065,23 @@ function updateFilterCount() {
   const sbClose = document.getElementById('sb-close-filters');
   const sbPanel = document.getElementById('sb-filters');
   if (sbClose && sbPanel) sbClose.style.display = sbPanel.classList.contains('open') ? 'inline-block' : 'none';
+  // Mobile badge
   const mobBadge = document.getElementById('mob-filter-badge');
   if (mobBadge) { mobBadge.textContent = total > 0 ? total : ''; mobBadge.classList.toggle('show', total > 0); }
+  // Mobile count
   const mobShown = document.getElementById('mob-shown-count');
   if (mobShown) mobShown.textContent = filtered.length;
-  const mobStatusCount = document.getElementById('mob-status-count');
-  if (mobStatusCount) mobStatusCount.innerHTML = total > 0 ? `<strong>${total}</strong> filter${total>1?'s':''} active` : '';
+  // Mobile active count text
+  // Mobile clear button
   const mobClear = document.getElementById('mob-clear');
   if (mobClear) mobClear.style.display = filtersAreActive() ? 'inline-block' : 'none';
+  // Mobile done button
+  updateMobFilterFooter();
+  const mobFilterClear = document.getElementById('mob-clear');
+  if (mobFilterClear) {
+    mobFilterClear.textContent = total > 0 ? `Clear ${total} filter${total>1?'s':''}` : '';
+    mobFilterClear.style.display = total > 0 ? 'inline-block' : 'none';
+  }
 }
 function applyFilters() {
   const q = searchQ.toLowerCase().trim();
@@ -1024,13 +1131,13 @@ function buildMarkers() {
 // ── Load ─────────────────────────────────────────────────────────────────────
 async function loadData() {
   try {
-    const res = await fetch('https://data.cityofnewyork.us/resource/rvih-nhyn.json?$limit=600');
+    const res = await fetch('https://data.cityofnewyork.us/resource/rvih-nhyn.json?$limit=600&$order=:id');
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     if (!data?.length) throw new Error('Empty response');
     allData = data;
     document.getElementById('loading').style.display = 'none';
-    buildMarkers();
+    try { buildMarkers(); } catch(err) { console.error('buildMarkers failed:', err); }
   } catch(e) {
     console.error('Load failed:', e);
     document.getElementById('loading').style.display = 'none';
@@ -1040,170 +1147,82 @@ async function loadData() {
 }
 
 // ── UI Controls ──────────────────────────────────────────────────────────────
-function closeMobFilters() {
-  const panel = document.getElementById('mob-filters-panel');
-  const btn   = document.getElementById('mob-filter-btn');
-  const ov    = document.getElementById('mob-filter-overlay');
-  if (panel) panel.classList.remove('open');
-  if (btn) btn.classList.remove('active');
-  if (ov) ov.style.display = 'none';
-  updateMobMapTop();
-}
+// ════════════════════════════════════════
+// MOBILE — mirrors desktop sidebar logic
+// ════════════════════════════════════════
+
 function toggleMobSearch() {
   const panel = document.getElementById('mob-search-panel');
   const btn   = document.getElementById('mob-search-btn');
   const isOpen = panel.classList.contains('open');
   panel.classList.toggle('open', !isOpen);
   if (btn) btn.classList.toggle('active', !isOpen);
-  if (!isOpen) setTimeout(() => { const s = document.getElementById('mob-search'); if(s) s.focus(); }, 220);
-  updateMobMapTop();
+  if (!isOpen) setTimeout(() => { const s = document.getElementById('mob-search'); if(s) s.focus(); }, 150);
+  updateMobTop();
 }
+
 function toggleMobFilters() {
   const panel = document.getElementById('mob-filters-panel');
   const btn   = document.getElementById('mob-filter-btn');
-  const ov    = document.getElementById('mob-filter-overlay');
   const isOpen = panel.classList.contains('open');
-  // Close sheet if opening filters
-  if (!isOpen) closePanel();
+  if (!isOpen) closePanel(); // close detail sheet when opening filters
   panel.classList.toggle('open', !isOpen);
   if (btn) btn.classList.toggle('active', !isOpen);
-  if (ov) ov.style.display = isOpen ? 'none' : 'block';
-  updateMobMapTop();
+  // Show/hide Done button
+  updateMobFilterFooter();
+  updateMobTop();
 }
-function updateMobMapTop() {
+
+function updateMobFilterFooter() {
+  const panel   = document.getElementById('mob-filters-panel');
+  const doneBtn = document.getElementById('mob-filter-done-btn');
+  const clearBtn = document.getElementById('mob-clear');
+  const isOpen  = panel && panel.classList.contains('open');
+  if (doneBtn) doneBtn.style.display = isOpen ? 'inline-block' : 'none';
+}
+
+function updateMobTop() {
+  // Push map and results list below the mobile nav bar
   setTimeout(() => {
-    const bar = document.getElementById('mobile-bar');
+    const bar  = document.getElementById('mobile-bar');
     const wrap = document.getElementById('mapwrap');
     const res  = document.getElementById('mob-results');
     const h = bar ? bar.offsetHeight : 0;
     if (wrap) wrap.style.top = h + 'px';
-    // Keep results list below the bar too
     if (res && res.classList.contains('show')) res.style.paddingTop = h + 'px';
   }, 280);
 }
 
-function toggleSearch() {
-  const panel = document.getElementById('sb-search-panel');
-  const btn = document.getElementById('sb-search-btn');
-  const isOpen = panel.classList.contains('open');
-  panel.classList.toggle('open', !isOpen);
-  if (btn) btn.classList.toggle('active', !isOpen);
-  if (!isOpen) setTimeout(() => { const s = document.getElementById('nav-search'); if(s) s.focus(); }, 220);
-}
-function toggleSbFilters() {
-  const panel = document.getElementById('sb-filters');
-  const btn = document.getElementById('sb-filter-btn');
-  const closeBtn = document.getElementById('sb-close-filters');
-  const isOpen = panel.classList.contains('open');
-  panel.classList.toggle('open', !isOpen);
-  if (btn) btn.classList.toggle('active', !isOpen);
-  if (closeBtn) closeBtn.style.display = isOpen ? 'none' : 'inline-block';
-}
-function clearAllFilters() {
-  activeBoroughs = new Set();
-  activeTypes = new Set();
-  activeAmenities.clear();
-  document.querySelectorAll('#fd-boroughs .fc').forEach(b => b.classList.remove('on'));
-  document.querySelectorAll('#fd-types .fc').forEach(b => b.classList.remove('on'));
-  document.querySelectorAll('#fd-amenities .fc').forEach(b => b.classList.remove('on'));
-  clearSearch();
-  applyFilters();
-}
-
-document.querySelectorAll('#fd-boroughs .fc').forEach(b => {
-  b.addEventListener('click', () => {
-    const boro = b.dataset.b;
-    if (activeBoroughs.has(boro)) { activeBoroughs.delete(boro); b.classList.remove('on'); }
-    else { activeBoroughs.add(boro); b.classList.add('on'); }
-    applyFilters();
-  });
-});
-document.querySelectorAll('#fd-types .fc').forEach(b => {
-  b.addEventListener('click', () => {
-    const t = b.dataset.t;
-    if (activeTypes.has(t)) { activeTypes.delete(t); b.classList.remove('on'); }
-    else { activeTypes.add(t); b.classList.add('on'); }
-    applyFilters();
-  });
-});
-document.querySelectorAll('#fd-amenities .fc').forEach(b => {
-  b.addEventListener('click', () => {
-    const a = b.dataset.a;
-    if (activeAmenities.has(a)) { activeAmenities.delete(a); b.classList.remove('on'); }
-    else { activeAmenities.add(a); b.classList.add('on'); }
-    applyFilters();
-  });
-});
-
-// ── Unified search handler ──────────────────────────────────────────────────
-function onSearch(val) {
-  searchQ = val;
-  // Sync both inputs
-  const ds = document.getElementById('nav-search');
-  const ms = document.getElementById('mob-search');
-  if (ds && document.activeElement !== ds) ds.value = val;
-  if (ms && document.activeElement !== ms) ms.value = val;
-  // Show/hide clear buttons
-  document.getElementById('nav-search-clear')?.classList.toggle('show', !!val);
-  document.getElementById('mob-search-clear')?.classList.toggle('show', !!val);
-  // On mobile: keep search bar open; auto-switch to list only on first char
-  if (isMobile()) {
-    const sp = document.getElementById('mob-search-panel');
-    const sb = document.getElementById('mob-search-btn');
-    if (val && sp && !sp.classList.contains('open')) {
-      sp.classList.add('open');
-      if (sb) sb.classList.add('active');
-      updateMobMapTop();
-    }
-    // Only switch to list on first character, preserve view after that
-    if (val && val.length === 1 && mobView !== 'list') setMobView('list');
+function setMobView(v) {
+  mobView = v;
+  document.getElementById('vbtn-map').classList.toggle('active', v==='map');
+  document.getElementById('vbtn-list').classList.toggle('active', v==='list');
+  const res = document.getElementById('mob-results');
+  if (v === 'list') {
+    res.classList.add('show');
+    buildMobList();
+    closePanel();
+    const bar = document.getElementById('mobile-bar');
+    if (bar) res.style.paddingTop = bar.offsetHeight + 'px';
+  } else {
+    res.classList.remove('show');
   }
-  applyFilters();
-}
-function clearSearch() {
-  const ds = document.getElementById('nav-search');
-  const ms = document.getElementById('mob-search');
-  if (ds) ds.value = '';
-  if (ms) ms.value = '';
-  document.getElementById('nav-search-clear')?.classList.remove('show');
-  document.getElementById('mob-search-clear')?.classList.remove('show');
-  searchQ = '';
-  applyFilters();
 }
 
-// Desktop search
-const navSearch = document.getElementById('nav-search');
-if (navSearch) {
-  navSearch.addEventListener('input', e => onSearch(e.target.value));
-}
-const clearBtn = document.getElementById('nav-search-clear');
-if (clearBtn) clearBtn.addEventListener('click', clearSearch);
-
-// Mobile search
-const mobSearchEl = document.getElementById('mob-search');
-if (mobSearchEl) {
-  mobSearchEl.addEventListener('input', e => onSearch(e.target.value));
-}
-const mobClearBtn = document.getElementById('mob-search-clear');
-if (mobClearBtn) mobClearBtn.addEventListener('click', clearSearch);
-// Sync mob filter chips with sidebar state (they share activeBoroughs etc.)
-function syncMobFilterChips() {
-  document.querySelectorAll('#mob-fd-boroughs .fc').forEach(b => b.classList.toggle('on', activeBoroughs.has(b.dataset.b)));
-  document.querySelectorAll('#mob-fd-types .fc').forEach(b => b.classList.toggle('on', activeTypes.has(b.dataset.t)));
-  document.querySelectorAll('#mob-fd-amenities .fc').forEach(b => b.classList.toggle('on', activeAmenities.has(b.dataset.a)));
-}
+// Mobile chip listeners — mirror desktop, no panel closing
 document.querySelectorAll('#mob-fd-boroughs .fc').forEach(b => {
-  b.addEventListener('click', () => {
+  b.addEventListener('click', e => {
+    e.stopPropagation();
     const boro = b.dataset.b;
     if (activeBoroughs.has(boro)) { activeBoroughs.delete(boro); b.classList.remove('on'); }
     else { activeBoroughs.add(boro); b.classList.add('on'); }
-    // Sync sidebar chips
     document.querySelectorAll('#fd-boroughs .fc').forEach(sb => sb.classList.toggle('on', activeBoroughs.has(sb.dataset.b)));
     applyFilters();
   });
 });
 document.querySelectorAll('#mob-fd-types .fc').forEach(b => {
-  b.addEventListener('click', () => {
+  b.addEventListener('click', e => {
+    e.stopPropagation();
     const t = b.dataset.t;
     if (activeTypes.has(t)) { activeTypes.delete(t); b.classList.remove('on'); }
     else { activeTypes.add(t); b.classList.add('on'); }
@@ -1212,7 +1231,8 @@ document.querySelectorAll('#mob-fd-types .fc').forEach(b => {
   });
 });
 document.querySelectorAll('#mob-fd-amenities .fc').forEach(b => {
-  b.addEventListener('click', () => {
+  b.addEventListener('click', e => {
+    e.stopPropagation();
     const a = b.dataset.a;
     if (activeAmenities.has(a)) { activeAmenities.delete(a); b.classList.remove('on'); }
     else { activeAmenities.add(a); b.classList.add('on'); }
@@ -1221,8 +1241,11 @@ document.querySelectorAll('#mob-fd-amenities .fc').forEach(b => {
   });
 });
 
-// Update mob filter badge in updateFilterCount
-const origUpdateFilterCount = updateFilterCount;
+// Mobile search input
+const mobSearchEl = document.getElementById('mob-search');
+if (mobSearchEl) mobSearchEl.addEventListener('input', e => onSearch(e.target.value));
+const mobClearBtn = document.getElementById('mob-search-clear');
+if (mobClearBtn) mobClearBtn.addEventListener('click', clearSearch);
 
 // ── Resizable sidebar ────────────────────────────────────────────────────────
 (function() {
@@ -1286,7 +1309,7 @@ const origUpdateFilterCount = updateFilterCount;
 })();
 
 loadData();
-if (typeof updateMobMapTop === 'function') setTimeout(updateMobMapTop, 100);
+setTimeout(updateMobTop, 100);
 </script>
 </body>
 </html>
