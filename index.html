@@ -48,7 +48,6 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
 }
 #sb-title-row{display:flex;align-items:flex-start;justify-content:space-between}
 #sb-title{font-size:32px;font-weight:800;color:var(--white);letter-spacing:-.5px;line-height:1}
-#sb-subtitle{font-size:11px;color:rgba(255,255,255,.5);margin-top:3px;font-weight:400;letter-spacing:.02em}
 #sb-title span{color:var(--yellow)}
 #sb-icon-row{display:flex;gap:7px;padding-top:2px;flex-shrink:0}
 .sb-icon-btn{
@@ -351,8 +350,7 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
   padding:16px 16px 0;
   flex-shrink:0;
 }
-#mob-title{font-size:28px;font-weight:800;color:var(--white);letter-spacing:-.5px;line-height:1}
-#mob-subtitle{font-size:11px;color:rgba(255,255,255,.5);margin-top:3px;font-weight:400;letter-spacing:.02em}
+#mob-title{font-size:28px;font-weight:800;color:var(--white);letter-spacing:-.4px;line-height:1}
 #mob-title span{color:var(--yellow)}
 #mob-icon-row{display:flex;gap:7px;padding-top:2px;flex-shrink:0}
 
@@ -523,10 +521,7 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
   <div id="sidebar">
     <div id="sb-header">
       <div id="sb-title-row">
-        <div>
-          <div id="sb-title">NYC <span>POPS</span></div>
-          <div id="sb-subtitle">Privately Owned Public Spaces</div>
-        </div>
+        <div id="sb-title">NYC <span>POPS</span></div>
         <div id="sb-icon-row">
           <button class="sb-icon-btn" id="sb-search-btn" onclick="toggleSearch()" aria-label="Search">
             <svg width="17" height="17" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="white" stroke-width="1.8"/><path d="M12 12l3.5 3.5" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
@@ -655,7 +650,6 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
 <div id="mobile-bar">
   <div id="mob-title-row">
     <div id="mob-title">NYC <span>POPS</span></div>
-    <div id="mob-subtitle">Privately Owned Public Spaces</div>
     <div id="mob-icon-row">
       <button class="sb-icon-btn" id="mob-search-btn" onclick="toggleMobSearch()" aria-label="Search">
         <svg width="17" height="17" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="white" stroke-width="1.8"/><path d="M12 12l3.5 3.5" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
@@ -665,8 +659,6 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
         <span id="mob-filter-badge"></span>
       </button>
     </div>
-  </div>
-
   <div id="mob-search-panel">
     <div id="mob-search-wrap">
       <input id="mob-search" type="text" placeholder="Search spaces, addresses…" autocomplete="off"/>
