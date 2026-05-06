@@ -49,6 +49,7 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
 #sb-title-row{display:flex;align-items:flex-start;justify-content:space-between}
 #sb-title{font-size:32px;font-weight:800;color:var(--white);letter-spacing:-.5px;line-height:1}
 #sb-title span{color:var(--yellow)}
+#sb-subtitle{font-size:11px;color:rgba(255,255,255,.55);margin-top:3px;font-weight:400;letter-spacing:.02em}
 #sb-icon-row{display:flex;gap:7px;padding-top:2px;flex-shrink:0}
 .sb-icon-btn{
   width:36px;height:36px;border-radius:10px;
@@ -349,10 +350,12 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
   display:flex;align-items:flex-start;justify-content:space-between;
   padding:16px 16px 0;
   flex-shrink:0;
+  margin-bottom:4px;
 }
-#mob-title{font-size:28px;font-weight:800;color:var(--white);letter-spacing:-.4px;line-height:1}
+#mob-title{font-size:36px;font-weight:800;color:var(--white);letter-spacing:-.5px;line-height:1}
+#mob-tagline{font-size:13px;color:rgba(255,255,255,.65);margin-top:4px;font-weight:400}
 #mob-title span{color:var(--yellow)}
-#mob-icon-row{display:flex;gap:7px;padding-top:2px;flex-shrink:0}
+#mob-icon-row{display:flex;gap:8px;padding-top:4px;flex-shrink:0}
 
 /* Search panel — same as #sb-search-panel */
 #mob-search-panel{overflow:hidden;max-height:0;transition:max-height .2s ease;flex-shrink:0}
@@ -390,12 +393,11 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
 /* Count bar — same as #sb-meta */
 #mob-meta{
   display:flex;align-items:center;gap:8px;
-  padding:10px 16px 16px;
+  padding:12px 16px 14px;
   background:transparent;flex-shrink:0;
-  min-height:44px;
 }
 #mob-meta span{font-size:16px;color:rgba(255,255,255,.7)}
-#mob-meta strong{font-size:16px;color:var(--white);font-weight:700}
+#mob-meta strong{font-size:18px;color:var(--white);font-weight:800}
 #mob-active-count{font-size:14px;color:rgba(255,255,255,.7)}
 #mob-active-count strong{color:var(--yellow)}
 #mob-clear{
@@ -416,10 +418,9 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
 /* Results list */
 #mob-results{
   display:none;position:fixed;
-  top:0;left:0;right:75px;bottom:0;
+  top:0;left:0;right:0;bottom:0;
   z-index:600;background:transparent;
   overflow-y:auto;-webkit-overflow-scrolling:touch;
-  pointer-events:none;
   padding-top:75px;
 }
 #mob-results.show{display:block}
@@ -456,7 +457,7 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
 #panel{
   position:fixed;bottom:0;left:0;right:0;z-index:800;
   background:var(--white);border-radius:24px 24px 0 0;
-  transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,0,1);
+  transform:translateY(100%);transition:transform .4s cubic-bezier(.34,1.56,.64,1);
   height:50%;display:flex;flex-direction:column;
   box-shadow:0 -4px 32px rgba(0,0,0,.12);overflow:hidden;display:none;
 }
@@ -521,7 +522,10 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
   <div id="sidebar">
     <div id="sb-header">
       <div id="sb-title-row">
-        <div id="sb-title">NYC <span>POPS</span></div>
+        <div>
+          <div id="sb-title">NYC <span>POPS</span></div>
+          <div id="sb-subtitle">privately owned public spaces</div>
+        </div>
         <div id="sb-icon-row">
           <button class="sb-icon-btn" id="sb-search-btn" onclick="toggleSearch()" aria-label="Search">
             <svg width="17" height="17" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="white" stroke-width="1.8"/><path d="M12 12l3.5 3.5" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
@@ -649,7 +653,10 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
 <!-- ═══════════ MOBILE GREEN NAV ═══════════ -->
 <div id="mobile-bar">
   <div id="mob-title-row">
-    <div id="mob-title">NYC <span>POPS</span></div>
+    <div>
+      <div id="mob-title">NYC <span>POPS</span></div>
+      <div id="mob-tagline">privately owned public spaces</div>
+    </div>
     <div id="mob-icon-row">
       <button class="sb-icon-btn" id="mob-search-btn" onclick="toggleMobSearch()" aria-label="Search">
         <svg width="17" height="17" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="white" stroke-width="1.8"/><path d="M12 12l3.5 3.5" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
@@ -659,6 +666,7 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
         <span id="mob-filter-badge"></span>
       </button>
     </div>
+  </div>
   <div id="mob-search-panel">
     <div id="mob-search-wrap">
       <input id="mob-search" type="text" placeholder="Search spaces, addresses…" autocomplete="off"/>
@@ -1054,14 +1062,13 @@ function updateFilterCount() {
   if (mobShown) mobShown.textContent = filtered.length;
   // Mobile active count text
   // Mobile clear button
-  const mobClear = document.getElementById('mob-clear');
-  if (mobClear) mobClear.style.display = filtersAreActive() ? 'inline-block' : 'none';
   // Mobile done button
   updateMobFilterFooter();
   const mobFilterClear = document.getElementById('mob-clear');
   if (mobFilterClear) {
     mobFilterClear.textContent = total > 0 ? `Clear ${total} filter${total>1?'s':''}` : '';
-    mobFilterClear.style.display = total > 0 ? 'inline-block' : 'none';
+    mobFilterClear.style.visibility = total > 0 ? 'visible' : 'hidden';
+    mobFilterClear.style.display = 'inline-block';
   }
 }
 function applyFilters() {
