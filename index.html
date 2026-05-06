@@ -35,17 +35,8 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
   overflow:visible;
   border-radius:0 32px 32px 0;
   z-index:50;
-  pointer-events:none;
+  pointer-events:auto;
 }
-#sidebar > *{pointer-events:auto}
-
-/* Sidebar resize handle */
-#sb-resize{
-  position:absolute;top:32px;bottom:32px;
-  width:6px;cursor:col-resize;z-index:51;
-  background:transparent;transition:background .15s;
-}
-#sb-resize:hover,#sb-resize.dragging{background:rgba(0,114,99,.2)}
 
 /* Green header */
 #sb-header{
@@ -53,10 +44,11 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
   padding:20px 16px 0;
   flex-shrink:0;
   border-radius:0 32px 32px 0;
-  overflow:hidden;
+  transition:none;
 }
 #sb-title-row{display:flex;align-items:flex-start;justify-content:space-between}
 #sb-title{font-size:32px;font-weight:800;color:var(--white);letter-spacing:-.5px;line-height:1}
+#sb-subtitle{font-size:11px;color:rgba(255,255,255,.5);margin-top:3px;font-weight:400;letter-spacing:.02em}
 #sb-title span{color:var(--yellow)}
 #sb-icon-row{display:flex;gap:7px;padding-top:2px;flex-shrink:0}
 .sb-icon-btn{
@@ -100,14 +92,13 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
 
 /* Filter panel */
 #sb-filters{overflow:hidden;max-height:0;transition:max-height .25s cubic-bezier(.32,.72,0,1)}
-#sb-filters.open{max-height:200px;overflow-y:auto}
 #sb-filters.open{max-height:340px;overflow-y:auto;margin-top:8px}
 
 /* Filter sections inside green header */
 .fd-section{padding:8px 16px 6px 16px}
-.fd-row{display:flex;gap:12px;align-items:flex-start}
-.fd-col{display:flex;flex-direction:column;gap:6px;flex:1;min-width:0}
-.fd-col-type{flex:0 0 auto}
+.fd-row{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.fd-col{display:flex;flex-direction:column;gap:6px;flex:1;min-width:120px}
+.fd-col-type{flex:0 0 auto;min-width:100px;max-width:140px}
 .fd-chips-col{flex-wrap:wrap}
 .fd-section:last-of-type{padding-bottom:12px}
 .fd-section-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:7px}
@@ -159,6 +150,7 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
 
 /* List */
 #list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:6px 10px 6px 0;display:flex;flex-direction:column;gap:6px;scrollbar-width:none;overflow-x:visible}
+#list .space-item{animation:slideInLeft .22s cubic-bezier(.32,.72,0,1) both}
 #list::-webkit-scrollbar{display:none}
 #list-empty{padding:36px 18px;text-align:center;color:var(--ink3);font-size:16px;line-height:1.7}
 
@@ -181,7 +173,7 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
 .si-icon-sq{width:20px;height:20px;flex-shrink:0;margin-top:3px}
 .si-content{flex:1;min-width:0}
 .si-name{font-size:16px;font-weight:600;color:var(--ink);margin-bottom:3px;line-height:1.3}
-.si-addr{font-size:16px;color:var(--ink3);margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.si-addr{font-size:13px;color:var(--ink3);margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .si-tags{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
 .si-tag{font-size:10.5px;padding:2px 8px;border-radius:20px;font-weight:600}
 .si-tag-boro{background:transparent;color:var(--green-text);border:1.5px solid var(--green-text)}
@@ -196,38 +188,35 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
 
 /* ── DESKTOP DETAIL CARD ── */
 #detail{
-  position:absolute;top:16px;right:16px;
+  position:absolute;top:32px;right:16px;bottom:32px;
   width:clamp(280px,28vw,33.33vw);
   min-width:280px;max-width:33.33vw;
   background:var(--white);border-radius:32px;
   box-shadow:0 8px 32px rgba(0,114,99,.15);
   z-index:600;display:none;overflow:hidden;animation:fadeUp .2s ease;
-  flex-direction:column;resize:horizontal;
-  overflow-x:hidden;
+  flex-direction:column;
 }
-/* Resize handle styling */
-#detail::-webkit-resizer{display:none}
 @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 #detail.show{display:flex}
 #detail-close{
-  position:absolute;top:12px;right:14px;width:32px;height:32px;border-radius:50%;
+  position:absolute;top:12px;right:14px;width:36px;height:36px;border-radius:10px;
   display:flex;align-items:center;justify-content:center;
-  font-size:18px;cursor:pointer;color:rgba(255,255,255,.8);background:rgba(0,0,0,.15);border:none;font-family:var(--font);z-index:1;
+  cursor:pointer;color:rgba(255,255,255,.85);background:rgba(255,255,255,.18);border:none;z-index:1;
 }
-#detail-close:hover{background:rgba(0,0,0,.28)}
-#d-header{padding:16px 20px 16px}
+#detail-close:hover{background:rgba(255,255,255,.3)}
+#d-header{padding:16px 20px 14px;flex-shrink:0}
 #d-header.out{background:var(--orange)}
 #d-header.in{background:var(--blue)}
-/* Tag row in detail header */
-#d-tag-row{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:10px}
+/* Tag row — now in detail-body on white bg */
+#d-tag-row{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-bottom:14px}
 .d-htag{font-size:16px;font-weight:600;padding:3px 9px;border-radius:20px}
-.d-htag-boro{background:transparent;color:rgba(255,255,255,.9);border:1.5px solid rgba(255,255,255,.5)}
-.d-htag-out{background:rgba(255,255,255,.22);color:var(--white)}
-.d-htag-in{background:rgba(255,255,255,.25);color:var(--white)}
-.d-htag-type{background:rgba(255,255,255,.12);color:rgba(255,255,255,.75)}
+.d-htag-boro{background:transparent;color:var(--green-text);border:1.5px solid var(--green-text)}
+.d-htag-out{background:var(--orange-light);color:var(--orange-text)}
+.d-htag-in{background:var(--blue-light);color:var(--blue-text)}
+.d-htag-type{background:var(--slate-light);color:var(--ink2)}
 #d-name{font-size:20px;font-weight:800;color:var(--white);margin-bottom:6px;line-height:1.2;padding-right:36px}
-#d-addr{font-size:16px;color:rgba(255,255,255,.65);line-height:1.4}
-#detail-body{padding:14px 18px 20px;overflow-y:auto;flex:1}
+#d-addr{font-size:13px;color:rgba(255,255,255,.65);line-height:1.4}
+#detail-body{padding:14px 18px 24px;overflow-y:auto;flex:1}
 /* dtype no longer used — removed */
 #d-amenities-label{font-size:16px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px}
 #d-amenities{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
@@ -259,12 +248,7 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
 .apops-btn:hover{background:#3a3838}
 
 /* ── MOBILE VIEW TOGGLE ── */
-#mob-view-bar{
-  display:none;
-  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
-  z-index:1000;background:var(--dark);border-radius:24px;padding:4px;
-  box-shadow:0 4px 20px rgba(0,0,0,.25);gap:2px;
-}
+
 .vbtn{padding:8px 20px;font-size:16px;font-weight:600;font-family:var(--font);border:none;border-radius:20px;cursor:pointer;transition:all .15s;color:rgba(255,255,255,.6);background:transparent}
 .vbtn.active{background:var(--white);color:var(--ink)}
 
@@ -272,45 +256,30 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
 #mob-status{font-size:16px;color:var(--ink3)}
 
 /* ── MOBILE PANEL ── */
-#panel{
-  position:fixed;bottom:0;left:0;right:0;z-index:800;
-  background:var(--white);border-radius:32px 32px 0 0;
-  transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,0,1);
-  height:50%;display:flex;flex-direction:column;
-  box-shadow:0 -4px 32px rgba(0,0,0,.12);overflow:hidden;display:none;
-}
+
 #panel.open{transform:translateY(0)}
 
 /* Sticky strip: only handle + name + close */
-#p-sticky{
-  flex-shrink:0;position:relative;
-  border-radius:32px 32px 0 0;
-  overflow:hidden;
-}
+
 #p-sticky.out{background:var(--orange)}
 #p-sticky.in{background:var(--blue)}
-#p-sticky-name-row{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:10px 16px 10px;gap:10px;
-}
-#p-sub-header{
-  padding:0 16px 14px;
-}
-#p-name{font-size:17px;font-weight:700;color:var(--white);line-height:1.3;flex:1;min-width:0}
-#pclose{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;color:rgba(255,255,255,.8);background:rgba(0,0,0,.15);border:none;font-family:var(--font);flex-shrink:0;position:static}
-#pclose:hover{background:rgba(0,0,0,.28)}
+
+
+
+
+#pclose:hover{background:rgba(255,255,255,.3)}
 
 /* Scrollable body: everything else */
-#p-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0;display:flex;flex-direction:column}
-#p-top-row{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:6px}
-.p-htag{font-size:16px;font-weight:600;padding:3px 9px;border-radius:20px}
-.p-htag-boro{background:transparent;color:rgba(255,255,255,.9);border:1.5px solid rgba(255,255,255,.5)}
-.p-htag-out{background:rgba(255,255,255,.2);color:var(--white)}
-.p-htag-in{background:rgba(255,255,255,.22);color:var(--white)}
-.p-htag-type{background:rgba(255,255,255,.12);color:rgba(255,255,255,.75)}
-#p-addr-link{font-size:16px;color:rgba(255,255,255,.7);line-height:1.4;text-decoration:none;display:inline-flex;align-items:center;gap:4px;margin-bottom:8px}
+
+
+.p-htag{font-size:13px;font-weight:600;padding:3px 9px;border-radius:20px}
+.p-htag-boro{background:transparent;color:var(--green-text);border:1.5px solid var(--green-text)}
+.p-htag-out{background:var(--orange-light);color:var(--orange-text)}
+.p-htag-in{background:var(--blue-light);color:var(--blue-text)}
+.p-htag-type{background:var(--slate-light);color:var(--ink2)}
+
 #p-addr-link:hover{color:rgba(255,255,255,.95)}
-#p-addr-link::after{content:' ↗';font-size:16px;opacity:.7}
+#p-addr-link::after{content:' ↗';font-size:11px;opacity:.7}
 #p-amenities-label{font-size:16px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px}
 #p-amenities{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
 .pam{display:flex;align-items:center;gap:8px;font-size:16px}
@@ -332,34 +301,23 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
   padding:16px 16px 12px;
   display:flex;align-items:flex-start;justify-content:space-between;
 }
-#mob-title{font-size:28px;font-weight:800;color:var(--white);letter-spacing:-.4px;line-height:1}
+
 #mob-title span{color:var(--yellow)}
-#mob-icon-row{display:flex;gap:7px;padding-top:2px;flex-shrink:0}
+
 /* Reuse .sb-icon-btn styles — already defined */
 
 /* Search panel */
-#mob-search-panel{overflow:hidden;max-height:0;transition:max-height .2s ease}
+
 #mob-search-panel.open{max-height:52px;margin-bottom:2px}
 #mob-search-wrap-inner{position:relative;padding:0 14px 12px}
-#mob-search{
-  width:100%;padding:9px 38px 9px 12px;
-  font-size:16px;font-family:var(--font);
-  border:none;border-radius:8px;
-  background:rgba(255,255,255,.2);color:var(--white);outline:none;
-}
+
 #mob-search::placeholder{color:rgba(255,255,255,.55)}
 #mob-search:focus{background:rgba(255,255,255,.28)}
-#mob-search-clear{
-  position:absolute;right:10px;top:50%;transform:translateY(-50%);
-  background:none;border:none;color:rgba(255,255,255,.7);
-  font-size:16px;font-weight:700;cursor:pointer;
-  width:24px;height:24px;display:none;align-items:center;justify-content:center;
-  border-radius:50%;background:rgba(255,255,255,.15);
-}
+
 #mob-search-clear.show{display:flex}
 
 /* Filter panel */
-#mob-filters-panel{overflow:hidden;max-height:0;transition:max-height .25s cubic-bezier(.32,.72,0,1)}
+
 #mob-filters-panel.open{max-height:55vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
 #mob-filter-done{
   font-size:14px;font-family:var(--font);font-weight:600;
@@ -370,8 +328,6 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
 #mob-filter-done:hover{background:rgba(255,255,255,.32)}
 /* mob filter panel inherits .fd-section, .fd-section-label, .fc styles from shared CSS */
 
-#mob-clear{font-size:14px;font-family:var(--font);font-weight:600;background:transparent;color:var(--yellow);border:1.5px solid rgba(245,203,92,.5);border-radius:20px;padding:3px 10px;cursor:pointer;display:none;margin-left:auto}
-#mob-clear:hover{background:rgba(245,203,92,.12)}
 
 /* ════════════════════════════════════════
    MOBILE — mirrors desktop sidebar
@@ -383,21 +339,25 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
   position:fixed;top:0;left:0;right:0;
   z-index:800;
   background:var(--green);
-  border-radius:0 0 32px 32px;
+  border-radius:0 0 24px 24px;
   box-shadow:0 4px 16px rgba(0,0,0,.15);
   flex-direction:column;
+  max-height:60vh;
+  overflow-y:hidden;
 }
 /* Title row */
 #mob-title-row{
   display:flex;align-items:flex-start;justify-content:space-between;
   padding:16px 16px 0;
+  flex-shrink:0;
 }
 #mob-title{font-size:28px;font-weight:800;color:var(--white);letter-spacing:-.5px;line-height:1}
+#mob-subtitle{font-size:11px;color:rgba(255,255,255,.5);margin-top:3px;font-weight:400;letter-spacing:.02em}
 #mob-title span{color:var(--yellow)}
 #mob-icon-row{display:flex;gap:7px;padding-top:2px;flex-shrink:0}
 
 /* Search panel — same as #sb-search-panel */
-#mob-search-panel{overflow:hidden;max-height:0;transition:max-height .2s ease}
+#mob-search-panel{overflow:hidden;max-height:0;transition:max-height .2s ease;flex-shrink:0}
 #mob-search-panel.open{max-height:56px;margin:10px 0;padding:0 16px}
 #mob-search-wrap{position:relative}
 #mob-search{
@@ -426,14 +386,15 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
 #mob-filter-badge.show{display:flex}
 
 /* Filter panel — same structure as #sb-filters */
-#mob-filters-panel{overflow:hidden;max-height:0;transition:max-height .25s cubic-bezier(.32,.72,0,1)}
-#mob-filters-panel.open{max-height:60vh;overflow-y:auto}
+#mob-filters-panel{overflow-y:auto;max-height:0;transition:max-height .25s cubic-bezier(.32,.72,0,1)}
+#mob-filters-panel.open{max-height:calc(60vh - 130px)}
 
 /* Count bar — same as #sb-meta */
 #mob-meta{
   display:flex;align-items:center;gap:8px;
   padding:10px 16px 16px;
-  background:transparent;flex-shrink:0;min-height:44px;
+  background:transparent;flex-shrink:0;
+  min-height:44px;
 }
 #mob-meta span{font-size:16px;color:rgba(255,255,255,.7)}
 #mob-meta strong{font-size:16px;color:var(--white);font-weight:700}
@@ -457,12 +418,31 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
 /* Results list */
 #mob-results{
   display:none;position:fixed;
-  top:0;left:0;right:0;bottom:0;
-  z-index:600;background:var(--white);
+  top:0;left:0;right:75px;bottom:0;
+  z-index:600;background:transparent;
   overflow-y:auto;-webkit-overflow-scrolling:touch;
+  pointer-events:none;
+  padding-top:75px;
 }
 #mob-results.show{display:block}
-#mob-results-list{padding:8px 10px 80px;display:flex;flex-direction:column;gap:6px}
+#mob-results-list{
+  padding:8px 0 100px 0;
+  display:flex;flex-direction:column;gap:6px;
+  pointer-events:auto;
+}
+
+/* Slide-in animation for each card */
+@keyframes slideInLeft{
+  from{opacity:0;transform:translateX(-100%)}
+  to{opacity:1;transform:translateX(0)}
+}
+@keyframes slideOutLeft{
+  from{opacity:1;transform:translateX(0)}
+  to{opacity:0;transform:translateX(-100%)}
+}
+#mob-results-list .space-item{
+  animation:slideInLeft .22s cubic-bezier(.32,.72,0,1) both;
+}
 
 /* Map/list toggle */
 #mob-view-bar{
@@ -477,23 +457,23 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
 /* Panel (detail sheet) */
 #panel{
   position:fixed;bottom:0;left:0;right:0;z-index:800;
-  background:var(--white);border-radius:32px 32px 0 0;
+  background:var(--white);border-radius:24px 24px 0 0;
   transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,0,1);
   height:50%;display:flex;flex-direction:column;
   box-shadow:0 -4px 32px rgba(0,0,0,.12);overflow:hidden;display:none;
 }
 #panel.open{transform:translateY(0)}
-#p-sticky{flex-shrink:0;position:relative;border-radius:32px 32px 0 0;overflow:hidden}
+#p-sticky{flex-shrink:0;position:relative;border-radius:24px 24px 0 0;overflow:hidden}
 #p-sticky.out{background:var(--orange)}
 #p-sticky.in{background:var(--blue)}
 #p-sticky-name-row{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 12px;gap:10px}
-#p-name{font-size:18px;font-weight:700;color:var(--white);line-height:1.3;flex:1;min-width:0}
-#pclose{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;color:rgba(255,255,255,.8);background:rgba(0,0,0,.15);border:none;font-family:var(--font);flex-shrink:0;position:static}
-#pclose:hover{background:rgba(0,0,0,.28)}
+#p-name{font-size:20px;font-weight:800;color:var(--white);line-height:1.2;flex:1;min-width:0}
+#pclose{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgba(255,255,255,.85);background:rgba(255,255,255,.18);border:none;flex-shrink:0;position:static}
+#pclose:hover{background:rgba(255,255,255,.3)}
 #p-sub-header{padding:0 18px 14px}
 #p-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
 #p-top-row{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:6px}
-#p-addr-link{font-size:14px;color:rgba(255,255,255,.7);line-height:1.4;text-decoration:underline;text-underline-offset:3px;display:inline-flex;align-items:center;gap:4px}
+#p-addr-link{font-size:13px;color:rgba(255,255,255,.7);line-height:1.4;text-decoration:underline;text-underline-offset:3px;display:inline-flex;align-items:center;gap:4px}
 #p-addr-link:hover{color:white}
 
 /* ── LOADING / ERROR ── */
@@ -530,7 +510,7 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
   #mobile-bar{display:flex}
   html,body,#app{overflow-x:hidden;max-width:100vw}
   #app{position:relative;height:100vh;height:100dvh;width:100%}
-  #mapwrap{position:absolute;top:0;left:0;right:0;bottom:0;overflow:hidden}
+  #mapwrap{position:absolute;top:0;left:0;right:0;bottom:0;overflow:hidden;z-index:0}
   .si-addr{white-space:normal;overflow:visible;text-overflow:unset}
 }
 </style>
@@ -545,13 +525,14 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
       <div id="sb-title-row">
         <div>
           <div id="sb-title">NYC <span>POPS</span></div>
+          <div id="sb-subtitle">Privately Owned Public Spaces</div>
         </div>
         <div id="sb-icon-row">
           <button class="sb-icon-btn" id="sb-search-btn" onclick="toggleSearch()" aria-label="Search">
             <svg width="17" height="17" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="white" stroke-width="1.8"/><path d="M12 12l3.5 3.5" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
           </button>
           <button class="sb-icon-btn" id="sb-filter-btn" onclick="toggleSbFilters()" aria-label="Filters">
-            <svg width="17" height="17" viewBox="0 0 18 18" fill="none"><path d="M2 4h14M5 9h8M7.5 14h3" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <svg width="17" height="17" viewBox="0 0 18 18" fill="none"><line x1="3" y1="5" x2="15" y2="5" stroke="white" stroke-width="1.6" stroke-linecap="round"/><line x1="3" y1="9" x2="15" y2="9" stroke="white" stroke-width="1.6" stroke-linecap="round"/><line x1="3" y1="13" x2="15" y2="13" stroke="white" stroke-width="1.6" stroke-linecap="round"/><circle cx="6" cy="5" r="2" fill="var(--green)" stroke="white" stroke-width="1.6"/><circle cx="11" cy="9" r="2" fill="var(--green)" stroke="white" stroke-width="1.6"/><circle cx="7" cy="13" r="2" fill="var(--green)" stroke="white" stroke-width="1.6"/></svg>
             <span class="sb-icon-badge" id="sb-filter-badge"></span>
           </button>
         </div>
@@ -580,6 +561,11 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
             <div class="fd-chips fd-chips-col" id="fd-types">
               <button class="fc" data-t="outdoor">Outdoors</button>
               <button class="fc" data-t="indoor">Indoors</button>
+            </div>
+            <div class="fd-section-label" style="margin-top:10px">Access</div>
+            <div class="fd-chips fd-chips-col" id="fd-ada">
+              <button class="fc" data-ada="partial">♿ Some</button>
+              <button class="fc" data-ada="full">♿ Full</button>
             </div>
           </div>
         </div>
@@ -617,8 +603,6 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
 
     <div id="list"></div>
   </div>
-  <!-- Sidebar resize handle -->
-  <div id="sb-resize" title="Drag to resize"></div>
 
   <!-- MAP -->
   <div id="mapwrap">
@@ -628,13 +612,13 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
 
     <!-- Desktop detail card -->
     <div id="detail">
-      <button id="detail-close">&#215;</button>
+      <button id="detail-close"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
       <div id="d-header">
         <div id="d-name"></div>
         <div id="d-addr"></div>
-        <div id="d-tag-row"></div>
       </div>
       <div id="detail-body">
+        <div id="d-tag-row"></div>
         <div id="d-amenities-label">Amenities</div>
         <div id="d-amenities"></div>
         <div id="d-hours"></div>
@@ -671,12 +655,13 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
 <div id="mobile-bar">
   <div id="mob-title-row">
     <div id="mob-title">NYC <span>POPS</span></div>
+    <div id="mob-subtitle">Privately Owned Public Spaces</div>
     <div id="mob-icon-row">
       <button class="sb-icon-btn" id="mob-search-btn" onclick="toggleMobSearch()" aria-label="Search">
         <svg width="17" height="17" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="white" stroke-width="1.8"/><path d="M12 12l3.5 3.5" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
       </button>
       <button class="sb-icon-btn" id="mob-filter-btn" style="position:relative" onclick="toggleMobFilters()" aria-label="Filters">
-        <svg width="17" height="17" viewBox="0 0 18 18" fill="none"><path d="M2 4h14M5 9h8M7.5 14h3" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <svg width="17" height="17" viewBox="0 0 18 18" fill="none"><line x1="3" y1="5" x2="15" y2="5" stroke="white" stroke-width="1.6" stroke-linecap="round"/><line x1="3" y1="9" x2="15" y2="9" stroke="white" stroke-width="1.6" stroke-linecap="round"/><line x1="3" y1="13" x2="15" y2="13" stroke="white" stroke-width="1.6" stroke-linecap="round"/><circle cx="6" cy="5" r="2" fill="var(--green)" stroke="white" stroke-width="1.6"/><circle cx="11" cy="9" r="2" fill="var(--green)" stroke="white" stroke-width="1.6"/><circle cx="7" cy="13" r="2" fill="var(--green)" stroke="white" stroke-width="1.6"/></svg>
         <span id="mob-filter-badge"></span>
       </button>
     </div>
@@ -707,6 +692,11 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
           <button class="fc" data-t="outdoor">Outdoors</button>
           <button class="fc" data-t="indoor">Indoors</button>
         </div>
+        <div class="fd-section-label" style="margin-top:10px">Access</div>
+        <div class="fd-chips fd-chips-col" id="mob-fd-ada">
+          <button class="fc" data-ada="partial">♿ Some</button>
+          <button class="fc" data-ada="full">♿ Full</button>
+        </div>
       </div>
     </div>
     <div class="fd-section">
@@ -735,33 +725,24 @@ html,body{height:100%;font-family:var(--font);background:transparent;color:var(-
 
   <div id="mob-meta">
     <strong id="mob-shown-count">0</strong><span>spaces</span>
-    <button id="mob-clear" onclick="clearAllFilters()" style="display:none"></button>
+    <button id="mob-clear" onclick="clearAllFilters()" style="display:inline-block;visibility:hidden"></button>
     <button id="mob-filter-done-btn" onclick="toggleMobFilters()" style="display:none;margin-left:auto">Done</button>
   </div>
 </div>
 
-
-<!-- Map/List toggle -->
-<div id="mob-view-bar">
-  <button class="vbtn active" id="vbtn-map" onclick="setMobView('map')">Map</button>
-  <button class="vbtn" id="vbtn-list" onclick="setMobView('list')">List</button>
-</div>
 
 <!-- Mobile slide-up panel -->
 <div id="panel">
   <div id="p-sticky">
     <div id="p-sticky-name-row">
       <div id="p-name"></div>
-      <button id="pclose">&#215;</button>
+      <button id="pclose"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </div>
-    <!-- Green sub-area: addr + tags, not sticky but still on green -->
-    <div id="p-sub-header">
-      <a id="p-addr-link" href="#" target="_blank" rel="noopener"></a>
-      <div id="p-top-row"></div>
-    </div>
+    <a id="p-addr-link" href="#" target="_blank" rel="noopener" style="display:block;padding:0 18px 14px;font-size:13px;color:rgba(255,255,255,.72);text-decoration:underline;text-underline-offset:3px"></a>
   </div>
   <div id="p-body">
-    <div style="padding:14px 18px 32px">
+    <div style="padding:12px 18px 100px">
+      <div id="p-top-row" style="margin-bottom:14px;display:flex;align-items:center;gap:5px;flex-wrap:wrap"></div>
       <div id="p-amenities-label">Amenities</div>
       <div id="p-amenities"></div>
       <div id="p-hours"></div>
@@ -818,6 +799,16 @@ const AMENITIES = [
   { label:'24-hour access',   keys:['24 hour','24-hour','24hours','open 24'] },
 ];
 
+function isAdaAccessible(r) {
+  // Any level of accessibility (partial, full/partial, full)
+  const v = (r.physically_disabled||'').toLowerCase().trim();
+  return v === 'full' || v === 'full/partial' || v === 'partial/full' || v === 'partial';
+}
+function isAdaFull(r) {
+  // Fully accessible (full or full/partial — i.e. has full access somewhere)
+  const v = (r.physically_disabled||'').toLowerCase().trim();
+  return v === 'full' || v === 'full/partial' || v === 'partial/full';
+}
 const AMENITY_FILTER_MAP = {
   seating:  r => getAmenity(r, ['seating','seat']),
   tables:   r => getAmenity(r, ['table']),
@@ -851,6 +842,7 @@ let allData=[], filtered=[], markers=[], searchQ='', activeItem=null;
 let activeBoroughs = new Set(); // empty = show all
 let activeTypes    = new Set(); // empty = show all
 let activeAmenities = new Set(); // empty = no amenity filter
+let activeAda = new Set();       // empty = no ada filter
 let mobView = 'map';
 
 // ── Icons ────────────────────────────────────────────────────────────────────
@@ -900,6 +892,11 @@ function apopsURL(r) {
 }
 
 // ── Fill card ────────────────────────────────────────────────────────────────
+function toSentenceCase(str) {
+  if (!str) return str;
+  return str.toLowerCase().replace(/(^\w|[.,!?]\s+\w)/g, l => l.toUpperCase());
+}
+
 function fillCard(r, prefix) {
   const ind = isIndoor(r), label = ind?'Indoors':'Outdoors';
   const type = getType(r);
@@ -917,7 +914,7 @@ function fillCard(r, prefix) {
     const mapsQ = encodeURIComponent([getName(r), addr].filter(Boolean).join(', ') + ' NYC');
     const addrLink = document.getElementById('p-addr-link');
     addrLink.href = `https://www.google.com/maps/search/?api=1&query=${mapsQ}`;
-    addrLink.innerHTML = `<svg width="12" height="12" viewBox="0 0 14 14" fill="none" style="flex-shrink:0"><path d="M7 1C4.79 1 3 2.79 3 5c0 3.25 4 8 4 8s4-4.75 4-8c0-2.21-1.79-4-4-4z" fill="currentColor" opacity=".7"/><circle cx="7" cy="5" r="1.5" fill="white"/></svg>${addr}`;
+    addrLink.innerHTML = `<svg width="11" height="11" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;margin-right:4px"><path d="M7 1C4.79 1 3 2.79 3 5c0 3.25 4 8 4 8s4-4.75 4-8c0-2.21-1.79-4-4-4z" fill="currentColor" opacity=".7"/><circle cx="7" cy="5" r="1.5" fill="white"/></svg>${addr}`;
     document.getElementById('p-amenities').innerHTML = amenityRows(r,'pam','pam-yes','pam-no');
     document.getElementById('p-hours').innerHTML = hoursBlock(r);
     const pAda = adaBlock(r);
@@ -970,34 +967,13 @@ function closeDetail() {
 }
 document.getElementById('detail-close').addEventListener('click', closeDetail);
 document.getElementById('pclose').addEventListener('click', closePanel);
-map.on('click', () => { closeDetail(); closePanel(); });
+map.on('click', () => {
+  closeDetail();
+  closePanel();
+  if (isMobile() && mobView === 'list') setMobView('map');
+});
 
-// ── Mobile view ──────────────────────────────────────────────────────────────
-function setMobView(v) {
-  mobView = v;
-  document.getElementById('vbtn-map').classList.toggle('active', v==='map');
-  document.getElementById('vbtn-list').classList.toggle('active', v==='list');
-  const res = document.getElementById('mob-results');
-  if (v === 'list') {
-    res.classList.add('show');
-    buildMobList();
-    closePanel();
-    // Push results below mobile-bar
-    const bar = document.getElementById('mobile-bar');
-    if (bar) res.style.paddingTop = bar.offsetHeight + 'px';
-  } else {
-    res.classList.remove('show');
-  }
-  // Keep search panel open while searching
-  if (searchQ) {
-    const sp = document.getElementById('mob-search-panel');
-    const sb = document.getElementById('mob-search-btn');
-    if (sp && !sp.classList.contains('open')) {
-      sp.classList.add('open');
-      if (sb) sb.classList.add('active');
-    }
-  }
-}
+// setMobView is defined in the mobile section below
 
 // ── Build list items ─────────────────────────────────────────────────────────
 function buildListItem(r, mo, forMobile) {
@@ -1018,6 +994,7 @@ function buildListItem(r, mo, forMobile) {
       </div>
     </div>
   </div>`;
+  el.dataset.popsId = r.pops_number || r.building_address_with_zip || '';
   el.addEventListener('click', () => {
     const lat=getLat(r), lng=getLng(r);
     if (!isNaN(lat)&&!isNaN(lng)) map.panTo([lat,lng],{animate:true,duration:.4});
@@ -1031,15 +1008,27 @@ function buildList() {
   list.innerHTML = '';
   if (!filtered.length) { list.innerHTML = '<div id="list-empty">No spaces match.<br/>Try adjusting filters.</div>'; return; }
   const frag = document.createDocumentFragment();
-  filtered.forEach(({r,mo}) => frag.appendChild(buildListItem(r, mo, false)));
+  filtered.forEach(({r,mo}, i) => {
+    const el = buildListItem(r, mo, false);
+    el.style.animationDelay = Math.min(i * 25, 300) + 'ms';
+    frag.appendChild(el);
+  });
   list.appendChild(frag);
 }
 function buildMobList() {
   const list = document.getElementById('mob-results-list');
   list.innerHTML = '';
+  // Reset so re-opening triggers animation again
+  list.style.display = 'none';
+  list.offsetHeight; // force reflow
+  list.style.display = '';
   if (!filtered.length) { list.innerHTML = '<div style="padding:36px 18px;text-align:center;color:var(--ink3);font-size:16px;line-height:1.7">No spaces match.<br/>Try adjusting filters.</div>'; return; }
   const frag = document.createDocumentFragment();
-  filtered.forEach(({r,mo}) => frag.appendChild(buildListItem(r, mo, true)));
+  filtered.forEach(({r,mo}, i) => {
+    const el = buildListItem(r, mo, true);
+    el.style.animationDelay = Math.min(i * 30, 300) + 'ms';
+    frag.appendChild(el);
+  });
   list.appendChild(frag);
 }
 
@@ -1048,10 +1037,10 @@ function searchableText(r) {
   return [getName(r),getAddr(r),getBorough(r),r.street_name||'',r.neighborhood||'',r.community_district||'',getType(r),r.amenities_required||'',r.hour_of_access_required||'',r.building_location||'',r.developer||'',r.zip_code||'',r.pops_number||''].join(' ').toLowerCase();
 }
 function filtersAreActive() {
-  return activeAmenities.size > 0 || activeBoroughs.size > 0 || activeTypes.size > 0 || !!searchQ;
+  return activeAmenities.size > 0 || activeBoroughs.size > 0 || activeTypes.size > 0 || activeAda.size > 0 || !!searchQ;
 }
 function updateFilterCount() {
-  const total = activeAmenities.size + activeBoroughs.size + activeTypes.size;
+  const total = activeAmenities.size + activeBoroughs.size + activeTypes.size + activeAda.size;
   // Update filter badge on icon
   const badge = document.getElementById('sb-filter-badge');
   if (badge) { badge.textContent = total > 0 ? total : ''; badge.classList.toggle('show', total > 0); }
@@ -1093,12 +1082,17 @@ function applyFilters() {
     const ind = isIndoor(r);
     const mT = activeTypes.size === 0 || (ind && activeTypes.has('indoor')) || (!ind && activeTypes.has('outdoor'));
     const mA = activeAmenities.size === 0 || [...activeAmenities].every(key => AMENITY_FILTER_MAP[key]&&AMENITY_FILTER_MAP[key](r));
-    if (mS&&mB&&mT&&mA) { map.addLayer(mo.layer); filtered.push({r,mo}); }
+    // ADA filter: empty = show all; 'full' = full only; 'partial' = full or partial
+    // ADA: OR — 'full' = fully accessible, 'partial' = some access
+    const mAda = activeAda.size === 0 ||
+      (activeAda.has('full') && isAdaFull(r)) ||
+      (activeAda.has('partial') && isAdaAccessible(r) && !isAdaFull(r));
+    if (mS&&mB&&mT&&mA&&mAda) { map.addLayer(mo.layer); filtered.push({r,mo}); }
     else map.removeLayer(mo.layer);
   });
   document.getElementById('shown-count').textContent = filtered.length;
-  const ms = document.getElementById('mob-status');
-  if (ms) ms.textContent = `${filtered.length} of ${allData.length} spaces`;
+  const mobShown = document.getElementById('mob-shown-count');
+  if (mobShown) mobShown.textContent = filtered.length;
   buildList();
   if (isMobile() && mobView==='list') buildMobList();
 
@@ -1147,6 +1141,48 @@ async function loadData() {
 }
 
 // ── UI Controls ──────────────────────────────────────────────────────────────
+// ── Desktop sidebar toggles ──────────────────────────────────────────────────
+function toggleSearch() {
+  const panel = document.getElementById('sb-search-panel');
+  const btn   = document.getElementById('sb-search-btn');
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open', !isOpen);
+  if (btn) btn.classList.toggle('active', !isOpen);
+  if (!isOpen) setTimeout(() => { const s = document.getElementById('nav-search'); if(s) s.focus(); }, 220);
+}
+function toggleSbFilters() {
+  const panel   = document.getElementById('sb-filters');
+  const btn     = document.getElementById('sb-filter-btn');
+  const closeBtn = document.getElementById('sb-close-filters');
+  const isOpen  = panel.classList.contains('open');
+  panel.classList.toggle('open', !isOpen);
+  if (btn) btn.classList.toggle('active', !isOpen);
+  if (closeBtn) closeBtn.style.display = isOpen ? 'none' : 'inline-block';
+}
+
+// ── Unified search ───────────────────────────────────────────────────────────
+function onSearch(val) {
+  searchQ = val;
+  document.getElementById('nav-search-clear')?.classList.toggle('show', !!val);
+  document.getElementById('mob-search-clear')?.classList.toggle('show', !!val);
+  applyFilters();
+}
+function clearSearch() {
+  const ds = document.getElementById('nav-search');
+  const ms = document.getElementById('mob-search');
+  if (ds) ds.value = '';
+  if (ms) ms.value = '';
+  document.getElementById('nav-search-clear')?.classList.remove('show');
+  document.getElementById('mob-search-clear')?.classList.remove('show');
+  searchQ = '';
+  applyFilters();
+}
+// Desktop search
+const navSearch = document.getElementById('nav-search');
+if (navSearch) navSearch.addEventListener('input', e => onSearch(e.target.value));
+const clearBtn = document.getElementById('nav-search-clear');
+if (clearBtn) clearBtn.addEventListener('click', clearSearch);
+
 // ════════════════════════════════════════
 // MOBILE — mirrors desktop sidebar logic
 // ════════════════════════════════════════
@@ -1158,7 +1194,7 @@ function toggleMobSearch() {
   panel.classList.toggle('open', !isOpen);
   if (btn) btn.classList.toggle('active', !isOpen);
   if (!isOpen) setTimeout(() => { const s = document.getElementById('mob-search'); if(s) s.focus(); }, 150);
-  updateMobTop();
+  // Update results position after animation completes
 }
 
 function toggleMobFilters() {
@@ -1170,7 +1206,6 @@ function toggleMobFilters() {
   if (btn) btn.classList.toggle('active', !isOpen);
   // Show/hide Done button
   updateMobFilterFooter();
-  updateMobTop();
 }
 
 function updateMobFilterFooter() {
@@ -1181,31 +1216,47 @@ function updateMobFilterFooter() {
   if (doneBtn) doneBtn.style.display = isOpen ? 'inline-block' : 'none';
 }
 
-function updateMobTop() {
-  // Push map and results list below the mobile nav bar
-  setTimeout(() => {
-    const bar  = document.getElementById('mobile-bar');
-    const wrap = document.getElementById('mapwrap');
-    const res  = document.getElementById('mob-results');
-    const h = bar ? bar.offsetHeight : 0;
-    if (wrap) wrap.style.top = h + 'px';
-    if (res && res.classList.contains('show')) res.style.paddingTop = h + 'px';
-  }, 280);
-}
 
 function setMobView(v) {
+  if (v === mobView) return; // don't reanimate active view
   mobView = v;
-  document.getElementById('vbtn-map').classList.toggle('active', v==='map');
-  document.getElementById('vbtn-list').classList.toggle('active', v==='list');
-  const res = document.getElementById('mob-results');
+  const mapBtn  = document.getElementById('vbtn-map');
+  const listBtn = document.getElementById('vbtn-list');
+  if (mapBtn)  mapBtn.classList.toggle('active',  v === 'map');
+  if (listBtn) listBtn.classList.toggle('active', v === 'list');
+  const res  = document.getElementById('mob-results');
+  const list = document.getElementById('mob-results-list');
+  if (!res) return;
   if (v === 'list') {
     res.classList.add('show');
     buildMobList();
+    // Highlight the card that was open in the panel
+    if (activeItem) {
+      setTimeout(() => {
+        const cards = document.querySelectorAll('#mob-results-list .space-item');
+        cards.forEach(el => {
+          if (el.dataset.popsId === (activeItem.r.pops_number || activeItem.r.building_address_with_zip)) {
+            el.classList.add('active');
+            el.scrollIntoView({block:'nearest', behavior:'smooth'});
+          }
+        });
+      }, 300); // after animation
+    }
     closePanel();
-    const bar = document.getElementById('mobile-bar');
-    if (bar) res.style.paddingTop = bar.offsetHeight + 'px';
-  } else {
-    res.classList.remove('show');
+    } else {
+    // Animate cards out to the left, then hide
+    const cards = list ? list.querySelectorAll('.space-item') : [];
+    if (cards.length) {
+      cards.forEach((el, i) => {
+        el.style.animation = 'none';
+        el.offsetHeight; // force reflow
+        el.style.animation = `slideOutLeft .18s cubic-bezier(.32,.72,0,1) ${Math.min(i * 20, 180)}ms both`;
+      });
+      const hideDuration = Math.min(cards.length * 20, 180) + 200;
+      setTimeout(() => res.classList.remove('show'), hideDuration);
+    } else {
+      res.classList.remove('show');
+    }
   }
 }
 
@@ -1230,6 +1281,15 @@ document.querySelectorAll('#mob-fd-types .fc').forEach(b => {
     applyFilters();
   });
 });
+document.querySelectorAll('#mob-fd-ada .fc').forEach(b => {
+  b.addEventListener('click', e => {
+    e.stopPropagation();
+    const a = b.dataset.ada;
+    if (activeAda.has(a)) { activeAda.delete(a); b.classList.remove('on'); }
+    else { activeAda.add(a); b.classList.add('on'); }
+    applyFilters();
+  });
+});
 document.querySelectorAll('#mob-fd-amenities .fc').forEach(b => {
   b.addEventListener('click', e => {
     e.stopPropagation();
@@ -1247,69 +1307,67 @@ if (mobSearchEl) mobSearchEl.addEventListener('input', e => onSearch(e.target.va
 const mobClearBtn = document.getElementById('mob-search-clear');
 if (mobClearBtn) mobClearBtn.addEventListener('click', clearSearch);
 
-// ── Resizable sidebar ────────────────────────────────────────────────────────
-(function() {
-  const handle = document.getElementById('sb-resize');
-  const sidebar = document.getElementById('sidebar');
-  if (!handle || !sidebar) return;
-  let dragging = false, startX, startW;
-  // Position handle at right edge of sidebar
-  function posHandle() {
-    const r = sidebar.getBoundingClientRect();
-    handle.style.left = (r.right - 3) + 'px';
-  }
-  new ResizeObserver(posHandle).observe(sidebar);
-  posHandle();
-  handle.addEventListener('mousedown', e => {
-    dragging = true; startX = e.clientX;
-    startW = sidebar.getBoundingClientRect().width;
-    handle.classList.add('dragging');
-    document.body.style.cursor = 'col-resize';
-    document.body.style.userSelect = 'none';
-  });
-  window.addEventListener('mousemove', e => {
-    if (!dragging) return;
-    const w = Math.min(Math.max(startW + (e.clientX - startX), 260), window.innerWidth / 3);
-    sidebar.style.width = w + 'px';
-    posHandle();
-  });
-  window.addEventListener('mouseup', () => {
-    if (dragging) { dragging = false; handle.classList.remove('dragging'); document.body.style.cursor = ''; document.body.style.userSelect = ''; }
-  });
-})();
 
-// ── Resizable detail card ─────────────────────────────────────────────────────
-(function() {
-  const detail = document.getElementById('detail');
-  if (!detail) return;
-  let dragging = false, startX, startW;
-  // Drag from left edge
-  detail.addEventListener('mousedown', e => {
-    const rect = detail.getBoundingClientRect();
-    if (e.clientX > rect.left + 20) return; // only left 20px
-    dragging = true; startX = e.clientX; startW = rect.width;
-    document.body.style.cursor = 'col-resize';
-    document.body.style.userSelect = 'none';
-    e.preventDefault();
+// ── Desktop filter chip listeners ────────────────────────────────────────────
+document.querySelectorAll('#fd-boroughs .fc').forEach(b => {
+  b.addEventListener('click', () => {
+    const boro = b.dataset.b;
+    if (activeBoroughs.has(boro)) { activeBoroughs.delete(boro); b.classList.remove('on'); }
+    else { activeBoroughs.add(boro); b.classList.add('on'); }
+    document.querySelectorAll('#mob-fd-boroughs .fc').forEach(mb => mb.classList.toggle('on', activeBoroughs.has(mb.dataset.b)));
+    applyFilters();
   });
-  window.addEventListener('mousemove', e => {
-    if (!dragging) return;
-    const delta = startX - e.clientX;
-    const w = Math.min(Math.max(startW + delta, 280), window.innerWidth / 3);
-    detail.style.width = w + 'px';
+});
+document.querySelectorAll('#fd-types .fc').forEach(b => {
+  b.addEventListener('click', () => {
+    const t = b.dataset.t;
+    if (activeTypes.has(t)) { activeTypes.delete(t); b.classList.remove('on'); }
+    else { activeTypes.add(t); b.classList.add('on'); }
+    document.querySelectorAll('#mob-fd-types .fc').forEach(mb => mb.classList.toggle('on', activeTypes.has(mb.dataset.t)));
+    applyFilters();
   });
-  window.addEventListener('mouseup', () => {
-    if (dragging) { dragging = false; document.body.style.cursor = ''; document.body.style.userSelect = ''; }
+});
+document.querySelectorAll('#fd-ada .fc').forEach(b => {
+  b.addEventListener('click', () => {
+    const a = b.dataset.ada;
+    if (activeAda.has(a)) { activeAda.delete(a); b.classList.remove('on'); }
+    else { activeAda.add(a); b.classList.add('on'); }
+    document.querySelectorAll('#mob-fd-ada .fc').forEach(mb => mb.classList.toggle('on', activeAda.has(mb.dataset.ada)));
+    applyFilters();
   });
-  // Show resize cursor when hovering left edge
-  detail.addEventListener('mousemove', e => {
-    const rect = detail.getBoundingClientRect();
-    detail.style.cursor = e.clientX < rect.left + 20 ? 'col-resize' : '';
+});
+document.querySelectorAll('#fd-amenities .fc').forEach(b => {
+  b.addEventListener('click', () => {
+    const a = b.dataset.a;
+    if (activeAmenities.has(a)) { activeAmenities.delete(a); b.classList.remove('on'); }
+    else { activeAmenities.add(a); b.classList.add('on'); }
+    document.querySelectorAll('#mob-fd-amenities .fc').forEach(mb => mb.classList.toggle('on', activeAmenities.has(mb.dataset.a)));
+    applyFilters();
   });
-})();
+});
+
+// ── Clear all filters ────────────────────────────────────────────────────────
+function clearAllFilters() {
+  activeBoroughs = new Set();
+  activeTypes    = new Set();
+  activeAmenities.clear();
+  activeAda.clear();
+  // Reset all chips — desktop and mobile
+  ['#fd-boroughs .fc','#mob-fd-boroughs .fc'].forEach(s => document.querySelectorAll(s).forEach(b => b.classList.remove('on')));
+  ['#fd-types .fc','#mob-fd-types .fc'].forEach(s => document.querySelectorAll(s).forEach(b => b.classList.remove('on')));
+  ['#fd-amenities .fc','#mob-fd-amenities .fc'].forEach(s => document.querySelectorAll(s).forEach(b => b.classList.remove('on')));
+  ['#fd-ada .fc','#mob-fd-ada .fc'].forEach(s => document.querySelectorAll(s).forEach(b => b.classList.remove('on')));
+  // Clear search
+  const ns = document.getElementById('nav-search'); if (ns) ns.value = '';
+  const ms = document.getElementById('mob-search'); if (ms) ms.value = '';
+  document.getElementById('nav-search-clear')?.classList.remove('show');
+  document.getElementById('mob-search-clear')?.classList.remove('show');
+  searchQ = '';
+  applyFilters();
+}
 
 loadData();
-setTimeout(updateMobTop, 100);
+
 </script>
 </body>
 </html>
